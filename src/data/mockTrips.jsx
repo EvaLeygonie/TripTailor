@@ -331,4 +331,3 @@ export const trips = [
     },
   },
 ];
-export default trips;
