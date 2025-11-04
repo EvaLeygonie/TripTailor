@@ -1,5 +1,9 @@
+import { Calendar, MapPin, DollarSign } from "lucide-react";
+
 export default function TripCard({ trip, onClick }) {
-  const { title, destination, dates, coverImage, tripStatus, } = trip;
+  const { title, destination, dates, coverImage, tripStatus, budget } = trip;
+
+  const budgetPercentage = (budget.spent / budget.total) * 100;
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -34,20 +38,52 @@ export default function TripCard({ trip, onClick }) {
           {tripStatus.charAt(0).toUpperCase() + tripStatus.slice(1)}
         </span>
       </div>
-      
 
-      <div className="p-4 space-y-1">
-        <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
-        <p className="text-sm text-gray-600">
-          {destination.city}, {destination.country}
-        </p>
-        <p className="text-xs text-gray-500">
-          {new Date(dates.start).toLocaleDateString()} –{" "}
-          {new Date(dates.end).toLocaleDateString()}
-        </p>
+
+      <div className="p-4 flex flex-col flex-grow justify-between space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
+          <div className="flex items-center gap-1 text-sm text-gray-600">
+            <MapPin size={14} />
+            <span>
+              {destination.city}, {destination.country}
+            </span>
+          </div>
+          <div className="flex items-center gap-1 text-xs text-gray-500">
+            <Calendar size={14} />
+            <span>
+              {new Date(dates.start).toLocaleDateString()} –{" "}
+              {new Date(dates.end).toLocaleDateString()}
+            </span>
+          </div>
+        </div>
+
+        {/* Budget */}
+        <div className="pt-2">
+          <div className="flex justify-between items-center text-sm mb-1">
+            <div className="flex items-center gap-1 text-gray-600">
+              <DollarSign size={14} />
+              <span>Budget</span>
+            </div>
+            <span className="font-medium text-gray-800">
+              {budget.spent.toLocaleString()} / {budget.total.toLocaleString()} kr
+            </span>
+          </div>
+          <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className={`h-full rounded-full ${
+                budgetPercentage > 100
+                  ? "bg-red-500"
+                  : budgetPercentage > 80
+                  ? "bg-yellow-500"
+                  : "bg-green-500"
+              }`}
+              style={{ width: `${Math.min(budgetPercentage, 100)}%` }}
+            />
+          </div>
+        </div>
       </div>
-
-      {/*<Link to={`/trip/${trip.id}`}
+         {/*<Link to={`/trip/${trip.id}`}
       className="mt-4 inline-block text-center bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
 
         View Details
