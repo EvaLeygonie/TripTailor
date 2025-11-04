@@ -1,7 +1,10 @@
-export default function BudgetView() {
+export default function BudgetView({ trip }) {
+  console.log(trip)
+
   return (
-    <div>
-      <h2>Budget Overview</h2>
+    <div className="budget-view p-4 text-gray-500">
+      <h3 className="text-xl font-semibold mb-4">Budget Overview</h3>
+      <p>Budget summary will be displayed here.</p>
     </div>
-  )
+  );
 }

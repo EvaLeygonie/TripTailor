@@ -24,7 +24,7 @@ export default function TripDetails() {
         <button onClick={() => navigate('/')} className="mt-4 text-blue-600 hover:underline">Go to Home</button>
       </div>
     );
-  }// 💡 (FUTURE STEP: Update the Header prop in App.jsx or use Context)
+  }
 
  return (
     <div className="trip-details flex flex-col h-full">
