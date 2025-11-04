@@ -96,7 +96,7 @@ export const trips = [
   {
     id: "t_Bali_2025_11",
     title: " Bali Island Escape",
-    status: "ongoing", // planned , ongoing, completed
+    tripStatus: "ongoing", // planned , ongoing, completed
     coverImage:
       "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1335",
     destination: { city: "Bali", country: "Indonesia" },
@@ -203,7 +203,7 @@ export const trips = [
   {
     id: "t_Stockholm_2025_01",
     title: "Stockholm Winter Lights",
-    status: "completed", // planned , ongoing, completed
+    tripStatus: "completed", // planned , ongoing, completed
     coverImage:
       "https://plus.unsplash.com/premium_photo-1697729828023-35f1eb84db3e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
     destination: { city: "Stockholm", country: "Sweden" },
@@ -331,3 +331,5 @@ export const trips = [
     },
   },
 ];
+
+export default trips;
