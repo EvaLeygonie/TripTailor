@@ -93,5 +93,242 @@ export const trips = [
       },
     },
   },
+  {
+    id: "t_Bali_2025_11",
+    title: " Bali Island Escape",
+    status: "ongoing", // planned , ongoing, completed
+    coverImage:
+      "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1335",
+    destination: { city: "Bali", country: "Indonesia" },
+    dates: { start: "2025-11-04", end: "2025-11-14", nights: 9 },
+    tabSections: [
+      { key: "mustSees", label: "Must-Sees" },
+      { key: "attractions", label: "Attractions" },
+      { key: "restaurants", label: "Restaurants" },
+      { key: "packingList", label: "Packing" },
+      { key: "budget", label: "Budget" },
+    ],
+    attractions: [
+      {
+        id: "a_tegalalang",
+        title: "Tegallalang Rice Terrace",
+        category: "Nature",
+        address: "Tegallalang, Gianyar Regency",
+        rating: 4.3,
+        priceLevel: "€",
+        expectedCost: 2, // EUR
+        durationMin: 180,
+        openingHours: "Always open",
+        image:
+          "https://plus.unsplash.com/premium_photo-1697729933176-7b999b743f8c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=927",
+      },
+      {
+        id: "a_uluwatu",
+        title: "Uluwatu Temple",
+        category: "Sightseeing",
+        address: "Pecatu, South Kuta",
+        rating: 4.5,
+        priceLevel: "€",
+        expectedCost: 3,
+        durationMin: 180,
+        openingHours: "07:00–19:00",
+        image:
+          "https://images.unsplash.com/photo-1604842937136-1648761a6256?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1365",
+      },
+      {
+        id: "a_canggu_beach",
+        title: "Canggu Beach",
+        category: "Relaxation",
+        address: "Canggu, North Kuta",
+        rating: 4.8,
+        priceLevel: "Free",
+        expectedCost: 0,
+        durationMin: 180,
+        openingHours: "Always open",
+        image:
+          "https://images.unsplash.com/photo-1564221549673-b43c122d1c29?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=968",
+      },
+    ],
+    restaurants: [
+      {
+        id: "r_warung_babi_guling",
+        title: "Warung Babi Guling Ibu Oka",
+        category: "Balinese  Cuisine",
+        address: "Jl. Suweta No.2, Ubud, Gianyar Regency, Bali, Indonesia",
+        rating: 4.6,
+        priceLevel: "€€",
+        durationMin: 90,
+        openingHours: "08:00–22:00",
+        image:
+          "https://images.unsplash.com/photo-1751110314375-ca26cbbc5a6a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987",
+        expectedCost: 15,
+      },
+    ],
+    mustSeeIds: ["a_tegalalang", "a_uluwatu", "a_canggu_beach"],
+    packingList: [
+      {
+        category: "Clothes",
+        items: [
+          { label: "Light sneakers" },
+          { label: "Jacket" },
+          { label: "Swimwear" },
+          { label: "Hat / Cap" },
+        ],
+      },
+      {
+        category: "Tech",
+        items: [
+          { label: "Power bank" },
+          { label: "Travel adapter (Type C/F)" },
+        ],
+      },
+      {
+        category: "Essentials",
+        items: [{ label: "Sunscreen SPF 50+" }, { label: "Bug spray" }],
+      },
+    ],
+    budget: {
+      total: 11300,
+      spent: 0,
+      breakdown: {
+        flights: 1500,
+        accommodation: 4500,
+        food: 2000,
+        transport: 500,
+        activities: 2000,
+        other: 800,
+      },
+    },
+  },
+  {
+    id: "t_Stockholm_2025_01",
+    title: "Stockholm Winter Lights",
+    status: "completed", // planned , ongoing, completed
+    coverImage:
+      "https://plus.unsplash.com/premium_photo-1697729828023-35f1eb84db3e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
+    destination: { city: "Stockholm", country: "Sweden" },
+    dates: { start: "2025-01-10", end: "2025-01-15", nights: 5 },
+    tabSections: [
+      { key: "mustSees", label: "Must-Sees" },
+      { key: "attractions", label: "Attractions" },
+      { key: "restaurants", label: "Restaurants" },
+      { key: "packingList", label: "Packing" },
+      { key: "budget", label: "Budget" },
+    ],
+
+    attractions: [
+      {
+        id: "a_gamla_stan",
+        title: "Gamla Stan",
+        category: "Sightseeing",
+        address: "Old Town, Stockholm",
+        rating: 4.7,
+        priceLevel: "Free",
+        expectedCost: 0,
+        durationMin: 120,
+        openingHours: "Always open",
+        image:
+          "https://images.unsplash.com/photo-1665938025129-ab56b64afebc?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=927",
+      },
+      {
+        id: "a_vasa_museum",
+        title: "Vasa Museum",
+        category: "Museum",
+        address: "Galärvarvsvägen 14, Djurgården, Stockholm",
+        rating: 4.8,
+        priceLevel: "€€",
+        expectedCost: 18, // EUR
+        durationMin: 150,
+        openingHours: "10:00–17:00",
+        image:
+          "https://images.unsplash.com/photo-1677755998695-3a029eb6b51b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2069",
+      },
+      {
+        id: "a_abba_museum",
+        title: "ABBA The Museum",
+        category: "Entertainment",
+        address: "Djurgårdsvägen 68, Stockholm",
+        rating: 4.6,
+        priceLevel: "€€",
+        expectedCost: 25,
+        durationMin: 120,
+        openingHours: "10:00–18:00",
+        image:
+          "https://images.unsplash.com/photo-1665060221922-aff438b69d36?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987",
+      },
+    ],
+
+    restaurants: [
+      {
+        id: "r_pelikan",
+        title: "Pelikan",
+        category: "Traditional Swedish",
+        address: "Blekingegatan 40, Södermalm, Stockholm",
+        rating: 4.5,
+        priceLevel: "€€",
+        expectedCost: 30,
+        durationMin: 90,
+        openingHours: "11:30–23:00",
+        image:
+          "https://images.unsplash.com/photo-1723062332051-36bc882e3549?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1335",
+      },
+      {
+        id: "r_cafe_saturdays",
+        title: "Café Saturdays",
+        category: "Café / Bakery",
+        address: "Drottninggatan 55, Stockholm",
+        rating: 4.4,
+        priceLevel: "€",
+        expectedCost: 10,
+        durationMin: 60,
+        openingHours: "08:00–18:00",
+        image:
+          "https://images.unsplash.com/photo-1707846396119-630407daf600?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987",
+      },
+    ],
+
+    mustSeeIds: ["a_gamla_stan", "a_vasa_museum", "a_abba_museum"],
+
+    packingList: [
+      {
+        category: "Clothes",
+        items: [
+          { label: "Winter jacket" },
+          { label: "Warm boots" },
+          { label: "Scarf & gloves" },
+          { label: "Thermal socks" },
+        ],
+      },
+      {
+        category: "Tech",
+        items: [
+          { label: "Camera" },
+          { label: "Power bank" },
+          { label: "Travel adapter" },
+        ],
+      },
+      {
+        category: "Essentials",
+        items: [
+          { label: "Lip balm" },
+          { label: "Moisturizer" },
+          { label: "Travel insurance papers" },
+        ],
+      },
+    ],
+
+    budget: {
+      total: 8900, // EUR
+      spent: 8750,
+      breakdown: {
+        flights: 1200,
+        accommodation: 3200,
+        food: 1800,
+        transport: 700,
+        activities: 1500,
+        other: 500,
+      },
+    },
+  },
 ];
 export default trips;
