@@ -26,8 +26,6 @@ export default function TripDetails() {
     );
   }
 
-  // 💡 (FUTURE STEP: Update the Header prop in App.jsx or use Context)
-
  return (
     <div className="trip-details flex flex-col h-full">
 
