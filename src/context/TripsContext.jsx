@@ -1,5 +1,7 @@
 // TripsContext.jsx
-import { createContext, useState } from 'react'
+import { createContext, useState, useEffect } from 'react'
+import mockTrips from "../data/mockTrips"
+
 
 const TripsContext = createContext({
     trips: [], // Use an array for trips
@@ -13,16 +15,18 @@ const TripsContext = createContext({
 })
 
 export function TripsProvider({ children }) {
-    // Add state for your trips here, for now it can be an empty array
+
     const [trips, setTrips] = useState(() => {
-        const savedTrips = localStorage.getItem('trips')
-        return savedTrips ? JSON.parse(savedTrips) : []
+        const savedTrips = localStorage.getItem("trips");
+        return savedTrips ? JSON.parse(savedTrips) : mockTrips
     })
 
+    useEffect(() => {
+        localStorage.setItem("trips", JSON.stringify(trips))
+    }, [trips])
+
     const addTrip = (newTrip) => {
-        const updatedTrips = [...trips, newTrip]
-        setTrips(updatedTrips)
-        localStorage.setItem('trips', JSON.stringify(updatedTrips))
+        setTrips((prev) => [...prev, newTrip])
     }
 
     const removeTrip = (id) => {
@@ -88,7 +92,6 @@ export function TripsProvider({ children }) {
     }
 
     // 💡 If you load mock data, load it here!
-    // const [trips, setTrips] = useState(mockTrips)
 
     const contextValue = {
         trips,

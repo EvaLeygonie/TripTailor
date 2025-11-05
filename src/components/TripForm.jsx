@@ -32,9 +32,18 @@ export default function TripForm({ onAddTrip }) {
       dates: { start, end },
       coverImage: selectedCover, //
       mustSees: [],
-    };
+      attractions: [],
+      restaurants: [],
+      tripStatus: "planned",
+      budget: {
+        total: 0,
+        spent: 0,
+        breakdown: {},
+      },
+    }
 
-    onAddTrip?.(newTrip);
+    onAddTrip?.(newTrip)
+
 
     // Rensa fält (inklusive vald bild)
     setTitle("");
@@ -140,5 +149,5 @@ export default function TripForm({ onAddTrip }) {
         ➕ Add Trip
       </button>
     </form>
-  );
+  )
 }

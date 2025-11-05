@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { MapPin, ArrowLeft } from "lucide-react"
 import TabNav from "../components/TabNav"
@@ -8,14 +8,18 @@ import RestaurantsList from "../components/RestaurantsList"
 import PackingList from "../components/PackingList"
 import BudgetView from "../components/BudgetView"
 import trips from "../data/mockTrips"
+import { TripsContext } from "../context/TripsContext"
 
 export default function TripDetails() {
   const [activeTab, setActiveTab] = useState("mustsees")
   const navigate = useNavigate()
   const { id } = useParams()
-  const trip = trips.find((t) => t.id === id)
 
-   if (!trip) {
+  const { trips: contextTrips, removeTrip } = useContext(TripsContext)
+  const allTrips = [...trips, ...contextTrips]
+  const trip = allTrips.find((t) => t.id === id)
+
+  if (!trip) {
     // Handle case where trip ID is invalid or not found
     return (
       <div className="p-8 text-center text-red-600">
@@ -26,7 +30,7 @@ export default function TripDetails() {
     );
   }
 
- return (
+  return (
     <div className="trip-details flex flex-col h-full">
 
       {/* 2. DYNAMIC HEADER SECTION (Trip Name & Back Button) */}
@@ -42,7 +46,7 @@ export default function TripDetails() {
           <div>
             <h2 className="text-xl font-semibold">{trip.title}</h2>
             <p className="text-gray-600 flex items-center gap-1 text-sm">
-              <MapPin size={16} className="inline-block mr-1"/>
+              <MapPin size={16} className="inline-block mr-1" />
               {trip.destination.city}, {trip.destination.country}
             </p>
           </div>
@@ -61,6 +65,14 @@ export default function TripDetails() {
         {activeTab === "packing" && <PackingList trip={trip} />}
         {activeTab === "budget" && <BudgetView trip={trip} />}
       </div>
+
+      <button //Knapp behöver styling
+        onClick={() => {
+          removeTrip(trip.id)
+          navigate("/")
+        }}
+        className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-150 flex items-center gap-2"
+      >Remove Trip</button>
     </div>
   )
 }
