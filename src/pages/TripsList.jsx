@@ -1,12 +1,20 @@
-import { Link } from "react-router-dom"
-import trips from "../data/mockTrips"
-import TripCard from "../components/TripCard"
-import { Plus, Map } from "lucide-react"
+import { Link } from "react-router-dom";
+import trips from "../data/mockTrips";
+import TripCard from "../components/TripCard";
+import { Plus, Map, X } from "lucide-react";
+import { useState } from "react";
+import TripForm from "../components/TripFrom";
 
 export default function TripsList() {
+  const [open, setOpen] = useState(false);
+
+  function handleAddTrip(newTrip) {
+    console.log("New trip submitted", newTrip);
+    setOpen(false); // Close form
+  }
+
   return (
     <section className="trip-list p-4 sm:p-8">
-
       {/* 1. APP LOGO/BRANDING SECTION */}
       <header className="app-branding flex items-center gap-3 py-4 border-b border-gray-200">
         <Map size={32} className="text-blue-600" /> {/* Placeholder Icon */}
@@ -24,7 +32,11 @@ export default function TripsList() {
         </p>
 
         {/* The "Plan New Trip" Button (CTA) */}
-        <button className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-150 flex items-center gap-2">
+
+        <button
+          onClick={() => setOpen(true)}
+          className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-150 flex items-center gap-2"
+        >
           <Plus size={20} />
           Plan New Trip
         </button>
@@ -38,6 +50,25 @@ export default function TripsList() {
           </Link>
         ))}
       </div>
+
+      {/* 4. Modal contain TripForm */}
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-xl rounded-xl bg-white p-4 shadow-lg">
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="text-xl font-semibold">Add your new trip</h3>
+              <button
+                onClick={() => setOpen(false)}
+                className="rounded-md p-1 hover:bg-gray-100"
+                aria-label="Close"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <TripForm onAddTrip={handleAddTrip} />
+          </div>
+        </div>
+      )}
     </section>
-  )
+  );
 }
