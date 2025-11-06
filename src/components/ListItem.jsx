@@ -1,55 +1,71 @@
 
-import { Star } from 'lucide-react';
+import { Star, StarOff, Edit, Trash2, MapPin, Soup } from 'lucide-react'
 
-/**
- * ListItem Component
- * Renders a single, reusable card for an Attraction, Restaurant, or Must-See item.
- * This component is purely presentational and accepts data via props.
- *
- * @param {object} props
- * @param {object} props.item - The item object (attraction or restaurant).
- * @param {boolean} props.isMustSee - Indicates if the item is currently a favorite.
- * @param {function} props.onToggleFavorite - Placeholder for the function to toggle favorite status.
- * @param {string} props.type - 'attraction' or 'restaurant' (used for accessibility/future styling). => Maybe have slightly differen colors for each type so itäs clearer in must sees?
- */
+const ListItem = ({ item, type, isMustSee, onToggleFavorite, onEdit, onDelete }) => {
 
-export default function ListItem({ item, isMustSee = false, onToggleFavorite, type }) {
-console.log(onToggleFavorite, type);
+  const Icon = type === 'attraction' ? MapPin : Soup;
 
   return (
-    <div
-      key={item.id}
-      className="flex justify-between items-center p-4 bg-white border border-gray-200 rounded-xl shadow-sm"
-    >
-      <div className="flex flex-col flex-grow min-w-0 pr-4">
-        <h3 className="text-lg font-medium text-gray-900 truncate">
-          {item.title}
-        </h3>
+    <div className="flex bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 hover:shadow-xl">
 
-        {/* Category and Rating */}
-        <div className="flex items-center space-x-2 text-sm mt-1">
-          <span className="text-gray-500 font-medium">{item.category}</span>
-          <span className="text-gray-400">•</span>
-          <div className="flex items-center text-amber-500">
-            {/* Placeholder for Star Icon (Styling only) */}
-            <Star size={14} fill="currentColor" className="mr-1" />
-            <span className="text-gray-600">{item.rating}</span>
-          </div>
-        </div>
+      <div className="w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0">
+        <img
+          src={item.image || 'https://placehold.co/128x128/eeeeee/333333?text=Travel'}
+          alt={item.title}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = `https://placehold.co/128x128/eeeeee/333333?text=${type === 'attraction' ? 'Attr' : 'Rest'}`;
+          }}
+        />
       </div>
 
-      {/* Must-See Toggle (Right Side) */}
-      <button
-        // Button has no function yet
-        aria-label={`Toggle favorite status for ${item.title}`}
-        className="ml-4 p-2 transition duration-150 ease-in-out rounded-full"
-      >
-        <Star
-          size={24}
-          // Use isMustSee prop for initial display state
-          className={isMustSee ? 'text-amber-500 fill-amber-500' : 'text-gray-400'}
-        />
-      </button>
+      <div className="flex-grow p-3 sm:p-4 relative">
+        <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">{item.title}</h3>
+
+        <div className="flex items-center text-sm text-gray-500 mt-0.5">
+          <Icon size={14} className="mr-1.5 flex-shrink-0" />
+          <span>{item.category || (type === 'attraction' ? 'Sightseeing' : 'Dining')}</span>
+          {item.rating && (
+            <>
+              <span className="mx-2">•</span>
+              <span className="flex items-center text-yellow-500 font-medium">
+                <Star size={14} fill="currentColor" className="mr-1" />
+                {item.rating.toFixed(1)}
+              </span>
+            </>
+          )}
+        </div>
+
+        <div className="mt-2 flex space-x-2">
+          <button
+            onClick={onEdit}
+            className="p-1 rounded-full text-blue-600 hover:bg-blue-100 transition duration-150"
+            title="Edit Item"
+          >
+            <Edit size={18} />
+          </button>
+
+          <button
+            onClick={onDelete}
+            className="p-1 rounded-full text-red-600 hover:bg-red-100 transition duration-150"
+            title="Delete Item"
+          >
+            <Trash2 size={18} />
+          </button>
+
+          {/* Toggle Favorite Button */}
+          <button
+            onClick={onToggleFavorite}
+            className={`p-1 rounded-full transition duration-150 ${isMustSee ? 'text-yellow-500 hover:text-yellow-600' : 'text-gray-400 hover:text-yellow-400'}`}
+            title={isMustSee ? "Remove from Must-See" : "Add to Must-See"}
+          >
+            {isMustSee ? <Star size={18} fill="currentColor" /> : <Star size={18} />}
+          </button>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default ListItem;

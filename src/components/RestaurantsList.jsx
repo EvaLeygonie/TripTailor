@@ -53,7 +53,6 @@ const RestaurantsList = () => {
     "Dessert",
   ];
 
-  // Placeholder function (inert for now)
   const handleAddClick = () => {
     setError("");
     setName("");
@@ -104,7 +103,7 @@ const RestaurantsList = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-gray-800">Restaurants</h2>
         <button
-          onClick={handleAddClick} // Inert placeholder function
+          onClick={handleAddClick}
           className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition duration-150 ease-in-out"
         >
           <Plus size={20} />
