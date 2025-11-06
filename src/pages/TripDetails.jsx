@@ -1,14 +1,15 @@
-import { useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { MapPin, ArrowLeft } from "lucide-react";
-import TabNav from "../components/TabNav";
-import MustSeesList from "../components/MustSeesList";
-import AttractionsList from "../components/AttractionsList";
-import RestaurantsList from "../components/RestaurantsList";
-import PackingList from "../components/PackingList";
-import BudgetView from "../components/BudgetView";
-import trips from "../data/mockTrips";
-import { TripsContext } from "../context/TripsContext";
+import { useState, useContext } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { MapPin, ArrowLeft } from "lucide-react"
+import TabNav from "../components/TabNav"
+import MustSeesList from "../components/MustSeesList"
+import AttractionsList from "../components/AttractionsList"
+import RestaurantsList from "../components/RestaurantsList"
+import PackingList from "../components/PackingList"
+import BudgetView from "../components/BudgetView"
+import CalendarView from "../components/CalendarView"
+import trips from "../data/mockTrips"
+import { TripsContext } from "../context/TripsContext"
 
 export default function TripDetails() {
   const [activeTab, setActiveTab] = useState("mustsees");
@@ -84,6 +85,7 @@ export default function TripDetails() {
         {activeTab === "restaurants" && <RestaurantsList trip={trip} />}
         {activeTab === "packing" && <PackingList trip={trip} />}
         {activeTab === "budget" && <BudgetView trip={trip} />}
+        {activeTab === "planning" && <CalendarView trip={trip} />}
       </div>
 
       {/* Remove Button */}

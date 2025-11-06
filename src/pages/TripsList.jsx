@@ -10,6 +10,16 @@ export default function TripsList() {
   const [open, setOpen] = useState(false);
   const { trips, addTrip } = useContext(TripsContext)
   const [showToast, setShowToast] = useState(false)
+  const [filters, setFilters] = useState({
+    planned: false,
+    ongoing: false,
+    completed: false,
+  })
+
+  const anyFilterActive = Object.values(filters).some(v => v)
+  const filteredTrips = anyFilterActive
+    ? trips.filter(trip => filters[trip.tripStatus])
+    : trips
 
   return (
     <section className="trip-list p-4 sm:p-8">
@@ -40,9 +50,26 @@ export default function TripsList() {
         </button>
       </div>
 
+
+      <div className="mt-4 flex gap-4">
+        <p>Filter trips: </p>
+        {["planned", "ongoing", "completed"].map((status) => (
+          <label key={status} className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={filters[status]}
+              onChange={() =>
+                setFilters((prev) => ({ ...prev, [status]: !prev[status] }))
+              }
+            />
+            <span className="capitalize">{status}</span>
+          </label>
+        ))}
+      </div>
+
       {/* 3. TRIP GRID CONTENT (Your existing logic) */}
       <div className="trip-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
-        {trips.map((trip) => (
+        {filteredTrips.map((trip) => (
           <Link key={trip.id} to={`/trip/${trip.id}`} className="trip-card">
             <TripCard trip={trip} />
           </Link>

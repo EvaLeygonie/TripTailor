@@ -1,4 +1,4 @@
-import { Star, MapPin, Utensils, Briefcase, DollarSign } from 'lucide-react';
+import { Star, MapPin, Utensils, Briefcase, DollarSign, Calendar } from 'lucide-react';
 
 export default function TabNav({ activeTab, setActiveTab }) {
   const tabDefinitions = [
@@ -7,6 +7,7 @@ export default function TabNav({ activeTab, setActiveTab }) {
     { key: 'restaurants', label: 'Restaurants', Icon: Utensils },
     { key: 'packing', label: 'Packing', Icon: Briefcase },
     { key: 'budget', label: 'Budget', Icon: DollarSign },
+    { key: 'planning', label: 'Planning', Icon: Calendar },
   ];
 
   return (
