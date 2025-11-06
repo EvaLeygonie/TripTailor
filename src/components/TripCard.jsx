@@ -1,19 +1,24 @@
 import { Calendar, MapPin, DollarSign } from "lucide-react";
 
 export default function TripCard({ trip, onClick }) {
-
   const {
     title = "No title",
     destination = { city: "-", country: "-" },
     dates = { start: "", end: "" },
     coverImage = "",
     tripStatus = "planned",
-    budget = { total: 0, spent: 0 },
+    budget = { total: 0, breakdown: {} },
   } = trip;
 
-  if (!trip) return null
+  if (!trip) return null;
 
-  const spent = budget?.spent ?? 0;
+  const spent =
+    trip.tripStatus === "planned"
+      ? 0
+      : Object.values(budget?.breakdown || {}).reduce(
+          (sum, n) => sum + Number(n || 0),
+          0
+        );
   const total = budget?.total ?? 0;
   const budgetPercentage = total > 0 ? (spent / total) * 100 : 0;
 
@@ -33,7 +38,8 @@ export default function TripCard({ trip, onClick }) {
   return (
     <article
       onClick={onClick}
-      className="cursor-pointer overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-white max-w-sm w-full">
+      className="cursor-pointer overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-white max-w-sm w-full"
+    >
       {/* Image */}
       <div className="relative h-48 w-full overflow-hidden">
         <img
@@ -50,7 +56,6 @@ export default function TripCard({ trip, onClick }) {
           {tripStatus.charAt(0).toUpperCase() + tripStatus.slice(1)}
         </span>
       </div>
-
 
       <div className="p-4 flex flex-col flex-grow justify-between space-y-3">
         <div>
@@ -78,17 +83,19 @@ export default function TripCard({ trip, onClick }) {
               <span>Budget</span>
             </div>
             <span className="font-medium text-gray-800">
-              {budget.spent.toLocaleString()} / {budget.total.toLocaleString()} kr
+              {Number(spent).toLocaleString()} /{" "}
+              {Number(total).toLocaleString()} kr
             </span>
           </div>
           <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full ${budgetPercentage > 100
-                ? "bg-red-500"
-                : budgetPercentage > 80
+              className={`h-full rounded-full ${
+                budgetPercentage > 100
+                  ? "bg-red-500"
+                  : budgetPercentage > 80
                   ? "bg-yellow-500"
                   : "bg-green-500"
-                }`}
+              }`}
               style={{ width: `${Math.min(budgetPercentage, 100)}%` }}
             />
           </div>

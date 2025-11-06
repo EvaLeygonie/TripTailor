@@ -114,19 +114,21 @@ const RestaurantsList = () => {
       <div className="space-y-4">
         {trip.restaurants.map((restaurant) => (
           <article
-          key={restaurant.id}
+            key={restaurant.id}
             className="cursor-pointer text-left overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out 
             hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-gray-50"
           >
-          <ListItem
-            key={restaurant.id}
-            item={restaurant}
-            type="restaurant"
-            // Use mustSeeIds for initial 'favorite' state display
-            isMustSee={mustSeeIds.includes(restaurant.id)}
-            // Inert placeholder function
-            onToggleFavorite={() => console.log("Toggle not yet implemented.")}
-          />
+            <ListItem
+              key={restaurant.id}
+              item={restaurant}
+              type="restaurant"
+              // Use mustSeeIds for initial 'favorite' state display
+              isMustSee={mustSeeIds.includes(restaurant.id)}
+              // Inert placeholder function
+              onToggleFavorite={() =>
+                console.log("Toggle not yet implemented.")
+              }
+            />
           </article>
         ))}
       </div>
@@ -205,15 +207,15 @@ const RestaurantsList = () => {
                 value={priceLevel}
                 onChange={(e) => setPriceLevel(e.target.value)}
               >
-                <option value="€">€ – Cheap</option>
-                <option value="€€">€€ – Moderate</option>
-                <option value="€€€">€€€ – Expensive</option>
-                <option value="€€€€">€€€€ – Luxury</option>
+                <option value="$">$ – Cheap</option>
+                <option value="$$">$$ – Moderate</option>
+                <option value="$$$">$$$ – Expensive</option>
+                <option value="$$$$">$$$$ – Luxury</option>
               </select>
 
               {/* Expected cost */}
               <label className="text-sm font-medium text-gray-700">
-                Expected cost (EUR)
+                Expected cost (Kr)
               </label>
               <input
                 type="number"

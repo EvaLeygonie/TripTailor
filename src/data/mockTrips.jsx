@@ -21,8 +21,8 @@ export const trips = [
         category: "Landmark",
         address: "C/ Mallorca, 401, 08013 Barcelona, Spain",
         rating: 4.8,
-        priceLevel: "€€",
-        expectedCost: 26, // EUR
+        priceLevel: "$$",
+        expectedCost: 260,
         durationMin: 90,
         openingHours: "09:00–18:00",
         image:
@@ -64,12 +64,12 @@ export const trips = [
         category: "Tapas Bar",
         address: "Av. de Gaudí, 44, 46, L'Eixample, 08025 Barcelona, Spain",
         rating: 4.5,
-        priceLevel: "€€",
+        priceLevel: "$$",
         durationMin: 90,
         openingHours: "08:00–Midnight",
         image:
           "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyC09MTG4o2zfombHQOnXN5F4FSSKOtl8o5mhX605WU3bo-71XY5Bo9UJBaIZDyniAV3k-G8SyY5E03p3rJ_-fROokbQ16ntVWxNO9swkiK7L8RHklznBHxC6rPfvjLeT0RfW9AIF1Bknk3=s1360-w1360-h1020-rw",
-        expectedCost: 35,
+        expectedCost: 350,
       },
     ],
     mustSeeIds: ["a_sagrada", "r_arrosseria_gaudi"],
@@ -115,8 +115,8 @@ export const trips = [
         category: "Nature",
         address: "Tegallalang, Gianyar Regency",
         rating: 4.3,
-        priceLevel: "€",
-        expectedCost: 2, // EUR
+        priceLevel: "$$",
+        expectedCost: 200,
         durationMin: 180,
         openingHours: "Always open",
         image:
@@ -128,8 +128,8 @@ export const trips = [
         category: "Sightseeing",
         address: "Pecatu, South Kuta",
         rating: 4.5,
-        priceLevel: "€",
-        expectedCost: 3,
+        priceLevel: "$$",
+        expectedCost: 30,
         durationMin: 180,
         openingHours: "07:00–19:00",
         image:
@@ -156,12 +156,12 @@ export const trips = [
         category: "Balinese  Cuisine",
         address: "Jl. Suweta No.2, Ubud, Gianyar Regency, Bali, Indonesia",
         rating: 4.6,
-        priceLevel: "€€",
+        priceLevel: "$$$",
         durationMin: 90,
         openingHours: "08:00–22:00",
         image:
           "https://images.unsplash.com/photo-1751110314375-ca26cbbc5a6a?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987",
-        expectedCost: 15,
+        expectedCost: 250,
       },
     ],
     mustSeeIds: ["a_tegalalang", "a_uluwatu", "a_canggu_beach"],
@@ -236,8 +236,8 @@ export const trips = [
         category: "Museum",
         address: "Galärvarvsvägen 14, Djurgården, Stockholm",
         rating: 4.8,
-        priceLevel: "€€",
-        expectedCost: 18, // EUR
+        priceLevel: "$$$",
+        expectedCost: 180,
         durationMin: 150,
         openingHours: "10:00–17:00",
         image:
@@ -249,8 +249,8 @@ export const trips = [
         category: "Entertainment",
         address: "Djurgårdsvägen 68, Stockholm",
         rating: 4.6,
-        priceLevel: "€€",
-        expectedCost: 25,
+        priceLevel: "$$$",
+        expectedCost: 250,
         durationMin: 120,
         openingHours: "10:00–18:00",
         image:
@@ -265,8 +265,8 @@ export const trips = [
         category: "Traditional Swedish",
         address: "Blekingegatan 40, Södermalm, Stockholm",
         rating: 4.5,
-        priceLevel: "€€",
-        expectedCost: 30,
+        priceLevel: "$$$",
+        expectedCost: 300,
         durationMin: 90,
         openingHours: "11:30–23:00",
         image:
@@ -278,8 +278,8 @@ export const trips = [
         category: "Café / Bakery",
         address: "Drottninggatan 55, Stockholm",
         rating: 4.4,
-        priceLevel: "€",
-        expectedCost: 10,
+        priceLevel: "$$",
+        expectedCost: 100,
         durationMin: 60,
         openingHours: "08:00–18:00",
         image:
@@ -318,8 +318,8 @@ export const trips = [
     ],
 
     budget: {
-      total: 8900, // EUR
-      spent: 8750,
+      total: 8900,
+      spent: 8900,
       breakdown: {
         flights: 1200,
         accommodation: 3200,
