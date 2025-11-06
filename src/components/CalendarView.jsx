@@ -18,7 +18,7 @@ export default function CalendarView({ trip }) {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold">{trip.title}</h1>
+      <h1 className="text-2xl font-bold pb-8">Planned activities</h1>
       <p className="text-gray-600 mb-4">
         {trip.dates.start} – {trip.dates.end}
       </p>
