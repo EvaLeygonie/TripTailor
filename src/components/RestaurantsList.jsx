@@ -113,6 +113,11 @@ const RestaurantsList = () => {
 
       <div className="space-y-4">
         {trip.restaurants.map((restaurant) => (
+          <article
+          key={restaurant.id}
+            className="cursor-pointer text-left overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out 
+            hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-gray-50"
+          >
           <ListItem
             key={restaurant.id}
             item={restaurant}
@@ -122,6 +127,7 @@ const RestaurantsList = () => {
             // Inert placeholder function
             onToggleFavorite={() => console.log("Toggle not yet implemented.")}
           />
+          </article>
         ))}
       </div>
 

@@ -1,9 +1,33 @@
-
-import { Star, StarOff, Edit, Trash2, MapPin, Soup } from 'lucide-react'
+import { Star, Edit, Trash2, MapPin, Soup, TreePine, Landmark, Camera, Bath, Coffee, Drama, Amphora } from 'lucide-react'
 
 const ListItem = ({ item, type, isMustSee, onToggleFavorite, onEdit, onDelete }) => {
 
-  const Icon = type === 'attraction' ? MapPin : Soup;
+  const getCategoryIcon = (category) => {
+    if (!category) return MapPin;
+
+    switch (category.toLowerCase()) {
+      case 'nature':
+        return TreePine;
+      case 'landmark':
+        return Landmark;
+      case 'museum':
+        return Amphora;
+      case 'sightseeing':
+        return Camera;
+      case 'entertainment':
+        return Drama;
+      case 'café / bakery':
+      case 'restaurant':
+        return Coffee;
+      case 'relaxation':
+        return Bath;
+      default:
+        return Soup;
+    }
+  };
+
+  const Icon = getCategoryIcon(item.category);
+
 
   return (
     <div className="flex bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 hover:shadow-xl">
@@ -15,7 +39,7 @@ const ListItem = ({ item, type, isMustSee, onToggleFavorite, onEdit, onDelete })
           className="w-full h-full object-cover"
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = `https://placehold.co/128x128/eeeeee/333333?text=${type === 'attraction' ? 'Attr' : 'Rest'}`;
+            e.target.src = `https://placehold.co/128x128/eeeeee/333333?text=${type === 'category' ? 'Landmark' : 'Nature' }`;
           }}
         />
       </div>

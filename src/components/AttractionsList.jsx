@@ -1,8 +1,8 @@
-
 import { Plus } from 'lucide-react'
 import { useParams } from 'react-router-dom'
 import trips from '../data/mockTrips.jsx'
 import ListItem from './ListItem.jsx'
+
 
 const AttractionsList = () => {
   const { id } = useParams()
@@ -36,7 +36,7 @@ const AttractionsList = () => {
         {trip.attractions.map(attraction => (
           <article
             key={attraction.id}
-            className="cursor-pointer overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out 
+            className="cursor-pointer text-left overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out 
             hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-gray-50"
           >
           <ListItem
