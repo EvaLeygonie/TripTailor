@@ -34,6 +34,11 @@ const AttractionsList = () => {
 
       <div className="space-y-4">
         {trip.attractions.map(attraction => (
+          <article
+            key={attraction.id}
+            className="cursor-pointer overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out 
+            hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-gray-50"
+          >
           <ListItem
             key={attraction.id}
             item={attraction}
@@ -43,11 +48,12 @@ const AttractionsList = () => {
             // Inert placeholder function
             onToggleFavorite={() => console.log('Toggle not yet implemented.')}
           />
+          </article>
         ))}
       </div>
 
       {trip.attractions.length === 0 && (
-        <div className="text-center py-8 text-gray-500 italic">
+        <div className="text-center py-8 text-gray-500 italic ">
           No attractions have been added for this trip yet.
         </div>
       )}

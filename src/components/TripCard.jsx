@@ -1,9 +1,21 @@
 import { Calendar, MapPin, DollarSign } from "lucide-react";
 
 export default function TripCard({ trip, onClick }) {
-  const { title, destination, dates, coverImage, tripStatus, budget } = trip;
 
-  const budgetPercentage = (budget.spent / budget.total) * 100;
+  const {
+    title = "No title",
+    destination = { city: "-", country: "-" },
+    dates = { start: "", end: "" },
+    coverImage = "",
+    tripStatus = "planned",
+    budget = { total: 0, spent: 0 },
+  } = trip;
+
+  if (!trip) return null
+
+  const spent = budget?.spent ?? 0;
+  const total = budget?.total ?? 0;
+  const budgetPercentage = total > 0 ? (spent / total) * 100 : 0;
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -17,12 +29,12 @@ export default function TripCard({ trip, onClick }) {
         return "bg-gray-400";
     }
   };
-  
+
   return (
-    <article 
-    onClick={onClick} 
-    className="cursor-pointer overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-white max-w-sm w-full">
-     {/* Image */}
+    <article
+      onClick={onClick}
+      className="cursor-pointer overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-white max-w-sm w-full">
+      {/* Image */}
       <div className="relative h-48 w-full overflow-hidden">
         <img
           src={coverImage}
@@ -71,19 +83,18 @@ export default function TripCard({ trip, onClick }) {
           </div>
           <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full ${
-                budgetPercentage > 100
-                  ? "bg-red-500"
-                  : budgetPercentage > 80
+              className={`h-full rounded-full ${budgetPercentage > 100
+                ? "bg-red-500"
+                : budgetPercentage > 80
                   ? "bg-yellow-500"
                   : "bg-green-500"
-              }`}
+                }`}
               style={{ width: `${Math.min(budgetPercentage, 100)}%` }}
             />
           </div>
         </div>
       </div>
-         {/*<Link to={`/trip/${trip.id}`}
+      {/*<Link to={`/trip/${trip.id}`}
       className="mt-4 inline-block text-center bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
 
         View Details

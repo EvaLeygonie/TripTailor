@@ -1,17 +1,14 @@
 import { Link } from "react-router-dom";
-import trips from "../data/mockTrips";
 import TripCard from "../components/TripCard";
 import { Plus, Map, X } from "lucide-react";
-import { useState } from "react";
-import TripForm from "../components/TripFrom";
+import { useState, useContext } from "react";
+import TripForm from "../components/TripForm";
+import { TripsContext } from "../context/TripsContext"
+
 
 export default function TripsList() {
   const [open, setOpen] = useState(false);
-
-  function handleAddTrip(newTrip) {
-    console.log("New trip submitted", newTrip);
-    setOpen(false); // Close form
-  }
+  const { trips, addTrip } = useContext(TripsContext)
 
   return (
     <section className="trip-list p-4 sm:p-8">
@@ -65,10 +62,14 @@ export default function TripsList() {
                 <X size={20} />
               </button>
             </div>
-            <TripForm onAddTrip={handleAddTrip} />
+            <TripForm
+              onAddTrip={(newTrip) => {
+                addTrip(newTrip)
+                setOpen(false)
+              }} />
           </div>
         </div>
       )}
     </section>
-  );
+  )
 }
