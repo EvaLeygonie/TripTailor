@@ -1,83 +1,84 @@
-import { useState, useContext } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { MapPin, ArrowLeft } from "lucide-react"
-import TabNav from "../components/TabNav"
-import MustSeesList from "../components/MustSeesList"
-import AttractionsList from "../components/AttractionsList"
-import RestaurantsList from "../components/RestaurantsList"
-import PackingList from "../components/PackingList"
-import BudgetView from "../components/BudgetView"
-import trips from "../data/mockTrips"
-import { TripsContext } from "../context/TripsContext"
+import { useState, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { MapPin, ArrowLeft } from "lucide-react";
+import TabNav from "../components/TabNav";
+import MustSeesList from "../components/MustSeesList";
+import AttractionsList from "../components/AttractionsList";
+import RestaurantsList from "../components/RestaurantsList";
+import PackingList from "../components/PackingList";
+import BudgetView from "../components/BudgetView";
+import trips from "../data/mockTrips";
+import { TripsContext } from "../context/TripsContext";
 
 export default function TripDetails() {
-  const [activeTab, setActiveTab] = useState("mustsees")
-  const navigate = useNavigate()
-  const { id } = useParams()
-  const [showConfirmation, setShowConfirmation] = useState(false)
-  const [showRemoveButton, setShowRemoveButton] = useState(true)
+  const [activeTab, setActiveTab] = useState("mustsees");
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showRemoveButton, setShowRemoveButton] = useState(true);
 
-  const { trips: contextTrips, removeTrip } = useContext(TripsContext)
-  const allTrips = [...trips, ...contextTrips]
-  const trip = allTrips.find((t) => t.id === id)
+  const { trips: contextTrips, removeTrip } = useContext(TripsContext);
+  const allTrips = [...trips, ...contextTrips];
+  const trip = allTrips.find((t) => t.id === id);
 
   const handleRemoveClick = () => {
-    setShowConfirmation(true)
-    setShowRemoveButton(false)
-  }
+    setShowConfirmation(true);
+    setShowRemoveButton(false);
+  };
 
   const handleConfirm = () => {
-    removeTrip(id)
-    setShowConfirmation(false)
-    navigate("/")
-  }
+    removeTrip(id);
+    setShowConfirmation(false);
+    navigate("/");
+  };
 
   const handleCancel = () => {
-    setShowConfirmation(false)
-    setShowRemoveButton(true)
-  }
+    setShowConfirmation(false);
+    setShowRemoveButton(true);
+  };
 
   if (!trip) {
-    // Handle case where trip ID is invalid or not found
     return (
       <div className="p-8 text-center text-red-600">
         <h1 className="text-3xl font-bold">404</h1>
         <p>Trip not found! Please check the URL.</p>
-        <button onClick={() => navigate('/')} className="mt-4 text-blue-600 hover:underline">Go to Home</button>
+        <button
+          onClick={() => navigate("/")}
+          className="mt-4 text-blue-600 hover:underline"
+        >
+          Go to Home
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="trip-details flex flex-col h-full">
-
-
-      {/* 2. DYNAMIC HEADER SECTION (Trip Name & Back Button) */}
-      <header className="header flex items-center gap-3 p-4 border-b border-gray-200">
-        <div className="flex items-left gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="p-2 rounded-full hover:bg-gray-100 transition"
-            aria-label="Go back"
-          >
-            <ArrowLeft size={24} />
-          </button>
-          <div>
-            <h2 className="text-xl font-semibold">{trip.title}</h2>
-            <p className="text-gray-600 flex items-center gap-1 text-sm">
-              <MapPin size={16} className="inline-block mr-1" />
-              {trip.destination.city}, {trip.destination.country}
-            </p>
-          </div>
+    <div className="flex flex-col h-screen bg-gray-50">
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-20 flex items-center gap-3 p-3 sm:p-4 bg-white border-b border-gray-200 shadow-sm">
+        <button
+          onClick={() => navigate(-1)}
+          className="p-2 rounded-full hover:bg-gray-100 transition"
+          aria-label="Go back"
+        >
+          <ArrowLeft size={22} />
+        </button>
+        <div>
+          <h2 className="text-lg sm:text-xl font-semibold">{trip.title}</h2>
+          <p className="text-gray-600 flex items-center gap-1 text-sm sm:text-base">
+            <MapPin size={14} className="text-gray-500" />
+            {trip.destination.city}, {trip.destination.country}
+          </p>
         </div>
       </header>
 
-      {/* 3. TAB NAVIGATION */}
-      <TabNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      {/* Tabs */}
+      <div className="border-b border-gray-200 bg-white sticky top-[64px] z-10">
+        <TabNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
 
-      {/* 4. TAB CONTENT AREA */}
-      <div className="tab-content p-4 sm:p-6 flex-grow overflow-y-auto">
-        {/* Conditional Rendering based on activeTab state */}
+      {/* Scrollable Content */}
+      <div className="flex-grow overflow-y-auto p-3 sm:p-6">
         {activeTab === "mustsees" && <MustSeesList trip={trip} />}
         {activeTab === "attractions" && <AttractionsList trip={trip} />}
         {activeTab === "restaurants" && <RestaurantsList trip={trip} />}
@@ -85,32 +86,40 @@ export default function TripDetails() {
         {activeTab === "budget" && <BudgetView trip={trip} />}
       </div>
 
+      {/* Remove Button */}
       {showRemoveButton && (
-        <button //Knapp behöver styling
-          onClick={handleRemoveClick}
-          className="bg-red-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-red-700 transition duration-150 flex items-center gap-2 w-auto mx-auto"
-        >Remove Trip</button>
-      )}
-
-      {showConfirmation && (
-        <div className="mt-4 p-4 bg-gray-100 rounded-lg shadow-inner">
-          <p className="mb-3 py-8">Are you sure you want to delete this trip?</p>
-          <div className="flex gap-3 items-center justify-center">
-            <button
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-
-              onClick={handleConfirm}
-            >Yes</button>
-
-            <button
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              onClick={handleCancel}
-            >no</button>
-          </div>
+        <div className="p-4 bg-white border-t border-gray-200">
+          <button
+            onClick={handleRemoveClick}
+            className="w-full py-3 bg-red-600 text-white font-semibold rounded-lg shadow hover:bg-red-700 active:scale-[0.97] transition-all"
+          >
+            Remove Trip
+          </button>
         </div>
       )}
 
+      {/* Confirmation Box */}
+      {showConfirmation && (
+        <div className="p-5 bg-white border-t border-gray-200">
+          <p className="text-center mb-4 text-gray-700 font-medium">
+            Are you sure you want to delete this trip?
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              className="w-full sm:w-auto bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition"
+              onClick={handleConfirm}
+            >
+              Yes
+            </button>
+            <button
+              className="fixed bottom-5 left-1/2 -translate-x-1/2 w-[90%] sm:static sm:w-auto bg-blue-600 text-white px-5 py-3 rounded-lg shadow-lg hover:bg-blue-700 transition"
+              onClick={handleCancel}
+            >
+              No
+            </button>
+          </div>
+        </div>
+      )}
     </div>
-
-  )
+  );
 }
