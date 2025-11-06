@@ -9,6 +9,7 @@ import { TripsContext } from "../context/TripsContext"
 export default function TripsList() {
   const [open, setOpen] = useState(false);
   const { trips, addTrip } = useContext(TripsContext)
+  const [showToast, setShowToast] = useState(false)
 
   return (
     <section className="trip-list p-4 sm:p-8">
@@ -48,6 +49,14 @@ export default function TripsList() {
         ))}
       </div>
 
+      {showToast && (
+        <div className="fixed top-[3em] right-[3em] z-50">
+          <div className="bg-green-600 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500">
+            The trip has been added!
+          </div>
+        </div>
+      )}
+
       {/* 4. Modal contain TripForm */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
@@ -66,6 +75,9 @@ export default function TripsList() {
               onAddTrip={(newTrip) => {
                 addTrip(newTrip)
                 setOpen(false)
+
+                setShowToast(true)
+                setTimeout(() => setShowToast(false), 2000)
               }} />
           </div>
         </div>
