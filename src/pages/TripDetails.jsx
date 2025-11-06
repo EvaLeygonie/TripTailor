@@ -7,6 +7,7 @@ import AttractionsList from "../components/AttractionsList"
 import RestaurantsList from "../components/RestaurantsList"
 import PackingList from "../components/PackingList"
 import BudgetView from "../components/BudgetView"
+import CalendarView from "../components/CalendarView"
 import trips from "../data/mockTrips"
 import { TripsContext } from "../context/TripsContext"
 
@@ -83,6 +84,7 @@ export default function TripDetails() {
         {activeTab === "restaurants" && <RestaurantsList trip={trip} />}
         {activeTab === "packing" && <PackingList trip={trip} />}
         {activeTab === "budget" && <BudgetView trip={trip} />}
+        {activeTab === "planning" && <CalendarView trip={trip} />}
       </div>
 
       {showRemoveButton && (
