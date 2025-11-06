@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom'
 import trips from '../data/mockTrips.jsx'
 import ListItem from './ListItem.jsx'
 
-
 const AttractionsList = () => {
   const { id } = useParams()
   const trip = trips.find((t) => t.id === id)
