@@ -14,10 +14,28 @@ export default function TripDetails() {
   const [activeTab, setActiveTab] = useState("mustsees")
   const navigate = useNavigate()
   const { id } = useParams()
+  const [showConfirmation, setShowConfirmation] = useState(false)
+  const [showRemoveButton, setShowRemoveButton] = useState(true)
 
   const { trips: contextTrips, removeTrip } = useContext(TripsContext)
   const allTrips = [...trips, ...contextTrips]
   const trip = allTrips.find((t) => t.id === id)
+
+  const handleRemoveClick = () => {
+    setShowConfirmation(true)
+    setShowRemoveButton(false)
+  }
+
+  const handleConfirm = () => {
+    removeTrip(id)
+    setShowConfirmation(false)
+    navigate("/")
+  }
+
+  const handleCancel = () => {
+    setShowConfirmation(false)
+    setShowRemoveButton(true)
+  }
 
   if (!trip) {
     // Handle case where trip ID is invalid or not found
@@ -32,6 +50,7 @@ export default function TripDetails() {
 
   return (
     <div className="trip-details flex flex-col h-full">
+
 
       {/* 2. DYNAMIC HEADER SECTION (Trip Name & Back Button) */}
       <header className="header flex items-center gap-3 p-4 border-b border-gray-200">
@@ -66,13 +85,32 @@ export default function TripDetails() {
         {activeTab === "budget" && <BudgetView trip={trip} />}
       </div>
 
-      <button //Knapp behöver styling
-        onClick={() => {
-          removeTrip(trip.id)
-          navigate("/")
-        }}
-        className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-150 flex items-center gap-2"
-      >Remove Trip</button>
+      {showRemoveButton && (
+        <button //Knapp behöver styling
+          onClick={handleRemoveClick}
+          className="bg-red-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-red-700 transition duration-150 flex items-center gap-2 w-auto mx-auto"
+        >Remove Trip</button>
+      )}
+
+      {showConfirmation && (
+        <div className="mt-4 p-4 bg-gray-100 rounded-lg shadow-inner">
+          <p className="mb-3 py-8">Are you sure you want to delete this trip?</p>
+          <div className="flex gap-3 items-center justify-center">
+            <button
+              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+
+              onClick={handleConfirm}
+            >Yes</button>
+
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              onClick={handleCancel}
+            >no</button>
+          </div>
+        </div>
+      )}
+
     </div>
+
   )
 }
