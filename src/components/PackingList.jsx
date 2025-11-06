@@ -12,12 +12,12 @@ export default function PackingList() {
 
   // Placeholder functions (inert for now)
   const handleAddClick = () => {
-    console.log("Add item.")
+    console.log("Add item")
   }
-  const handleEdit = (category, itemLabel) => console.log(`Edit clicked for: ${itemLabel} in ${category}`);
-  const handleDelete = (category, itemLabel) => console.log(`Delete clicked for: ${itemLabel} in ${category}`);
+  const handleEdit = (category, itemLabel) => console.log(`Edit clicked for: ${itemLabel} in ${category}`)
+  const handleDelete = (category, itemLabel) => console.log(`Delete clicked for: ${itemLabel} in ${category}`)
   // Placeholder for checklist toggle (functionality to be added later)
-  const handleToggleCheck = (category, itemLabel) => console.log(`Toggle clicked for: ${itemLabel} in ${category}`);
+  const handleToggleCheck = (category, itemLabel) => console.log(`Toggle clicked for: ${itemLabel} in ${category}`)
 
   // --- Packing List Calculations (Simplified for structure) ---
   const allItems = trip.packingList.flatMap(category => category.items)
