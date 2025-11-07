@@ -62,7 +62,7 @@ const ListItem = ({ item, type, isMustSee, onToggleFavorite, onEdit, onDelete })
 
         <div className="mt-2 flex space-x-2">
            {/* Edit Button: Stop propagation to prevent conflict with outer click handlers */}
-          <button
+          {onEdit && <button
             onClick={(e) => {
               e.stopPropagation();
               onEdit();
@@ -72,9 +72,10 @@ const ListItem = ({ item, type, isMustSee, onToggleFavorite, onEdit, onDelete })
           >
             <Edit size={18} />
           </button>
+        }
 
            {/* Delete Button: Stop propagation to prevent conflict with outer click handlers */}
-          <button
+          {onDelete && <button
             onClick={(e) => {
               e.stopPropagation();
               onDelete();
@@ -84,6 +85,7 @@ const ListItem = ({ item, type, isMustSee, onToggleFavorite, onEdit, onDelete })
           >
             <Trash2 size={18} />
           </button>
+        }
 
           {/* Toggle Favorite Button: Stop propagation */}
           <button
