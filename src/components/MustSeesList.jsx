@@ -7,19 +7,21 @@ import { TripsContext } from "../context/TripsContext"
 export default function MustSeesList() {
   const { id } = useParams()
 
-  const { trips } = useContext(TripsContext)
+  // Get all necessary functions and data from context
+  const { trips, toggleMustSee } = useContext(TripsContext)
   const ctxTrip = trips.find((t) => t.id === id)
   const fallbackTrip = tripsData.find((t) => t.id === id);
   const trip = ctxTrip || fallbackTrip
 
   const mustSeeIds = trip ? trip.mustSeeIds : []
 
-  const mustSeeAttractions = trip.attractions.filter(attraction =>
+  // Filter must-sees
+  const mustSeeAttractions = trip ? trip.attractions.filter(attraction =>
     mustSeeIds.includes(attraction.id)
-  )
-  const mustSeeRestaurants = trip.restaurants.filter(restaurant =>
+  ) : []
+  const mustSeeRestaurants = trip ? trip.restaurants.filter(restaurant =>
     mustSeeIds.includes(restaurant.id)
-  )
+  ) : []
   const totalMustSees = mustSeeAttractions.length + mustSeeRestaurants.length
 
   if (!trip) {
@@ -30,12 +32,10 @@ export default function MustSeesList() {
     );
   }
 
-  // --- Placeholder för favoritfunktion (ska uppdateras senare) ---
+  // Handle Toggle Favorite
   const handleToggleFavorite = (itemId) => {
-    console.log(`Toggling favorite status for item ID: ${itemId}.`);
-    // NOTE: Här kommer funktionen för att uppdatera state/Local Storage senare
+    toggleMustSee(trip.id, itemId);
   };
-  // -----------------------------------------------------------
 
   return (
     <div className="p-4 bg-gray-50 rounded-xl shadow-lg mt-6">
@@ -43,8 +43,7 @@ export default function MustSeesList() {
         <h2 className="text-2xl font-semibold text-gray-800">Your Must-Sees</h2>
       </div>
 
-          {totalMustSees === 0 && (
-        // Styling: Clear message when the list is empty
+      {totalMustSees === 0 && (
         <div className="text-center py-10 bg-gray-50 rounded-lg border border-dashed border-gray-200 text-gray-500 italic">
           <p className="text-lg">No Must-See has been added yet.</p>
           <p className="text-sm mt-1">Mark your favorites on the Attractions and Restaurants pages!</p>
@@ -60,14 +59,12 @@ export default function MustSeesList() {
           <div className="space-y-4">
             {mustSeeAttractions.map((item) => (
               <article key={item.id} className="cursor-pointer text-left overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out
-            hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-gray-50">
+            hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-white">
                 <ListItem
                   item={item}
                   type="attraction"
                   isMustSee={true}
                   onToggleFavorite={() => handleToggleFavorite(item.id)}
-                  onEdit={() => console.log(`Edit Must-See ${item.id}`)}
-                  onDelete={() => console.log(`Delete Must-See ${item.id}`)}
                 />
               </article>
             ))}
@@ -84,14 +81,12 @@ export default function MustSeesList() {
           <div className="space-y-4">
             {mustSeeRestaurants.map((item) => (
               <article key={item.id} className="cursor-pointer text-left overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out
-            hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-gray-50">
+            hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-white">
                 <ListItem
                   item={item}
                   type="restaurant"
                   isMustSee={true}
                   onToggleFavorite={() => handleToggleFavorite(item.id)}
-                  onEdit={() => console.log(`Edit Must-See ${item.id}`)}
-                  onDelete={() => console.log(`Delete Must-See ${item.id}`)}
                 />
               </article>
             ))}
