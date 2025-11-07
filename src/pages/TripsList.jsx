@@ -25,7 +25,7 @@ export default function TripsList() {
     <section className="trip-list p-4 sm:p-8">
       {/* 1. APP LOGO/BRANDING SECTION */}
       <header className="app-branding flex items-center gap-3 py-4 border-b border-gray-200">
-        <Map size={32} className="text-blue-600" /> {/* Placeholder Icon */}
+        <Map size={32} className="text-violet-700" /> {/* Placeholder Icon */}
         <div>
           <h1 className="text-2xl font-bold">TripTailor</h1>
           <p className="text-gray-500 text-sm">Your personal travel planner</p>
@@ -43,7 +43,7 @@ export default function TripsList() {
 
         <button
           onClick={() => setOpen(true)}
-          className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-150 flex items-center gap-2"
+          className="bg-gradient-to-b from-violet-500 to-violet-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:from-violet-600 hover:to-violet-800 transition-all duration-200 flex items-center gap-2"
         >
           <Plus size={20} />
           Plan New Trip

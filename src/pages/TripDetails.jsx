@@ -39,46 +39,51 @@ export default function TripDetails() {
   }
 
   if (!trip) {
-    // Handle case where trip ID is invalid or not found
     return (
-      <div className="p-8 text-center text-red-600">
+      <div className="p-8 text-center text-red-600 min-h-screen">
         <h1 className="text-3xl font-bold">404</h1>
         <p>Trip not found! Please check the URL.</p>
-        <button onClick={() => navigate('/')} className="mt-4 text-blue-600 hover:underline">Go to Home</button>
+        <button
+          onClick={() => navigate('/')}
+          className="mt-4 bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700"
+        >
+          Go to Home
+        </button>
       </div>
-    );
+    )
   }
 
   return (
-    <div className="trip-details flex flex-col h-full">
+    <section className="trip-details p-4 sm:p-8 py-6 min-h-screen flex flex-col">
+      {/* HEADER (Back + Destination info) */}
+      {/* HEADER */}
+      <header className="flex items-center gap-3 py-4 border-b border-gray-200 bg-white sticky top-0 z-30">
+        <button
+          onClick={() => navigate(-1)}
+          className="p-2 rounded-full hover:bg-gray-100 transition"
+          aria-label="Go back"
+        >
+          <ArrowLeft size={24} />
+        </button>
 
-
-      {/* 2. DYNAMIC HEADER SECTION (Trip Name & Back Button) */}
-      <header className="header flex items-center gap-3 p-4 border-b border-gray-200">
-        <div className="flex items-left gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="p-2 rounded-full hover:bg-gray-100 transition"
-            aria-label="Go back"
-          >
-            <ArrowLeft size={24} />
-          </button>
-          <div>
-            <h2 className="text-xl font-semibold">{trip.title}</h2>
-            <p className="text-gray-600 flex items-center gap-1 text-sm">
-              <MapPin size={16} className="inline-block mr-1" />
-              {trip.destination.city}, {trip.destination.country}
-            </p>
-          </div>
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{trip.title}</h2>
+          <p className="text-gray-600 flex items-center gap-1 text-sm sm:text-base">
+            <MapPin size={16} />
+            {trip.destination.city}, {trip.destination.country}
+          </p>
         </div>
       </header>
 
-      {/* 3. TAB NAVIGATION */}
-      <TabNav activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* 4. TAB CONTENT AREA */}
-      <div className="tab-content p-4 sm:p-6 flex-grow overflow-y-auto">
-        {/* Conditional Rendering based on activeTab state */}
+      {/* TABS */}
+      <div className="mt-4 sticky top-[70px] z-10 pb-2 border-b border-gray-200  bg-white">
+        <TabNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
+
+
+      {/* TAB CONTENT */}
+      <div className="tab-content mt-6 flex-grow p-4 sm:p-6 bg-white rounded-2xl shadow-sm overflow-y-auto">
         {activeTab === "mustsees" && <MustSeesList trip={trip} />}
         {activeTab === "attractions" && <AttractionsList trip={trip} />}
         {activeTab === "restaurants" && <RestaurantsList trip={trip} />}
@@ -87,32 +92,43 @@ export default function TripDetails() {
         {activeTab === "planning" && <CalendarView trip={trip} />}
       </div>
 
-      {showRemoveButton && (
-        <button //Knapp behöver styling
-          onClick={handleRemoveClick}
-          className="bg-red-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-red-700 transition duration-150 flex items-center gap-2 w-auto mx-auto"
-        >Remove Trip</button>
-      )}
+      {/* REMOVE TRIP SECTION */}
+      <div className="mt-8 text-center">
+        {showRemoveButton && (
+          <button
+            onClick={handleRemoveClick}
+            className="bg-red-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-red-700 transition duration-150 inline-flex items-center gap-2"
+          >
+            Remove Trip
+          </button>
+        )}
 
-      {showConfirmation && (
-        <div className="mt-4 p-4 bg-gray-100 rounded-lg shadow-inner">
-          <p className="mb-3 py-8">Are you sure you want to delete this trip?</p>
-          <div className="flex gap-3 items-center justify-center">
-            <button
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+        {showConfirmation && (
+          <div className="mt-4 p-6 bg-gray-100 rounded-lg shadow-inner inline-block">
+            <p className="mb-4 text-gray-800 font-medium">
+              Are you sure you want to delete this trip?
+            </p>
+            <div className="flex gap-3 items-center justify-center">
+              {/* Confirm (Yes) */}
+              <button
+                className="bg-gradient-to-b from-red-500 to-red-700 text-white px-4 py-2 rounded-md font-medium shadow-sm hover:from-red-600 hover:to-red-800 transition-all duration-200"
+                onClick={handleConfirm}
+              >
+                Yes
+              </button>
 
-              onClick={handleConfirm}
-            >Yes</button>
-
-            <button
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              onClick={handleCancel}
-            >no</button>
+              {/* Cancel (No) */}
+              <button
+                className="bg-gradient-to-b from-violet-500 to-violet-700 text-white px-4 py-2 rounded-md font-medium shadow-sm hover:from-violet-600 hover:to-violet-800 transition-all duration-200"
+                onClick={handleCancel}
+              >
+                No
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-    </div>
-
+      </div>
+    </section>
   )
 }
