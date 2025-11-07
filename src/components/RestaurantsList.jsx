@@ -9,15 +9,21 @@ import { TripsContext } from "../context/TripsContext";
 const RestaurantsList = () => {
   const { id } = useParams();
 
-  const { trips, addRestaurant } = useContext(TripsContext);
+  const { trips, addRestaurant, editRestaurant, removeRestaurant, toggleMustSee } = useContext(TripsContext);
   const ctxTrip = trips.find((t) => t.id === id);
   const fallbackTrip = tripsData.find((t) => t.id === id);
   const trip = ctxTrip || fallbackTrip;
+
+  //Confirm delete
+  const [showConfirmation, setShowConfirmation] = useState(false)
+  const [itemToDeleteId, setItemToDeleteId] = useState(null);
 
   const mustSeeIds = trip ? trip.mustSeeIds : [];
 
   // Modal Add
   const [open, setOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingItemId, setEditingItemId] = useState(null);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [rating, setRating] = useState("");
@@ -53,14 +59,63 @@ const RestaurantsList = () => {
     "Dessert",
   ];
 
-  const handleAddClick = () => {
-    setError("");
+  // Helper to reset all form fields
+  const resetForm = () => {
     setName("");
     setCategory("");
+    setRating("");
+    setPriceLevel("$$");
+    setExpectedCost("");
+    setDurationMin("");
+    setOpeningHours("");
     setSelectedImage(coverImages[0]?.url || "");
+    setEditingItemId(null);
+    setIsEditing(false);
+    setError("");
+    setSaving(false);
+  }
+
+  const handleAddClick = () => {
+    resetForm();
     setOpen(true);
   };
 
+  // NEW: Handle Edit: Set state to 'Edit' mode and populate fields
+  const handleEditClick = (item) => {
+    setIsEditing(true);
+    setEditingItemId(item.id);
+    setName(item.title || "");
+    setCategory(item.category || "");
+    setRating(item.rating || "");
+    setPriceLevel(item.priceLevel || "$$");
+    setExpectedCost(item.expectedCost || "");
+    setDurationMin(item.durationMin || "");
+    setOpeningHours(item.openingHours || "");
+    setSelectedImage(item.image || coverImages[0]?.url);
+    setError("");
+    setOpen(true);
+  }
+
+  // NEW: Handle Delete
+  const handleDeleteClick = (itemId) => {
+    setItemToDeleteId(itemId);
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (itemToDeleteId) {
+      removeRestaurant(trip.id, itemToDeleteId);
+    }
+    setItemToDeleteId(null);
+    setShowConfirmation(false);
+  }
+
+  const handleCancelDelete = () => {
+    setItemToDeleteId(null);
+    setShowConfirmation(false);
+  }
+
+  // Handle Form Submission (Add or Edit)
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name.trim()) {
@@ -68,35 +123,40 @@ const RestaurantsList = () => {
       return;
     }
     setSaving(true);
-    try {
-      const newRestaurant = {
-        id: `r_${Date.now()}`,
-        title: name.trim(),
-        category: category.trim() || "Restaurant",
-        address: "",
-        rating: rating ? parseFloat(rating) : null,
-        priceLevel,
-        expectedCost: expectedCost ? parseFloat(expectedCost) : 0,
-        durationMin: durationMin ? parseInt(durationMin) : 90,
-        openingHours: openingHours || "",
-        image: selectedImage,
-      };
 
-      addRestaurant(trip.id, newRestaurant);
-      // Reset form
-      setName("");
-      setCategory("Restaurant");
-      setRating("");
-      setPriceLevel("€€");
-      setExpectedCost("");
-      setDurationMin("");
-      setOpeningHours("");
-      setSelectedImage(coverImages[0]?.url || "");
+    const itemData = {
+      title: name.trim(),
+      category: category.trim() || "Restaurant",
+      address: "", // Address not in form, keeping it empty/static
+      rating: rating ? parseFloat(rating) : null,
+      priceLevel,
+      expectedCost: expectedCost ? parseFloat(expectedCost) : 0,
+      durationMin: durationMin ? parseInt(durationMin) : 90,
+      openingHours: openingHours || "",
+      image: selectedImage,
+    };
+
+    try {
+      if (isEditing && editingItemId) {
+        // EDIT MODE
+        editRestaurant(trip.id, editingItemId, itemData);
+      } else {
+        // ADD MODE
+        const newRestaurant = {
+          ...itemData,
+          id: `r_${Date.now()}`, // Generate unique ID only for new items
+        };
+        addRestaurant(trip.id, newRestaurant);
+      }
+
+      resetForm();
       setOpen(false);
     } finally {
       setSaving(false);
     }
   };
+
+  const restaurantToDelete = trip.restaurants.find(r => r.id === itemToDeleteId);
 
   return (
     <div className="p-4 bg-gray-50 rounded-xl shadow-lg mt-6">
@@ -115,7 +175,7 @@ const RestaurantsList = () => {
         {trip.restaurants.map((restaurant) => (
           <article
             key={restaurant.id}
-            className="cursor-pointer text-left overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out 
+            className="cursor-pointer text-left overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out
             hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-gray-50"
           >
             <ListItem
@@ -124,10 +184,11 @@ const RestaurantsList = () => {
               type="restaurant"
               // Use mustSeeIds for initial 'favorite' state display
               isMustSee={mustSeeIds.includes(restaurant.id)}
-              // Inert placeholder function
-              onToggleFavorite={() =>
-                console.log("Toggle not yet implemented.")
-              }
+              // Connect Toggle Favorite funciton
+              onToggleFavorite={() => toggleMustSee(trip.id, restaurant.id)}
+              // Connect Edit/Delete handlers
+              onEdit={() => handleEditClick(restaurant)}
+              onDelete={() => handleDeleteClick(restaurant.id)}
             />
           </article>
         ))}
@@ -138,12 +199,13 @@ const RestaurantsList = () => {
           No restaurants have been added for this trip yet.
         </div>
       )}
-      {/* ===== Modal Add Restaurant ===== */}
+      {/* ===== Modal Add/Edit Restaurant (Logic updated to handle both) ===== */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-lg max-h-[90vh] overflow-y-auto">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Add Restaurant</h3>
+              {/* Dynamic Modal Title */}
+              <h3 className="text-lg font-semibold">{isEditing ? "Edit Restaurant" : "Add Restaurant"}</h3>
               <button
                 onClick={() => setOpen(false)}
                 className="rounded-md p-1 hover:bg-gray-100"
@@ -154,10 +216,10 @@ const RestaurantsList = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="grid gap-3">
+              {/* Form Fields are unchanged, but now use and update state correctly for both modes */}
+
               {/* Name */}
-              <label className="text-sm font-medium text-gray-700">
-                Restaurant name
-              </label>
+              <label className="text-sm font-medium text-gray-700">Restaurant name</label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g. La Piadina,..."
@@ -167,9 +229,7 @@ const RestaurantsList = () => {
               />
 
               {/* Category */}
-              <label className="text-sm font-medium text-gray-700">
-                Category
-              </label>
+              <label className="text-sm font-medium text-gray-700">Category</label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g. Café / Tapas Bar / Bakery..."
@@ -184,9 +244,7 @@ const RestaurantsList = () => {
               </datalist>
 
               {/* Rating */}
-              <label className="text-sm font-medium text-gray-700">
-                Rating (1–5)
-              </label>
+              <label className="text-sm font-medium text-gray-700">Rating (1–5)</label>
               <input
                 type="number"
                 min="1"
@@ -199,9 +257,7 @@ const RestaurantsList = () => {
               />
 
               {/* Price level */}
-              <label className="text-sm font-medium text-gray-700">
-                Price level
-              </label>
+              <label className="text-sm font-medium text-gray-700">Price level</label>
               <select
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={priceLevel}
@@ -214,9 +270,7 @@ const RestaurantsList = () => {
               </select>
 
               {/* Expected cost */}
-              <label className="text-sm font-medium text-gray-700">
-                Expected cost (Kr)
-              </label>
+              <label className="text-sm font-medium text-gray-700">Expected cost (Kr)</label>
               <input
                 type="number"
                 min="0"
@@ -227,9 +281,7 @@ const RestaurantsList = () => {
               />
 
               {/* Duration */}
-              <label className="text-sm font-medium text-gray-700">
-                Typical duration (minutes)
-              </label>
+              <label className="text-sm font-medium text-gray-700">Typical duration (minutes)</label>
               <input
                 type="number"
                 min="0"
@@ -240,9 +292,7 @@ const RestaurantsList = () => {
               />
 
               {/* Opening hours */}
-              <label className="text-sm font-medium text-gray-700">
-                Opening hours
-              </label>
+              <label className="text-sm font-medium text-gray-700">Opening hours</label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g. 08:00–23:00"
@@ -251,9 +301,7 @@ const RestaurantsList = () => {
               />
 
               {/* Image selector from mockImages */}
-              <label className="text-sm font-medium text-gray-700">
-                Select image
-              </label>
+              <label className="text-sm font-medium text-gray-700">Select image</label>
               <div className="grid grid-cols-3 gap-2">
                 {coverImages.map((img) => (
                   <img
@@ -286,10 +334,36 @@ const RestaurantsList = () => {
                   className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
                   disabled={saving || !name.trim()}
                 >
-                  {saving ? "Adding..." : "Add"}
+                  {saving ? (isEditing ? "Saving..." : "Adding...") : (isEditing ? "Save Changes" : "Add")}
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+    {/* ===== 2. Custom Delete Confirmation Modal (Global Overlay) ===== */}
+      {showConfirmation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl text-center">
+            <h3 className="text-lg font-bold text-red-600 mb-3">Confirm Deletion</h3>
+            <p className="mb-6 text-gray-700">
+              Are you sure you want to delete **{restaurantToDelete?.title || 'this item'}**? This cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-center">
+              <button
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg font-medium hover:bg-gray-400 transition"
+                onClick={handleCancelDelete}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition"
+                onClick={handleConfirmDelete}
+              >
+                Yes, Delete
+              </button>
+            </div>
           </div>
         </div>
       )}

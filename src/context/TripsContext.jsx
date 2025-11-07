@@ -1,16 +1,18 @@
-// TripsContext.jsx
 import { createContext, useState, useEffect } from "react";
 import mockTrips from "../data/mockTrips";
 
 const TripsContext = createContext({
-  trips: [], // Use an array for trips
+  trips: [],
   setTrips: () => {},
   addTrip: () => {},
   removeTrip: () => {},
   addAttraction: () => {},
   removeAttraction: () => {},
+  editAttraction: () => {},
   addRestaurant: () => {},
   removeRestaurant: () => {},
+  editRestaurant: () => {},
+  toggleMustSee: () => {},
   addBreakdownItem: () => {},
   setBreakdownValue: () => {},
   renameBreakdownCategory: () => {},
@@ -43,6 +45,7 @@ export function TripsProvider({ children }) {
     const updatedTrips = trips.filter((trip) => trip.id !== id);
     setTrips(updatedTrips);
     localStorage.setItem("trips", JSON.stringify(updatedTrips));
+    setTrips((prev) => prev.filter((trip) => trip.id !== id));
   };
 
   const addAttraction = (tripId, attraction) => {
@@ -99,6 +102,60 @@ export function TripsProvider({ children }) {
     });
     setTrips(updatedTrips);
     localStorage.setItem("trips", JSON.stringify(updatedTrips));
+  };
+
+  // NEW: Universal Edit Function for Attraction or Restaurant
+  const editItem = (tripId, itemId, updatedFields) => {
+    patchTrip(tripId, (t) => {
+      let updatedTrip = t;
+
+      // 1. Check Attractions
+      const attractionIndex = t.attractions.findIndex(a => a.id === itemId);
+      if (attractionIndex !== -1) {
+        const updatedAttractions = [...t.attractions];
+        updatedAttractions[attractionIndex] = {
+          ...updatedAttractions[attractionIndex],
+          ...updatedFields,
+        };
+        updatedTrip = { ...t, attractions: updatedAttractions };
+        return updatedTrip;
+      }
+
+      // 2. Check Restaurants
+      const restaurantIndex = t.restaurants.findIndex(r => r.id === itemId);
+      if (restaurantIndex !== -1) {
+        const updatedRestaurants = [...t.restaurants];
+        updatedRestaurants[restaurantIndex] = {
+          ...updatedRestaurants[restaurantIndex],
+          ...updatedFields,
+        };
+        updatedTrip = { ...t, restaurants: updatedRestaurants };
+        return updatedTrip;
+      }
+
+      return t; // If item not found, return trip unchanged
+    });
+  };
+
+  const editAttraction = (tripId, attractionId, updatedFields) => editItem(tripId, attractionId, updatedFields);
+  const editRestaurant = (tripId, restaurantId, updatedFields) => editItem(tripId, restaurantId, updatedFields);
+
+  // NEW: Toggle Must-See (Favorite) status
+  const toggleMustSee = (tripId, itemId) => {
+    patchTrip(tripId, (t) => {
+      const isCurrentlyMustSee = t.mustSeeIds.includes(itemId);
+
+      let newMustSeeIds;
+      if (isCurrentlyMustSee) {
+        // Remove item from mustSeeIds
+        newMustSeeIds = t.mustSeeIds.filter(id => id !== itemId);
+      } else {
+        // Add item to mustSeeIds
+        newMustSeeIds = [...t.mustSeeIds, itemId];
+      }
+
+      return { ...t, mustSeeIds: newMustSeeIds };
+    });
   };
 
   // ---- Budget: breakdown CRUD ----
@@ -179,8 +236,11 @@ export function TripsProvider({ children }) {
     removeTrip,
     addAttraction,
     removeAttraction,
+    editAttraction,
     addRestaurant,
     removeRestaurant,
+    editRestaurant,
+    toggleMustSee,
     addBreakdownItem,
     setBreakdownValue,
     renameBreakdownCategory,
@@ -197,4 +257,4 @@ export function TripsProvider({ children }) {
   );
 }
 
-export { TripsContext }; // Export the context itself for use in components
+export { TripsContext };

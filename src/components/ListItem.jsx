@@ -28,7 +28,6 @@ const ListItem = ({ item, type, isMustSee, onToggleFavorite, onEdit, onDelete })
 
   const Icon = getCategoryIcon(item.category);
 
-
   return (
     <div className="flex bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 hover:shadow-xl">
 
@@ -62,25 +61,36 @@ const ListItem = ({ item, type, isMustSee, onToggleFavorite, onEdit, onDelete })
         </div>
 
         <div className="mt-2 flex space-x-2">
+           {/* Edit Button: Stop propagation to prevent conflict with outer click handlers */}
           <button
-            onClick={onEdit}
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit();
+            }}
             className="p-1 rounded-full text-blue-600 hover:bg-blue-100 transition duration-150"
             title="Edit Item"
           >
             <Edit size={18} />
           </button>
 
+           {/* Delete Button: Stop propagation to prevent conflict with outer click handlers */}
           <button
-            onClick={onDelete}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
             className="p-1 rounded-full text-red-600 hover:bg-red-100 transition duration-150"
             title="Delete Item"
           >
             <Trash2 size={18} />
           </button>
 
-          {/* Toggle Favorite Button */}
+          {/* Toggle Favorite Button: Stop propagation */}
           <button
-            onClick={onToggleFavorite}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite();
+            }}
             className={`p-1 rounded-full transition duration-150 ${isMustSee ? 'text-yellow-500 hover:text-yellow-600' : 'text-gray-400 hover:text-yellow-400'}`}
             title={isMustSee ? "Remove from Must-See" : "Add to Must-See"}
           >
