@@ -1,6 +1,5 @@
-import { createContext, useState, useEffect } from "react";
-import mockTrips from "../data/mockTrips";
-
+import { createContext, useEffect, useState } from "react";
+import mockTrips from "../data/mockTrips.jsx";
 const TripsContext = createContext({
   trips: [],
   setTrips: () => {},
@@ -8,11 +7,13 @@ const TripsContext = createContext({
   removeTrip: () => {},
   addAttraction: () => {},
   removeAttraction: () => {},
-  editAttraction: () => {},
   addRestaurant: () => {},
   removeRestaurant: () => {},
-  editRestaurant: () => {},
-  toggleMustSee: () => {},
+  addExpense: () => {},
+  editExpense: () => {},
+  removeExpense: () => {},
+  setBudgetTotal: () => {},
+  setExpensePaid: () => {},
   addBreakdownItem: () => {},
   setBreakdownValue: () => {},
   renameBreakdownCategory: () => {},
@@ -22,212 +23,238 @@ const TripsContext = createContext({
   setPlannedTotal: () => {},
 });
 
+export { TripsContext };
+function normalizeBudget(trip) {
+  const b = trip.budget || {};
+  if (Array.isArray(b.expenses)) {
+    return {
+      ...trip,
+      budget: {
+        total: Number(b.total || 0),
+        expenses: (b.expenses || []).map((e) => ({
+          ...e,
+          id: e.id || crypto.randomUUID(),
+          amount: Number(e.amount || 0),
+          isPaid: typeof e.isPaid === "boolean" ? e.isPaid : false,
+        })),
+      },
+    };
+  }
+  const bd = b.breakdown || {};
+  const expenses = Object.entries(bd).map(([k, v]) => ({
+    id: crypto.randomUUID(),
+    title:
+      k === "flights"
+        ? "Flights"
+        : k === "accommodation"
+        ? "Accommodation"
+        : k === "food"
+        ? "Food & Drinks"
+        : k === "transport"
+        ? "Local transport"
+        : k === "activities"
+        ? "Activities"
+        : "Other",
+    amount: Number(v || 0),
+    category:
+      k === "flights"
+        ? "Transport"
+        : k === "accommodation"
+        ? "Accommodation"
+        : k === "food"
+        ? "Food & Drinks"
+        : k === "transport"
+        ? "Transport"
+        : k === "activities"
+        ? "Activities"
+        : "Other",
+    isPaid: false,
+  }));
+  return { ...trip, budget: { total: Number(b.total || 0), expenses } };
+}
 export function TripsProvider({ children }) {
   const [trips, setTrips] = useState(() => {
-    const savedTrips = localStorage.getItem("trips");
-    return savedTrips ? JSON.parse(savedTrips) : mockTrips;
+    const saved = localStorage.getItem("trips");
+    const base = saved ? JSON.parse(saved) : mockTrips;
+    return base.map(normalizeBudget);
   });
 
   useEffect(() => {
     localStorage.setItem("trips", JSON.stringify(trips));
   }, [trips]);
 
-  // Liten hjälpare för att uppdatera en specifik resa
   function patchTrip(tripId, updater) {
     setTrips((prev) => prev.map((t) => (t.id === tripId ? updater(t) : t)));
   }
 
-  const addTrip = (newTrip) => {
-    setTrips((prev) => [...prev, newTrip]);
-  };
-
-  const removeTrip = (id) => {
-    const updatedTrips = trips.filter((trip) => trip.id !== id);
-    setTrips(updatedTrips);
-    localStorage.setItem("trips", JSON.stringify(updatedTrips));
+  const addTrip = (newTrip) =>
+    setTrips((prev) => [...prev, normalizeBudget(newTrip)]);
+  const removeTrip = (id) =>
     setTrips((prev) => prev.filter((trip) => trip.id !== id));
-  };
 
-  const addAttraction = (tripId, attraction) => {
-    const updatedTrips = trips.map((trip) => {
-      if (trip.id === tripId) {
-        return {
-          ...trip,
-          attractions: [...trip.attractions, attraction],
-        };
-      }
-      return trip;
-    });
-    setTrips(updatedTrips);
-    localStorage.setItem("trips", JSON.stringify(updatedTrips));
-  };
-
-  const removeAttraction = (tripId, attractionId) => {
-    const updatedTrips = trips.map((trip) => {
-      if (trip.id === tripId) {
-        return {
-          ...trip,
-          attractions: trip.attractions.filter((a) => a.id !== attractionId),
-        };
-      }
-      return trip;
-    });
-    setTrips(updatedTrips);
-    localStorage.setItem("trips", JSON.stringify(updatedTrips));
-  };
-
-  const addRestaurant = (tripId, restaurant) => {
-    const updatedTrips = trips.map((trip) => {
-      if (trip.id === tripId) {
-        return {
-          ...trip,
-          restaurants: [...trip.restaurants, restaurant],
-        };
-      }
-      return trip;
-    });
-    setTrips(updatedTrips);
-    localStorage.setItem("trips", JSON.stringify(updatedTrips));
-  };
-
-  const removeRestaurant = (tripId, restaurantId) => {
-    const updatedTrips = trips.map((trip) => {
-      if (trip.id === tripId) {
-        return {
-          ...trip,
-          restaurants: trip.restaurants.filter((r) => r.id !== restaurantId),
-        };
-      }
-      return trip;
-    });
-    setTrips(updatedTrips);
-    localStorage.setItem("trips", JSON.stringify(updatedTrips));
-  };
-
-  // NEW: Universal Edit Function for Attraction or Restaurant
-  const editItem = (tripId, itemId, updatedFields) => {
-    patchTrip(tripId, (t) => {
-      let updatedTrip = t;
-
-      // 1. Check Attractions
-      const attractionIndex = t.attractions.findIndex(a => a.id === itemId);
-      if (attractionIndex !== -1) {
-        const updatedAttractions = [...t.attractions];
-        updatedAttractions[attractionIndex] = {
-          ...updatedAttractions[attractionIndex],
-          ...updatedFields,
-        };
-        updatedTrip = { ...t, attractions: updatedAttractions };
-        return updatedTrip;
-      }
-
-      // 2. Check Restaurants
-      const restaurantIndex = t.restaurants.findIndex(r => r.id === itemId);
-      if (restaurantIndex !== -1) {
-        const updatedRestaurants = [...t.restaurants];
-        updatedRestaurants[restaurantIndex] = {
-          ...updatedRestaurants[restaurantIndex],
-          ...updatedFields,
-        };
-        updatedTrip = { ...t, restaurants: updatedRestaurants };
-        return updatedTrip;
-      }
-
-      return t; // If item not found, return trip unchanged
-    });
-  };
-
-  const editAttraction = (tripId, attractionId, updatedFields) => editItem(tripId, attractionId, updatedFields);
-  const editRestaurant = (tripId, restaurantId, updatedFields) => editItem(tripId, restaurantId, updatedFields);
-
-  // NEW: Toggle Must-See (Favorite) status
-  const toggleMustSee = (tripId, itemId) => {
-    patchTrip(tripId, (t) => {
-      const isCurrentlyMustSee = t.mustSeeIds.includes(itemId);
-
-      let newMustSeeIds;
-      if (isCurrentlyMustSee) {
-        // Remove item from mustSeeIds
-        newMustSeeIds = t.mustSeeIds.filter(id => id !== itemId);
-      } else {
-        // Add item to mustSeeIds
-        newMustSeeIds = [...t.mustSeeIds, itemId];
-      }
-
-      return { ...t, mustSeeIds: newMustSeeIds };
-    });
-  };
-
-  // ---- Budget: breakdown CRUD ----
-
-  // Lägg till/ersätt en kostnadspost i breakdown
-  const addBreakdownItem = (tripId, category, amount) =>
+  const addAttraction = (tripId, attraction) =>
     patchTrip(tripId, (t) => ({
       ...t,
-      budget: {
-        ...(t.budget || {}),
-        breakdown: {
-          ...((t.budget && t.budget.breakdown) || {}),
-          [category]: Number(amount) || 0,
-        },
-      },
+      attractions: [...t.attractions, attraction],
     }));
 
-  // Sätt belopp för befintlig kategori
-  const setBreakdownValue = (tripId, category, amount) =>
-    patchTrip(tripId, (t) => {
-      const bd = { ...((t.budget || {}).breakdown || {}) };
-      if (!(category in bd)) return t;
-      bd[category] = Number(amount) || 0;
-      return { ...t, budget: { ...(t.budget || {}), breakdown: bd } };
-    });
+  const removeAttraction = (tripId, attractionId) =>
+    patchTrip(tripId, (t) => ({
+      ...t,
+      attractions: t.attractions.filter((a) => a.id !== attractionId),
+    }));
 
-  // Byt namn på en kategori
-  const renameBreakdownCategory = (tripId, oldKey, newKey) =>
-    patchTrip(tripId, (t) => {
-      if (!newKey || oldKey === newKey) return t;
-      const bd = { ...((t.budget || {}).breakdown || {}) };
-      if (!(oldKey in bd)) return t;
-      const amount = bd[oldKey];
-      delete bd[oldKey];
-      bd[newKey] = amount;
-      return { ...t, budget: { ...(t.budget || {}), breakdown: bd } };
-    });
+  const addRestaurant = (tripId, restaurant) =>
+    patchTrip(tripId, (t) => ({
+      ...t,
+      restaurants: [...t.restaurants, restaurant],
+    }));
 
-  // Ta bort en kategori
-  const removeBreakdownItem = (tripId, category) =>
-    patchTrip(tripId, (t) => {
-      const bd = { ...((t.budget || {}).breakdown || {}) };
-      delete bd[category];
-      return { ...t, budget: { ...(t.budget || {}), breakdown: bd } };
-    });
+  const removeRestaurant = (tripId, restaurantId) =>
+    patchTrip(tripId, (t) => ({
+      ...t,
+      restaurants: t.restaurants.filter((r) => r.id !== restaurantId),
+    }));
 
-  // Summa spenderat för en resa (summa av breakdown)
-  const getTripSpent = (trip) => {
+  function updateTripBudget(tripId, updater) {
+    patchTrip(tripId, (t) => {
+      const b = t.budget || { total: 0, expenses: [] };
+      const safe = {
+        total: Number(b.total ?? 0),
+        expenses: Array.isArray(b.expenses) ? b.expenses : [],
+      };
+      const next = updater(safe);
+      return { ...t, budget: next };
+    });
+  }
+
+  function addExpense(tripId, expense) {
+    updateTripBudget(tripId, (b) => ({
+      ...b,
+      expenses: [
+        ...b.expenses,
+        {
+          id: crypto.randomUUID(),
+          title: String(expense.title || "").trim(),
+          amount: Number(expense.amount || 0),
+          category: expense.category || "Other",
+          isPaid: !!expense.isPaid,
+        },
+      ],
+    }));
+  }
+
+  function editExpense(tripId, expenseId, patch) {
+    updateTripBudget(tripId, (b) => ({
+      ...b,
+      expenses: b.expenses.map((e) =>
+        e.id === expenseId
+          ? {
+              ...e,
+              ...patch,
+              amount: Number((patch?.amount ?? e.amount) || 0),
+            }
+          : e
+      ),
+    }));
+  }
+
+  function removeExpense(tripId, expenseId) {
+    updateTripBudget(tripId, (b) => ({
+      ...b,
+      expenses: b.expenses.filter((e) => e.id !== expenseId),
+    }));
+  }
+
+  function setBudgetTotal(tripId, total) {
+    updateTripBudget(tripId, (b) => ({ ...b, total: Number(total || 0) }));
+  }
+
+  function setExpensePaid(tripId, expenseId, isPaid) {
+    updateTripBudget(tripId, (b) => ({
+      ...b,
+      expenses: b.expenses.map((e) =>
+        e.id === expenseId ? { ...e, isPaid: !!isPaid } : e
+      ),
+    }));
+  }
+
+  function getTripSpent(trip) {
     if (!trip || !trip.budget) return 0;
-    if (trip.tripStatus === "planned") return 0;
-    return Object.values(trip.budget.breakdown || {}).reduce(
-      (sum, n) => sum + Number(n || 0),
-      0
-    );
-  };
+    const status = trip.tripStatus || "planned";
+    if (status === "planned") return 0;
+    const list = (trip.budget.expenses || []).filter((e) => e.isPaid);
+    return list.reduce((sum, e) => sum + Number(e.amount || 0), 0);
+  }
 
-  // Total spenderat för alla pågående resor
-  const getOngoingSpentTotal = () =>
-    trips
+  function getOngoingSpentTotal() {
+    return trips
       .filter((t) => t.tripStatus === "ongoing")
       .reduce((sum, t) => sum + getTripSpent(t), 0);
+  }
 
-  const setPlannedTotal = (tripId, total) =>
-    patchTrip(tripId, (t) => ({
-      ...t,
-      budget: {
-        ...(t.budget || {}),
-        total: Number(total) || 0,
-      },
-    }));
+  function addBreakdownItem(tripId, category, amount) {
+    const title = String(category || "").trim();
+    const mappedCategory =
+      title.toLowerCase() === "flights"
+        ? "Transport"
+        : title.toLowerCase() === "accommodation"
+        ? "Accommodation"
+        : title.toLowerCase().includes("food")
+        ? "Food & Drinks"
+        : title.toLowerCase().includes("transport")
+        ? "Transport"
+        : title.toLowerCase().includes("activit")
+        ? "Activities"
+        : "Other";
+    addExpense(tripId, {
+      title,
+      amount: Number(amount || 0),
+      category: mappedCategory,
+      isPaid: false,
+    });
+  }
 
-  // 💡 If you load mock data, load it here!
+  function setBreakdownValue(tripId, category, amount) {
+    const title = String(category || "").trim();
+    const trip = trips.find((t) => t.id === tripId);
+    const match = trip?.budget?.expenses?.find((e) => e.title === title);
+    if (match) {
+      editExpense(tripId, match.id, { amount: Number(amount || 0) });
+    } else {
+      addBreakdownItem(tripId, title, amount);
+    }
+  }
+
+  function renameBreakdownCategory(tripId, oldKey, newKey) {
+    const trip = trips.find((t) => t.id === tripId);
+    const exp = trip?.budget?.expenses?.find((e) => e.title === oldKey);
+    if (!exp) return;
+    const mappedCategory =
+      (newKey || "").toLowerCase() === "flights"
+        ? "Transport"
+        : (newKey || "").toLowerCase() === "accommodation"
+        ? "Accommodation"
+        : (newKey || "").toLowerCase().includes("food")
+        ? "Food & Drinks"
+        : (newKey || "").toLowerCase().includes("transport")
+        ? "Transport"
+        : (newKey || "").toLowerCase().includes("activit")
+        ? "Activities"
+        : "Other";
+    editExpense(tripId, exp.id, { title: newKey, category: mappedCategory });
+  }
+
+  function removeBreakdownItem(tripId, category) {
+    const title = String(category || "").trim();
+    const trip = trips.find((t) => t.id === tripId);
+    const match = trip?.budget?.expenses?.find((e) => e.title === title);
+    if (match) removeExpense(tripId, match.id);
+  }
+
+  function setPlannedTotal(tripId, total) {
+    setBudgetTotal(tripId, total);
+  }
 
   const contextValue = {
     trips,
@@ -236,11 +263,13 @@ export function TripsProvider({ children }) {
     removeTrip,
     addAttraction,
     removeAttraction,
-    editAttraction,
     addRestaurant,
     removeRestaurant,
-    editRestaurant,
-    toggleMustSee,
+    addExpense,
+    editExpense,
+    removeExpense,
+    setBudgetTotal,
+    setExpensePaid,
     addBreakdownItem,
     setBreakdownValue,
     renameBreakdownCategory,
@@ -256,5 +285,3 @@ export function TripsProvider({ children }) {
     </TripsContext.Provider>
   );
 }
-
-export { TripsContext };
