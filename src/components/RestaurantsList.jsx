@@ -162,9 +162,10 @@ const RestaurantsList = () => {
     <div className="p-4 bg-gray-50 rounded-xl shadow-lg mt-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-gray-800">Restaurants</h2>
+        
         <button
           onClick={handleAddClick}
-          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition duration-150 ease-in-out"
+          className="bg-gradient-to-b from-violet-500 to-violet-700 text-white flex items-center space-x-2 px-4 py-2 font-medium rounded-lg shadow-md hover:from-violet-600 hover:to-violet-800 transition-all duration-200 ease-in-out"
         >
           <Plus size={20} />
           <span>Add</span>

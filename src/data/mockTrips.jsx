@@ -82,17 +82,53 @@ export const trips = [
     ],
     budget: {
       total: 10900,
-      spent: 0,
-      breakdown: {
-        flights: 3500,
-        accommodation: 3600,
-        food: 1400,
-        transport: 400,
-        activities: 1200,
-        other: 800,
-      },
+      expenses: [
+        {
+          id: "e_flight",
+          title: "Flight tickets",
+          amount: 3500,
+          category: "Transport",
+          isPaid: false,
+        },
+        {
+          id: "e_hotel",
+          title: "Hotel (3 nights)",
+          amount: 3600,
+          category: "Accommodation",
+          isPaid: false,
+        },
+        {
+          id: "e_food",
+          title: "Food & Drinks",
+          amount: 1400,
+          category: "Food & Drinks",
+          isPaid: false,
+        },
+        {
+          id: "e_local_transport",
+          title: "Local transport",
+          amount: 400,
+          category: "Transport",
+          isPaid: false,
+        },
+        {
+          id: "e_activities",
+          title: "Activities",
+          amount: 1200,
+          category: "Activities",
+          isPaid: false,
+        },
+        {
+          id: "e_other",
+          title: "Other",
+          amount: 800,
+          category: "Other",
+          isPaid: false,
+        },
+      ],
     },
   },
+
   {
     id: "t_Bali_2025_11",
     title: " Bali Island Escape",
@@ -189,17 +225,53 @@ export const trips = [
     ],
     budget: {
       total: 11300,
-      spent: 0,
-      breakdown: {
-        flights: 1500,
-        accommodation: 4500,
-        food: 2000,
-        transport: 500,
-        activities: 2000,
-        other: 800,
-      },
+      expenses: [
+        {
+          id: "e_flight",
+          title: "Flights",
+          amount: 1500,
+          category: "Transport",
+          isPaid: false,
+        },
+        {
+          id: "e_hotel",
+          title: "Accommodation",
+          amount: 4500,
+          category: "Accommodation",
+          isPaid: false,
+        },
+        {
+          id: "e_food",
+          title: "Food & Drinks",
+          amount: 2000,
+          category: "Food & Drinks",
+          isPaid: false,
+        },
+        {
+          id: "e_local_transport",
+          title: "Local transport",
+          amount: 500,
+          category: "Transport",
+          isPaid: false,
+        },
+        {
+          id: "e_activities",
+          title: "Activities",
+          amount: 2000,
+          category: "Activities",
+          isPaid: false,
+        },
+        {
+          id: "e_other",
+          title: "Other",
+          amount: 800,
+          category: "Other",
+          isPaid: false,
+        },
+      ],
     },
   },
+
   {
     id: "t_Stockholm_2025_01",
     title: "Stockholm Winter Lights",
@@ -215,7 +287,6 @@ export const trips = [
       { key: "packingList", label: "Packing" },
       { key: "budget", label: "Budget" },
     ],
-
     attractions: [
       {
         id: "a_gamla_stan",
@@ -257,7 +328,6 @@ export const trips = [
           "https://images.unsplash.com/photo-1665060221922-aff438b69d36?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987",
       },
     ],
-
     restaurants: [
       {
         id: "r_pelikan",
@@ -286,9 +356,7 @@ export const trips = [
           "https://images.unsplash.com/photo-1707846396119-630407daf600?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=987",
       },
     ],
-
     mustSeeIds: ["a_gamla_stan", "a_vasa_museum", "a_abba_museum"],
-
     packingList: [
       {
         category: "Clothes",
@@ -316,18 +384,52 @@ export const trips = [
         ],
       },
     ],
-
     budget: {
       total: 8900,
-      spent: 8900,
-      breakdown: {
-        flights: 1200,
-        accommodation: 3200,
-        food: 1800,
-        transport: 700,
-        activities: 1500,
-        other: 500,
-      },
+      expenses: [
+        {
+          id: "e_flight",
+          title: "Flights",
+          amount: 1200,
+          category: "Transport",
+          isPaid: true,
+        },
+        {
+          id: "e_hotel",
+          title: "Accommodation",
+          amount: 3200,
+          category: "Accommodation",
+          isPaid: true,
+        },
+        {
+          id: "e_food",
+          title: "Food & Drinks",
+          amount: 1800,
+          category: "Food & Drinks",
+          isPaid: true,
+        },
+        {
+          id: "e_local_transport",
+          title: "Local transport",
+          amount: 700,
+          category: "Transport",
+          isPaid: true,
+        },
+        {
+          id: "e_activities",
+          title: "Activities",
+          amount: 1500,
+          category: "Activities",
+          isPaid: true,
+        },
+        {
+          id: "e_other",
+          title: "Other",
+          amount: 500,
+          category: "Other",
+          isPaid: true,
+        },
+      ],
     },
   },
 ];
