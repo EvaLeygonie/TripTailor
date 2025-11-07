@@ -107,6 +107,15 @@ export function TripsProvider({ children }) {
       attractions: t.attractions.filter((a) => a.id !== attractionId),
     }));
 
+  // IMPLEMENTERAD: Uppdaterar en befintlig attraktion
+  const editAttraction = (tripId, attractionId, updatedData) =>
+    patchTrip(tripId, (t) => ({
+      ...t,
+      attractions: t.attractions.map((a) =>
+        a.id === attractionId ? { ...a, ...updatedData } : a
+      ),
+    }));
+
   const addRestaurant = (tripId, restaurant) =>
     patchTrip(tripId, (t) => ({
       ...t,
@@ -119,7 +128,16 @@ export function TripsProvider({ children }) {
       restaurants: t.restaurants.filter((r) => r.id !== restaurantId),
     }));
 
-  // --- ÅTERSTÄLLD FUNKTION: toggleMustSee ---
+  // IMPLEMENTERAD: Uppdaterar en befintlig restaurang
+  const editRestaurant = (tripId, restaurantId, updatedData) =>
+    patchTrip(tripId, (t) => ({
+      ...t,
+      restaurants: t.restaurants.map((r) =>
+        r.id === restaurantId ? { ...r, ...updatedData } : r
+      ),
+    }));
+
+  // IMPLEMENTERAD: toggleMustSee
   const toggleMustSee = (tripId, itemId) => {
     patchTrip(tripId, (t) => {
       const mustSeeIds = t.mustSeeIds || [];
@@ -140,7 +158,6 @@ export function TripsProvider({ children }) {
       }
     });
   };
-  // ------------------------------------------
 
   function updateTripBudget(tripId, updater) {
     patchTrip(tripId, (t) => {
@@ -289,10 +306,11 @@ export function TripsProvider({ children }) {
     removeTrip,
     addAttraction,
     removeAttraction,
+    editAttraction, // NU IMPLEMENTERAD
     addRestaurant,
     removeRestaurant,
-    // INKLUDERAD: toggleMustSee
-    toggleMustSee,
+    editRestaurant, // NU IMPLEMENTERAD
+    toggleMustSee,  // NU IMPLEMENTERAD
     addExpense,
     editExpense,
     removeExpense,
