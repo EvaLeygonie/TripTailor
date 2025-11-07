@@ -34,8 +34,12 @@ export default function MustSeesList() {
 
   // Handle Toggle Favorite
   const handleToggleFavorite = (itemId) => {
+    // Toggling the must-see status means removing it from this list.
     toggleMustSee(trip.id, itemId);
   };
+
+  // NOTE: Edit and Delete handlers are no longer needed here
+  // because we won't pass the onEdit or onDelete props to ListItem.
 
   return (
     <div className="p-4 bg-gray-50 rounded-xl shadow-lg mt-6">
@@ -64,7 +68,9 @@ export default function MustSeesList() {
                   item={item}
                   type="attraction"
                   isMustSee={true}
+                  // ONLY passing onToggleFavorite
                   onToggleFavorite={() => handleToggleFavorite(item.id)}
+                  // NOTE: onEdit and onDelete are OMITTED here
                 />
               </article>
             ))}
@@ -86,7 +92,9 @@ export default function MustSeesList() {
                   item={item}
                   type="restaurant"
                   isMustSee={true}
+                  // ONLY passing onToggleFavorite
                   onToggleFavorite={() => handleToggleFavorite(item.id)}
+                  // NOTE: onEdit and onDelete are OMITTED here
                 />
               </article>
             ))}

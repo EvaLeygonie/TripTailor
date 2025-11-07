@@ -8,7 +8,10 @@ const TripsContext = createContext({
   addAttraction: () => {},
   removeAttraction: () => {},
   addRestaurant: () => {},
+  editAttraction: () => {},
   removeRestaurant: () => {},
+  editRestaurant: () => {},
+  toggleMustSee: () => {},
   addExpense: () => {},
   editExpense: () => {},
   removeExpense: () => {},
@@ -115,6 +118,29 @@ export function TripsProvider({ children }) {
       ...t,
       restaurants: t.restaurants.filter((r) => r.id !== restaurantId),
     }));
+
+  // --- ÅTERSTÄLLD FUNKTION: toggleMustSee ---
+  const toggleMustSee = (tripId, itemId) => {
+    patchTrip(tripId, (t) => {
+      const mustSeeIds = t.mustSeeIds || [];
+      const isMustSee = mustSeeIds.includes(itemId);
+
+      if (isMustSee) {
+        // Ta bort objektet från mustSeeIds
+        return {
+          ...t,
+          mustSeeIds: mustSeeIds.filter((id) => id !== itemId),
+        };
+      } else {
+        // Lägg till objektet i mustSeeIds
+        return {
+          ...t,
+          mustSeeIds: [...mustSeeIds, itemId],
+        };
+      }
+    });
+  };
+  // ------------------------------------------
 
   function updateTripBudget(tripId, updater) {
     patchTrip(tripId, (t) => {
@@ -265,6 +291,8 @@ export function TripsProvider({ children }) {
     removeAttraction,
     addRestaurant,
     removeRestaurant,
+    // INKLUDERAD: toggleMustSee
+    toggleMustSee,
     addExpense,
     editExpense,
     removeExpense,
