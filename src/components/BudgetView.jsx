@@ -1,8 +1,5 @@
-// components/BudgetView.jsx
 import { useContext, useEffect, useMemo, useState } from "react";
 import { TripsContext } from "../context/TripsContext";
-
-// Svensk kommentar: BudgetView med textinputs istället för number inputs
 // så att användaren skriver belopp direkt utan upp-/nedpilar.
 
 export default function BudgetView({ trip }) {
@@ -16,7 +13,7 @@ export default function BudgetView({ trip }) {
     setPlannedTotal,
   } = useContext(TripsContext);
 
-  // ✅ Hämta alltid aktuell version av resan
+  // Hämta alltid aktuell version av resan
   const liveTrip = useMemo(
     () => trips.find((t) => t.id === trip?.id) || trip,
     [trips, trip?.id]
@@ -66,7 +63,6 @@ export default function BudgetView({ trip }) {
     setBreakdownValue(liveTrip.id, targetKey, amountNum);
   }
 
-  // --- Thêm dòng mới ---
   const [newRow, setNewRow] = useState({ category: "", amount: "" });
   function addRow() {
     const cat = newRow.category.trim();
