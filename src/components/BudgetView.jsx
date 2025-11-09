@@ -1,8 +1,9 @@
 import { useContext, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TripsContext } from "../context/TripsContext";
+import { Trash2, Edit, Plus } from "lucide-react";
 
-// Formatter för valuta
+
 const money = (n) =>
   (n ?? 0).toLocaleString("sv-SE", {
     style: "currency",
@@ -13,18 +14,15 @@ const money = (n) =>
 function Row({ label, value }) {
   return (
     <div className="flex items-center justify-between py-3 border-b border-white/15 last:border-0">
-      <div className="opacity-90">{label}</div>
-      <div className="text-xl font-semibold">{value}</div>
+      <div className="opacity-90 text-sm sm:text-base">{label}</div>
+      <div className="text-lg sm:text-xl font-semibold">{value}</div>
     </div>
   );
 }
 
 function Badge({ children }) {
   return (
-    <span
-      className="inline-block rounded-full px-3 py-1 text-sm font-medium bg-gray-100 border border-gray-200"
-      style={{ lineHeight: 1.8 }}
-    >
+    <span className="inline-block rounded-full px-3 py-1 text-xs sm:text-sm font-medium bg-gray-100 border border-gray-200">
       {children}
     </span>
   );
@@ -41,13 +39,11 @@ export default function BudgetView() {
     setExpensePaid,
   } = useContext(TripsContext);
 
-  // Hämta resa (fallback: första om id saknas)
   const trip = trips.find((t) => t.id === id) || trips[0];
   const status = trip?.tripStatus || "planned";
   const total = trip?.budget?.total ?? 0;
   const expenses = trip?.budget?.expenses ?? [];
 
-  // Spent: planned → 0, annars summera expense.isPaid
   const spent = useMemo(() => {
     if (status === "planned") return 0;
     return (expenses || [])
@@ -56,11 +52,8 @@ export default function BudgetView() {
   }, [expenses, status]);
 
   const remaining = Math.max(0, total - spent);
-
-  // Total Budget input (draft + save)
   const [draftTotal, setDraftTotal] = useState(total);
 
-  // Modal: Add Expense
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -81,7 +74,6 @@ export default function BudgetView() {
     setOpen(false);
   }
 
-  // Modal: Edit Expense
   const [editOpen, setEditOpen] = useState(false);
   const [editId, setEditId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
@@ -108,36 +100,44 @@ export default function BudgetView() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       {/* Top bar */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-semibold">Budget Overview</h2>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+        <h2 className="text-xl sm:text-2xl font-semibold">Budget Overview</h2>
         <button
           onClick={() => setOpen(true)}
-          className="rounded-lg px-4 py-2 text-white font-medium"
-          style={{ background: "#2563eb" }}
+          className="rounded-lg px-4 py-2 text-white font-medium bg-violet-600 hover:bg-violet-700 transition"
         >
           + Add Expense
         </button>
       </div>
 
-      {/* Summary kort: redigerbart Total Budget */}
-      <div
-        className="rounded-xl p-6 text-white mb-8"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(37,99,235,1) 0%, rgba(59,130,246,1) 50%, rgba(14,165,233,1) 100%)",
-        }}
-      >
-        {/* Total Budget */}
+      {/* Summary */}
+        <div
+          className="relative rounded-2xl p-5 sm:p-6 text-white mb-8 overflow-hidden shadow-[0_8px_30px_rgba(88,28,135,0.45)]"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(67,56,202,1) 0%, rgba(109,40,217,1) 40%, rgba(139,92,246,1) 100%)",
+          }}
+        >
+        {/* Shine overlay */}
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-white/10 via-transparent to-white/5 opacity-40 mix-blend-overlay pointer-events-none"
+        />
+
+        {/* Subtil highlight längst upp */}
+        <div
+          className="absolute top-0 left-0 right-0 h-1/3 bg-white/10 blur-2xl opacity-40 pointer-events-none"
+        />
+
         <div className="flex items-center justify-between py-3 border-b border-white/15">
-          <div className="opacity-90">Total Budget</div>
+          <div className="opacity-90 text-sm sm:text-base">Total Budget</div>
           <div className="flex items-center gap-2">
             <input
               type="text"
               inputMode="decimal"
               pattern="[0-9]*[.,]?[0-9]*"
-              className="w-36 rounded-lg px-2 py-1 text-right font-semibold text-blue-900"
+              className="w-28 sm:w-36 rounded-lg px-2 py-1 text-right font-semibold text-violet-700"
               value={draftTotal}
               onChange={(e) => {
                 const raw = e.target.value.replace(/[^\d.,]/g, "");
@@ -152,7 +152,7 @@ export default function BudgetView() {
               placeholder="0"
             />
             <button
-              className="px-3 py-1 rounded bg-white/20 hover:bg-white/30"
+              className="px-3 py-1 rounded bg-white/20 hover:bg-white/30 transition"
               onClick={() => {
                 const normalized = String(draftTotal).replace(",", ".");
                 setBudgetTotal(trip.id, Number(normalized) || 0);
@@ -168,12 +168,12 @@ export default function BudgetView() {
       </div>
 
       {/* Expenses */}
-      <h3 className="text-lg font-semibold mb-3">Expenses</h3>
+      <h3 className="text-lg sm:text-xl font-semibold mb-3">Expenses</h3>
       <div className="space-y-4">
         {expenses.map((e) => (
           <div
             key={e.id}
-            className="rounded-xl border border-gray-200 bg-white p-5 flex items-center justify-between"
+            className="rounded-xl border border-gray-200 bg-white p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
           >
             <div>
               <div className="text-base font-medium">{e.title}</div>
@@ -182,8 +182,7 @@ export default function BudgetView() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
-              {/* Checkbox Paid: disabled om planned */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 justify-end">
               <label className="flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"
@@ -200,172 +199,147 @@ export default function BudgetView() {
 
               <div className="text-base font-semibold">{money(e.amount)}</div>
 
-              <button
-                onClick={() => startEdit(e)}
-                className="text-sm underline text-gray-500 hover:text-gray-800"
-              >
-                Edit
-              </button>
+                <button
+                  onClick={() => startEdit(e)}
+                  className="p-1 rounded-full flex items-center gap-1 text-purple-700 border hover:bg-pueple-50 transition"
+                >
+                  <Edit className="w-4 h-4" />
+                 
+                </button>
 
-              <button
-                onClick={() => removeExpense(trip.id, e.id)}
-                className="text-sm underline text-red-500 hover:text-red-700"
-              >
-                Remove
-              </button>
+                <button
+                  type="button"
+                  className="p-1 rounded-full flex items-center gap-1 text-red-600 text-sm hover:bg-red-100 transition"
+                  onClick={() => removeExpense(trip.id, e.id)}
+                >
+                  <Trash2 size={16} />
+                  
+                </button>
+
             </div>
           </div>
         ))}
 
         {expenses.length === 0 && (
-          <div className="rounded-xl border border-dashed border-gray-300 p-8 text-gray-500 text-center">
+          <div className="rounded-xl border border-dashed border-gray-300 p-6 sm:p-8 text-gray-500 text-center text-sm sm:text-base">
             No expenses yet. Click <b>Add Expense</b> to get started.
           </div>
         )}
       </div>
 
-      {/* Modal: Add Expense */}
+      {/* Add Expense Modal */}
       {open && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <h4 className="text-lg font-semibold">Add Expense</h4>
-              <button onClick={() => setOpen(false)} className="text-gray-500">
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={saveExpense} className="space-y-4">
-              <div>
-                <label className="block text-sm mb-1">Title</label>
-                <input
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Flight tickets"
-                />
-              </div>
-              <div>
-                <label className="block text-sm mb-1">Amount (SEK)</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  placeholder="800"
-                />
-              </div>
-              <div>
-                <label className="block text-sm mb-1">Category</label>
-                <select
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  <option>Transport</option>
-                  <option>Accommodation</option>
-                  <option>Food & Drinks</option>
-                  <option>Activities</option>
-                  <option>Shopping</option>
-                  <option>Other</option>
-                </select>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  className="px-4 py-2 rounded-lg border border-gray-300"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-lg text-white font-medium"
-                  style={{ background: "#2563eb" }}
-                >
-                  Save
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <Modal
+          title="Add Expense"
+          onClose={() => setOpen(false)}
+          onSubmit={saveExpense}
+          titleValue={title}
+          setTitle={setTitle}
+          amountValue={amount}
+          setAmount={setAmount}
+          category={category}
+          setCategory={setCategory}
+        />
       )}
 
-      {/* Modal: Edit Expense */}
+      {/* Edit Expense Modal */}
       {editOpen && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <h4 className="text-lg font-semibold">Edit Expense</h4>
-              <button
-                onClick={() => setEditOpen(false)}
-                className="text-gray-500"
-              >
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={saveEdit} className="space-y-4">
-              <div>
-                <label className="block text-sm mb-1">Title</label>
-                <input
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                  placeholder="e.g. Flight tickets"
-                />
-              </div>
-              <div>
-                <label className="block text-sm mb-1">Amount (USD)</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                  value={editAmount}
-                  onChange={(e) => setEditAmount(e.target.value)}
-                  placeholder="800"
-                />
-              </div>
-              <div>
-                <label className="block text-sm mb-1">Category</label>
-                <select
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                  value={editCategory}
-                  onChange={(e) => setEditCategory(e.target.value)}
-                >
-                  <option>Transport</option>
-                  <option>Accommodation</option>
-                  <option>Food & Drinks</option>
-                  <option>Activities</option>
-                  <option>Shopping</option>
-                  <option>Other</option>
-                </select>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setEditOpen(false)}
-                  className="px-4 py-2 rounded-lg border border-gray-300"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-lg text-white font-medium"
-                  style={{ background: "#2563eb" }}
-                >
-                  Save changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <Modal
+          title="Edit Expense"
+          onClose={() => setEditOpen(false)}
+          onSubmit={saveEdit}
+          titleValue={editTitle}
+          setTitle={setEditTitle}
+          amountValue={editAmount}
+          setAmount={setEditAmount}
+          category={editCategory}
+          setCategory={setEditCategory}
+          isEdit
+        />
       )}
+    </div>
+  );
+}
+
+function Modal({
+  title,
+  onClose,
+  onSubmit,
+  titleValue,
+  setTitle,
+  amountValue,
+  setAmount,
+  category,
+  setCategory,
+  isEdit = false,
+}) {
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl">
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="text-lg font-semibold">{title}</h4>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            ✕
+          </button>
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm mb-1">Title</label>
+            <input
+              className="w-full rounded-lg border border-gray-300 px-3 py-2"
+              value={titleValue}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g. Flight tickets"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm mb-1">Amount (SEK)</label>
+            <input
+              type="number"
+              min="0"
+              step="1"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2"
+              value={amountValue}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="800"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm mb-1">Category</label>
+            <select
+              className="w-full rounded-lg border border-gray-300 px-3 py-2"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option>Transport</option>
+              <option>Accommodation</option>
+              <option>Food & Drinks</option>
+              <option>Activities</option>
+              <option>Shopping</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-lg text-white font-medium bg-violet-600 hover:bg-violet-700 transition"
+            >
+              {isEdit ? "Save changes" : "Save"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
