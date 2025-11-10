@@ -116,7 +116,13 @@ export default function CalendarView({ trip }) {
             month: "long",
           })
 
-          const dayActivities = activities.filter((a) => a.day === day.date)
+          const dayActivities = activities
+            .filter((a) => a.day === day.date)
+            .sort((a, b) => {
+              if (!a.time) return 1
+              if (!b.time) return -1
+              return a.time.localeCompare(b.time)
+            })
 
           return (
             <div key={day.date} className="mb-4 border-b pb-2">
