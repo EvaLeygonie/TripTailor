@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { TripsContext } from "../context/TripsContext";
 import { Trash2, Edit, Plus } from "lucide-react";
 
-
 const money = (n) =>
   (n ?? 0).toLocaleString("sv-SE", {
     style: "currency",
@@ -40,19 +39,17 @@ export default function BudgetView() {
   } = useContext(TripsContext);
 
   const trip = trips.find((t) => t.id === id) || trips[0];
-  const status = trip?.tripStatus || "planned";
   const total = trip?.budget?.total ?? 0;
   const expenses = trip?.budget?.expenses ?? [];
 
   const spent = useMemo(() => {
-    if (status === "planned") return 0;
     return (expenses || [])
       .filter((e) => e.isPaid)
       .reduce((s, e) => s + Number(e.amount || 0), 0);
-  }, [expenses, status]);
+  }, [expenses]);
 
   const remaining = Math.max(0, total - spent);
-  const [draftTotal, setDraftTotal] = useState(total);
+  const [draftTotal, setDraftTotal] = useState(String(total));
 
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -113,22 +110,18 @@ export default function BudgetView() {
       </div>
 
       {/* Summary */}
-        <div
-          className="relative rounded-2xl p-5 sm:p-6 text-white mb-8 overflow-hidden shadow-[0_8px_30px_rgba(88,28,135,0.45)]"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(67,56,202,1) 0%, rgba(109,40,217,1) 40%, rgba(139,92,246,1) 100%)",
-          }}
-        >
+      <div
+        className="relative rounded-2xl p-5 sm:p-6 text-white mb-8 overflow-hidden shadow-[0_8px_30px_rgba(88,28,135,0.45)]"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(67,56,202,1) 0%, rgba(109,40,217,1) 40%, rgba(139,92,246,1) 100%)",
+        }}
+      >
         {/* Shine overlay */}
-        <div
-          className="absolute inset-0 bg-gradient-to-t from-white/10 via-transparent to-white/5 opacity-40 mix-blend-overlay pointer-events-none"
-        />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/10 via-transparent to-white/5 opacity-40 mix-blend-overlay pointer-events-none" />
 
         {/* Subtil highlight längst upp */}
-        <div
-          className="absolute top-0 left-0 right-0 h-1/3 bg-white/10 blur-2xl opacity-40 pointer-events-none"
-        />
+        <div className="absolute top-0 left-0 right-0 h-1/3 bg-white/10 blur-2xl opacity-40 pointer-events-none" />
 
         <div className="flex items-center justify-between py-3 border-b border-white/15">
           <div className="opacity-90 text-sm sm:text-base">Total Budget</div>
@@ -187,7 +180,7 @@ export default function BudgetView() {
                 <input
                   type="checkbox"
                   checked={!!e.isPaid}
-                  disabled={status === "planned"}
+                  // disabled={status === "planned"}
                   onChange={(ev) =>
                     setExpensePaid(trip.id, e.id, ev.target.checked)
                   }
@@ -199,23 +192,20 @@ export default function BudgetView() {
 
               <div className="text-base font-semibold">{money(e.amount)}</div>
 
-                <button
-                  onClick={() => startEdit(e)}
-                  className="p-1 rounded-full flex items-center gap-1 text-purple-700 border hover:bg-pueple-50 transition"
-                >
-                  <Edit className="w-4 h-4" />
-                 
-                </button>
+              <button
+                onClick={() => startEdit(e)}
+                className="p-1 rounded-full flex items-center gap-1 text-purple-700 border hover:bg-pueple-50 transition"
+              >
+                <Edit className="w-4 h-4" />
+              </button>
 
-                <button
-                  type="button"
-                  className="p-1 rounded-full flex items-center gap-1 text-red-600 text-sm hover:bg-red-100 transition"
-                  onClick={() => removeExpense(trip.id, e.id)}
-                >
-                  <Trash2 size={16} />
-                  
-                </button>
-
+              <button
+                type="button"
+                className="p-1 rounded-full flex items-center gap-1 text-red-600 text-sm hover:bg-red-100 transition"
+                onClick={() => removeExpense(trip.id, e.id)}
+              >
+                <Trash2 size={16} />
+              </button>
             </div>
           </div>
         ))}
@@ -278,7 +268,10 @@ function Modal({
       <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <h4 className="text-lg font-semibold">{title}</h4>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
             ✕
           </button>
         </div>
