@@ -4,6 +4,7 @@ const TripsContext = createContext({
   trips: [],
   setTrips: () => {},
   addTrip: () => {},
+  updateTrip: () => {},
   removeTrip: () => {},
   addAttraction: () => {},
   removeAttraction: () => {},
@@ -100,6 +101,12 @@ export function TripsProvider({ children }) {
       ...t,
       attractions: [...t.attractions, attraction],
     }));
+
+  const updateTrip = (updatedTrip) => {
+  setTrips((prev) =>
+    prev.map((t) => (t.id === updatedTrip.id ? normalizeBudget(updatedTrip) : t))
+    );
+  };
 
   const removeAttraction = (tripId, attractionId) =>
     patchTrip(tripId, (t) => ({
@@ -303,6 +310,7 @@ export function TripsProvider({ children }) {
     trips,
     setTrips,
     addTrip,
+    updateTrip,
     removeTrip,
     addAttraction,
     removeAttraction,
