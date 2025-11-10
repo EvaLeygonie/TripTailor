@@ -1,6 +1,6 @@
 import TripCard from "../components/TripCard";
 import TripForm from "../components/TripForm";
-import { Plus, Map, X } from "lucide-react";
+import { Plus, Map, X, SlidersHorizontal } from "lucide-react";
 import { useState, useContext } from "react";
 import { TripsContext } from "../context/TripsContext";
 
@@ -9,6 +9,7 @@ export default function TripsList() {
   const [open, setOpen] = useState(false);
   const [editingTrip, setEditingTrip] = useState(null);
   const [showToast, setShowToast] = useState(false);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [filters, setFilters] = useState({
     planned: false,
     ongoing: false,
@@ -64,30 +65,49 @@ export default function TripsList() {
       </div>
 
       {/* FILTERS */}
-      <div className="mt-4 flex gap-4 flex-wrap">
-        <p>Filter trips:</p>
-        {["planned", "ongoing", "completed"].map((status) => (
-          <label key={status} className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={filters[status]}
-              onChange={() =>
-                setFilters((prev) => ({ ...prev, [status]: !prev[status] }))
-              }
-            />
-            <span className="capitalize">{status}</span>
-          </label>
-        ))}
+      <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <button
+          className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full shadow-sm sm:hidden"
+          onClick={() => setShowMobileFilters((prev) => !prev)}
+        >
+          <SlidersHorizontal size={20} />
+          <span>Filters</span>
+        </button>
+
+        <div
+          className={`flex flex-wrap gap-2 transition-all duration-300
+            ${showMobileFilters ? "max-h-40 overflow-y-auto" : "max-h-0 overflow-hidden"}
+            sm:max-h-full sm:overflow-visible sm:flex`}
+        >
+          {["planned", "ongoing", "completed"].map((status) => {
+            const active = filters[status];
+            const colors = {
+              planned: "bg-blue-100 text-blue-800",
+              ongoing: "bg-yellow-100 text-yellow-800",
+              completed: "bg-green-100 text-green-800",
+            };
+            return (
+              <button
+                key={status}
+                onClick={() =>
+                  setFilters((prev) => ({ ...prev, [status]: !prev[status] }))
+                }
+                className={`px-4 py-2 rounded-full font-medium text-sm flex items-center gap-1 transition
+                  ${active ? colors[status] : "bg-gray-200 text-gray-600 hover:bg-gray-300"}`}
+              >
+                {status.charAt(0).toUpperCase() + status.slice(1)}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* TRIP GRID */}
       <div className="trip-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
         {filteredTrips.map((trip) => (
-          <TripCard
-            key={trip.id}
-            trip={trip}
-            onEdit={(trip) => openModal(trip)}
-          />
+          <div key={trip.id} className="h-full flex">
+            <TripCard trip={trip} onEdit={(trip) => openModal(trip)} className="flex-1" />
+          </div>
         ))}
       </div>
 
