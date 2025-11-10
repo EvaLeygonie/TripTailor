@@ -1,4 +1,4 @@
-import { Star, Edit, Trash2, MapPin, Soup, TreePine, Landmark, Camera, Bath, Coffee, Drama, Amphora } from 'lucide-react'
+import { Star, Edit, Calendar, Trash2, MapPin, Soup, TreePine, Landmark, Camera, Bath, Coffee, Drama, Amphora } from 'lucide-react'
 
 const ListItem = ({ item, type, isMustSee, onToggleFavorite, onEdit, onDelete }) => {
 
@@ -61,20 +61,6 @@ const ListItem = ({ item, type, isMustSee, onToggleFavorite, onEdit, onDelete })
         </div>
 
         <div className="mt-2 flex space-x-2">
-           {/* Edit Button: Stop propagation to prevent conflict with outer click handlers */}
-          {onEdit && <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit();
-            }}
-            className="p-1 rounded-full text-blue-600 hover:bg-blue-100 transition duration-150"
-            title="Edit Item"
-          >
-            <Edit size={18} />
-          </button>
-        }
-
-           {/* Delete Button: Stop propagation to prevent conflict with outer click handlers */}
           {onDelete && <button
             onClick={(e) => {
               e.stopPropagation();
@@ -87,7 +73,30 @@ const ListItem = ({ item, type, isMustSee, onToggleFavorite, onEdit, onDelete })
           </button>
         }
 
-          {/* Toggle Favorite Button: Stop propagation */}
+          {onEdit && <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit();
+            }}
+            className="p-1 rounded-full text-blue-600 hover:bg-blue-100 transition duration-150"
+            title="Edit Item"
+          >
+            <Edit size={18} />
+          </button>
+        }
+
+        {/* Planning Button: Add function */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              //ADD PLANNING FUNCTIONALITY HERE
+            }}
+            className="p-1 rounded-full text-violet-500 hover:bg-violet-700 transition duration-150"
+            title="Plan Item"
+          >
+            <Calendar size={18} />
+          </button>
+
           <button
             onClick={(e) => {
               e.stopPropagation();
