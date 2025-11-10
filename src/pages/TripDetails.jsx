@@ -60,7 +60,7 @@ export default function TripDetails() {
     <section className="trip-details p-4 sm:p-8 py-6 min-h-screen flex flex-col">
 
       <header className="flex items-center gap-3 py-4 border-b border-gray-200 mb-8">
-        <Map size={32} className="text-blue-600" />
+        <Map size={32} className="text-purple-700" />
         <div>
           <h1 className="text-2xl font-bold">TripTailor</h1>
           <p className="text-gray-500 text-sm">Your personal travel planner</p>

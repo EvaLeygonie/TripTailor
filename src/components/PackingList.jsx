@@ -257,7 +257,7 @@ export default function PackingList() {
         </h2>
         <button
           onClick={openForm}
-          className="flex items-center justify-center gap-2 bg-blue-600 text-white font-medium text-sm sm:text-base px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 active:scale-[0.97] transition"
+          className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-700 to-blue-600 text-white font-medium text-sm sm:text-base px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 active:scale-[0.97] transition"
         >
           <Plus size={18} />
           <span>Add Item</span>
@@ -274,7 +274,7 @@ export default function PackingList() {
         </div>
         <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
           <div
-            className="h-full bg-blue-600 transition-all duration-500"
+            className="h-full bg-gradient-to-r from-purple-700 to-blue-600 transition-all duration-500"
             style={{ width: `${progressPercentage}%` }}
           />
         </div>
@@ -312,7 +312,7 @@ export default function PackingList() {
                           handleToggleCheck(categoryGroup.category, item.label)
                         }
                         id={inputId}
-                        className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        className="w-5 h-5 text-purple-700 border-gray-300 rounded focus:ring-blue-500"
                       />
                       <label
                         htmlFor={inputId}
@@ -332,7 +332,7 @@ export default function PackingList() {
                         onClick={() =>
                           openEditModal(categoryGroup.category, item.label)
                         }
-                        className="p-1.5 text-blue-600 hover:bg-blue-100 rounded-full transition"
+                        className="p-1.5 text-purple-700 hover:bg-purple-100 rounded-full transition"
                         title="Edit Item"
                       >
                         <Edit size={16} />
