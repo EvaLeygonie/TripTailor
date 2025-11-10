@@ -29,6 +29,19 @@ const TripsContext = createContext({
 
 export { TripsContext };
 function normalizeBudget(trip) {
+  const safeMustSeeIds = Array.isArray(trip?.mustSeeIds)
+    ? trip.mustSeeIds
+    : Array.isArray(trip?.mustSees)
+    ? trip.mustSees
+    : [];
+
+  const safeAttractions = Array.isArray(trip?.attractions)
+    ? trip.attractions
+    : [];
+  const safeRestaurants = Array.isArray(trip?.restaurants)
+    ? trip.restaurants
+    : [];
+
   const b = trip.budget || {};
   if (Array.isArray(b.expenses)) {
     return {
@@ -74,7 +87,13 @@ function normalizeBudget(trip) {
         : "Other",
     isPaid: false,
   }));
-  return { ...trip, budget: { total: Number(b.total || 0), expenses } };
+  return {
+    ...trip,
+    mustSeeIds: safeMustSeeIds,
+    attractions: safeAttractions,
+    restaurants: safeRestaurants,
+    budget: { total: Number(b.total || 0), expenses },
+  };
 }
 export function TripsProvider({ children }) {
   const [trips, setTrips] = useState(() => {
@@ -103,8 +122,10 @@ export function TripsProvider({ children }) {
     }));
 
   const updateTrip = (updatedTrip) => {
-  setTrips((prev) =>
-    prev.map((t) => (t.id === updatedTrip.id ? normalizeBudget(updatedTrip) : t))
+    setTrips((prev) =>
+      prev.map((t) =>
+        t.id === updatedTrip.id ? normalizeBudget(updatedTrip) : t
+      )
     );
   };
 
@@ -318,7 +339,7 @@ export function TripsProvider({ children }) {
     addRestaurant,
     removeRestaurant,
     editRestaurant, // NU IMPLEMENTERAD
-    toggleMustSee,  // NU IMPLEMENTERAD
+    toggleMustSee, // NU IMPLEMENTERAD
     addExpense,
     editExpense,
     removeExpense,

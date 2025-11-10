@@ -1,28 +1,32 @@
-import { useParams } from "react-router-dom"
-import tripsData from "../data/mockTrips.jsx"
-import ListItem from "./ListItem.jsx"
-import { useContext } from "react"
-import { TripsContext } from "../context/TripsContext"
+import { useParams } from "react-router-dom";
+import tripsData from "../data/mockTrips.jsx";
+import ListItem from "./ListItem.jsx";
+import { useContext } from "react";
+import { TripsContext } from "../context/TripsContext";
 
 export default function MustSeesList() {
-  const { id } = useParams()
+  const { id } = useParams();
 
   // Get all necessary functions and data from context
-  const { trips, toggleMustSee } = useContext(TripsContext)
-  const ctxTrip = trips.find((t) => t.id === id)
+  const { trips, toggleMustSee } = useContext(TripsContext);
+  const ctxTrip = trips.find((t) => t.id === id);
   const fallbackTrip = tripsData.find((t) => t.id === id);
-  const trip = ctxTrip || fallbackTrip
+  const trip = ctxTrip || fallbackTrip;
 
-  const mustSeeIds = trip ? trip.mustSeeIds : []
+  const mustSeeIds = trip?.mustSeeIds ?? [];
 
   // Filter must-sees
-  const mustSeeAttractions = trip ? trip.attractions.filter(attraction =>
-    mustSeeIds.includes(attraction.id)
-  ) : []
-  const mustSeeRestaurants = trip ? trip.restaurants.filter(restaurant =>
-    mustSeeIds.includes(restaurant.id)
-  ) : []
-  const totalMustSees = mustSeeAttractions.length + mustSeeRestaurants.length
+  const mustSeeAttractions = trip
+    ? trip.attractions.filter((attraction) =>
+        mustSeeIds.includes(attraction.id)
+      )
+    : [];
+  const mustSeeRestaurants = trip
+    ? trip.restaurants.filter((restaurant) =>
+        mustSeeIds.includes(restaurant.id)
+      )
+    : [];
+  const totalMustSees = mustSeeAttractions.length + mustSeeRestaurants.length;
 
   if (!trip) {
     return (
@@ -50,7 +54,9 @@ export default function MustSeesList() {
       {totalMustSees === 0 && (
         <div className="text-center py-10 bg-gray-50 rounded-lg border border-dashed border-gray-200 text-gray-500 italic">
           <p className="text-lg">No Must-See has been added yet.</p>
-          <p className="text-sm mt-1">Mark your favorites on the Attractions and Restaurants pages!</p>
+          <p className="text-sm mt-1">
+            Mark your favorites on the Attractions and Restaurants pages!
+          </p>
         </div>
       )}
 
@@ -62,8 +68,11 @@ export default function MustSeesList() {
 
           <div className="space-y-4">
             {mustSeeAttractions.map((item) => (
-              <article key={item.id} className="cursor-pointer text-left overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out
-            hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-white">
+              <article
+                key={item.id}
+                className="cursor-pointer text-left overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out
+            hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-white"
+              >
                 <ListItem
                   item={item}
                   type="attraction"
@@ -86,8 +95,11 @@ export default function MustSeesList() {
 
           <div className="space-y-4">
             {mustSeeRestaurants.map((item) => (
-              <article key={item.id} className="cursor-pointer text-left overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out
-            hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-white">
+              <article
+                key={item.id}
+                className="cursor-pointer text-left overflow-hidden rounded-xl shadow-md transition-transform duration-300 ease-out
+            hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] bg-white"
+              >
                 <ListItem
                   item={item}
                   type="restaurant"
@@ -102,5 +114,5 @@ export default function MustSeesList() {
         </section>
       )}
     </div>
-  )
+  );
 }
