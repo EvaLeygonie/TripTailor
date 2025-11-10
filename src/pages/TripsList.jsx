@@ -1,58 +1,71 @@
-import { Link } from "react-router-dom";
 import TripCard from "../components/TripCard";
+import TripForm from "../components/TripForm";
 import { Plus, Map, X } from "lucide-react";
 import { useState, useContext } from "react";
-import TripForm from "../components/TripForm";
-import { TripsContext } from "../context/TripsContext"
-
+import { TripsContext } from "../context/TripsContext";
 
 export default function TripsList() {
+  const { trips, addTrip, updateTrip } = useContext(TripsContext);
   const [open, setOpen] = useState(false);
-  const { trips, addTrip } = useContext(TripsContext)
-  const [showToast, setShowToast] = useState(false)
+  const [editingTrip, setEditingTrip] = useState(null);
+  const [showToast, setShowToast] = useState(false);
   const [filters, setFilters] = useState({
     planned: false,
     ongoing: false,
     completed: false,
-  })
+  });
 
-  const anyFilterActive = Object.values(filters).some(v => v)
+  const anyFilterActive = Object.values(filters).some((v) => v);
   const filteredTrips = anyFilterActive
-    ? trips.filter(trip => filters[trip.tripStatus])
-    : trips
+    ? trips.filter((trip) => filters[trip.tripStatus])
+    : trips;
+
+  const handleSaveEdit = (updatedTrip) => {
+    updateTrip(updatedTrip);
+    setEditingTrip(null);
+    setOpen(false);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
+  };
+
+  const openModal = (trip) => {
+    setEditingTrip(trip);
+    setOpen(true);
+  };
+
+  const closeModal = () => {
+    setEditingTrip(null);
+    setOpen(false);
+  };
 
   return (
     <section className="trip-list p-4 sm:p-8">
-      {/* 1. APP LOGO/BRANDING SECTION */}
-      <header className="app-branding flex items-center gap-3 py-4 border-b border-gray-200">
-        <Map size={32} className="text-violet-700" /> {/* Placeholder Icon */}
+      {/* HEADER */}
+      <header className="flex items-center gap-3 py-4 border-b border-gray-200">
+        <Map size={32} className="text-blue-600" />
         <div>
           <h1 className="text-2xl font-bold">TripTailor</h1>
           <p className="text-gray-500 text-sm">Your personal travel planner</p>
         </div>
       </header>
 
-      {/* 2. PAGE HEADER / CALL-TO-ACTION SECTION */}
+      {/* CTA */}
       <div className="page-header py-8">
         <h2 className="text-4xl font-extrabold mb-2">Your Journeys</h2>
         <p className="text-lg text-gray-600 mb-6">
           Plan, organize, and track all your adventures in one place
         </p>
-
-        {/* The "Plan New Trip" Button (CTA) */}
-
         <button
-          onClick={() => setOpen(true)}
-          className="bg-gradient-to-b from-violet-500 to-violet-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:from-violet-600 hover:to-violet-800 transition-all duration-200 flex items-center gap-2"
+          onClick={() => openModal(null)}
+          className="col-span-full mt-4 bg-gradient-to-r from-purple-700 to-blue-600 text-white py-3 px-6 rounded-lg shadow-lg hover:opacity-90 active:scale-95 transition duration-150 flex items-center justify-center gap-2 font-semibold"
         >
-          <Plus size={20} />
-          Plan New Trip
+          <Plus size={20} /> Plan New Trip
         </button>
       </div>
 
-
-      <div className="mt-4 flex gap-4">
-        <p>Filter trips: </p>
+      {/* FILTERS */}
+      <div className="mt-4 flex gap-4 flex-wrap">
+        <p>Filter trips:</p>
         {["planned", "ongoing", "completed"].map((status) => (
           <label key={status} className="flex items-center gap-2">
             <input
@@ -67,48 +80,65 @@ export default function TripsList() {
         ))}
       </div>
 
-      {/* 3. TRIP GRID CONTENT (Your existing logic) */}
-      <div className="trip-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+      {/* TRIP GRID */}
+      <div className="trip-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
         {filteredTrips.map((trip) => (
-          <Link key={trip.id} to={`/trip/${trip.id}`} className="trip-card">
-            <TripCard trip={trip} />
-          </Link>
+          <TripCard
+            key={trip.id}
+            trip={trip}
+            onEdit={(trip) => openModal(trip)}
+          />
         ))}
       </div>
 
+      {/* TOAST */}
       {showToast && (
         <div className="fixed top-[3em] right-[3em] z-50">
           <div className="bg-green-600 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500">
-            The trip has been added!
+            Trip saved!
           </div>
         </div>
       )}
 
-      {/* 4. Modal contain TripForm */}
+      {/* MODAL */}
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-xl rounded-xl bg-white p-4 shadow-lg">
-            <div className="mb-2 flex items-center justify-between">
-              <h3 className="text-xl font-semibold">Add your new trip</h3>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-3 sm:p-6 overflow-y-auto"
+          onClick={(e) => e.target === e.currentTarget && closeModal()}
+        >
+          <div
+            className="relative w-full max-w-xl bg-white rounded-2xl shadow-xl p-4 sm:p-6 my-auto animate-fadeIn"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sticky top-0 bg-white z-10 flex items-center justify-between pb-3 border-b border-gray-200">
+              <h3 className="text-lg sm:text-xl font-semibold">
+                {editingTrip ? "Edit Trip" : "Add your new trip"}
+              </h3>
               <button
-                onClick={() => setOpen(false)}
-                className="rounded-md p-1 hover:bg-gray-100"
+                onClick={closeModal}
+                className="rounded-md p-2 hover:bg-gray-100 active:scale-95 transition"
                 aria-label="Close"
               >
-                <X size={20} />
+                <X size={22} />
               </button>
             </div>
-            <TripForm
-              onAddTrip={(newTrip) => {
-                addTrip(newTrip)
-                setOpen(false)
 
-                setShowToast(true)
-                setTimeout(() => setShowToast(false), 2000)
-              }} />
+            <div className="max-h-[80vh] overflow-y-auto pt-3 pb-2">
+              <TripForm
+                isEditing={!!editingTrip}
+                tripToEdit={editingTrip}
+                onAddTrip={(newTrip) => {
+                  addTrip(newTrip);
+                  closeModal();
+                  setShowToast(true);
+                  setTimeout(() => setShowToast(false), 2000);
+                }}
+                onSaveEdit={handleSaveEdit}
+              />
+            </div>
           </div>
         </div>
       )}
     </section>
-  )
+  );
 }
