@@ -14,23 +14,24 @@ const RestaurantsList = () => {
   const fallbackTrip = tripsData.find((t) => t.id === id);
   const trip = ctxTrip || fallbackTrip;
 
-  //Confirm delete
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [itemToDeleteId, setItemToDeleteId] = useState(null);
 
   const mustSeeIds = trip ? trip.mustSeeIds : [];
 
-  // Modal Add
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingItemId, setEditingItemId] = useState(null);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
+  const [address, setAddress] = useState("");
+  const [description, setDescription] = useState("");
   const [rating, setRating] = useState("");
   const [priceLevel, setPriceLevel] = useState("€€");
   const [expectedCost, setExpectedCost] = useState("");
   const [durationMin, setDurationMin] = useState("");
   const [openingHours, setOpeningHours] = useState("");
+  const [planning, setPlanning] = useState("");
   const [selectedImage, setSelectedImage] = useState(coverImages[0]?.url || "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -43,7 +44,6 @@ const RestaurantsList = () => {
     );
   }
 
-  // Category list
   const suggestedCategories = [
     "Restaurant",
     "Café / Coffee",
@@ -57,17 +57,20 @@ const RestaurantsList = () => {
     "Bar",
     "Wine Bar",
     "Dessert",
+    "Other"
   ];
 
-  // Helper to reset all form fields
   const resetForm = () => {
     setName("");
     setCategory("");
+    setAddress("");
+    setDescription("");
     setRating("");
-    setPriceLevel("$$");
+    setPriceLevel("");
     setExpectedCost("");
     setDurationMin("");
     setOpeningHours("");
+    setPlanning("");
     setSelectedImage(coverImages[0]?.url || "");
     setEditingItemId(null);
     setIsEditing(false);
@@ -80,23 +83,24 @@ const RestaurantsList = () => {
     setOpen(true);
   };
 
-  // NEW: Handle Edit: Set state to 'Edit' mode and populate fields
   const handleEditClick = (item) => {
     setIsEditing(true);
     setEditingItemId(item.id);
     setName(item.title || "");
     setCategory(item.category || "");
+    setAddress(item.address || "");
+    setDescription(item.description || "");
     setRating(item.rating || "");
-    setPriceLevel(item.priceLevel || "$$");
+    setPriceLevel(item.priceLevel || "");
     setExpectedCost(item.expectedCost || "");
     setDurationMin(item.durationMin || "");
     setOpeningHours(item.openingHours || "");
+    setPlanning(item.planning || "");
     setSelectedImage(item.image || coverImages[0]?.url);
     setError("");
     setOpen(true);
   }
 
-  // NEW: Handle Delete
   const handleDeleteClick = (itemId) => {
     setItemToDeleteId(itemId);
     setShowConfirmation(true);
@@ -115,7 +119,6 @@ const RestaurantsList = () => {
     setShowConfirmation(false);
   }
 
-  // Handle Form Submission (Add or Edit)
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name.trim()) {
@@ -127,12 +130,14 @@ const RestaurantsList = () => {
     const itemData = {
       title: name.trim(),
       category: category.trim() || "Restaurant",
-      address: "", // Address not in form, keeping it empty/static
+      address: address.trim() || "",
+      description: description.trim() || "",
       rating: rating ? parseFloat(rating) : null,
-      priceLevel,
+      priceLevel: priceLevel || "",
       expectedCost: expectedCost ? parseFloat(expectedCost) : 0,
-      durationMin: durationMin ? parseInt(durationMin) : 90,
+      durationMin: durationMin ? parseInt(durationMin) : 120,
       openingHours: openingHours || "",
+      planning: planning || "",
       image: selectedImage,
     };
 
@@ -156,13 +161,14 @@ const RestaurantsList = () => {
     }
   };
 
+   // Find the restaurant name for the confirmation modal title
   const restaurantToDelete = trip.restaurants.find(r => r.id === itemToDeleteId);
 
   return (
     <div className="p-4 bg-gray-50 rounded-xl shadow-lg mt-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-gray-800">Restaurants</h2>
-        
+
         <button
           onClick={handleAddClick}
           className="bg-gradient-to-b from-violet-500 to-violet-700 text-white flex items-center space-x-2 px-4 py-2 font-medium rounded-lg shadow-md hover:from-violet-600 hover:to-violet-800 transition-all duration-200 ease-in-out"
@@ -183,11 +189,8 @@ const RestaurantsList = () => {
               key={restaurant.id}
               item={restaurant}
               type="restaurant"
-              // Use mustSeeIds for initial 'favorite' state display
               isMustSee={mustSeeIds.includes(restaurant.id)}
-              // Connect Toggle Favorite funciton
               onToggleFavorite={() => toggleMustSee(trip.id, restaurant.id)}
-              // Connect Edit/Delete handlers
               onEdit={() => handleEditClick(restaurant)}
               onDelete={() => handleDeleteClick(restaurant.id)}
             />
@@ -200,12 +203,12 @@ const RestaurantsList = () => {
           No restaurants have been added for this trip yet.
         </div>
       )}
-      {/* ===== Modal Add/Edit Restaurant (Logic updated to handle both) ===== */}
+
+      {/* ===== Modal Add/Edit Restaurant ===== */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-lg max-h-[90vh] overflow-y-auto">
             <div className="mb-3 flex items-center justify-between">
-              {/* Dynamic Modal Title */}
               <h3 className="text-lg font-semibold">{isEditing ? "Edit Restaurant" : "Add Restaurant"}</h3>
               <button
                 onClick={() => setOpen(false)}
@@ -217,7 +220,6 @@ const RestaurantsList = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="grid gap-3">
-              {/* Form Fields are unchanged, but now use and update state correctly for both modes */}
 
               {/* Name */}
               <label className="text-sm font-medium text-gray-700">Restaurant name</label>
@@ -244,6 +246,24 @@ const RestaurantsList = () => {
                 ))}
               </datalist>
 
+              {/* Address */}
+              <label className="text-sm font-medium text-gray-700">Address</label>
+              <input
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g. 75001 Paris, France"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+
+              {/* Description */}
+              <label className="text-sm font-medium text-gray-700">Description</label>
+              <input
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g. Italian dinner..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+
               {/* Rating */}
               <label className="text-sm font-medium text-gray-700">Rating (1–5)</label>
               <input
@@ -257,13 +277,15 @@ const RestaurantsList = () => {
                 onChange={(e) => setRating(e.target.value)}
               />
 
-              {/* Price level */}
+             {/* Price Level */}
               <label className="text-sm font-medium text-gray-700">Price level</label>
               <select
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={priceLevel}
                 onChange={(e) => setPriceLevel(e.target.value)}
               >
+                <option value="">Select price level</option>
+                <option value="Free">Free</option>
                 <option value="$">$ – Cheap</option>
                 <option value="$$">$$ – Moderate</option>
                 <option value="$$$">$$$ – Expensive</option>
@@ -299,6 +321,17 @@ const RestaurantsList = () => {
                 placeholder="e.g. 08:00–23:00"
                 value={openingHours}
                 onChange={(e) => setOpeningHours(e.target.value)}
+              />
+
+              {/* Planning */}
+              <label className="text-sm font-medium text-gray-700">Planned visit (date)</label>
+              <input
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="date"
+                min={trip.dates.start}
+                max={trip.dates.end}
+                value={planning}
+                onChange={(e) => setPlanning(e.target.value)}
               />
 
               {/* Image selector from mockImages */}
@@ -343,7 +376,7 @@ const RestaurantsList = () => {
         </div>
       )}
 
-    {/* ===== 2. Custom Delete Confirmation Modal (Global Overlay) ===== */}
+    {/* ===== Confirm Delete ===== */}
       {showConfirmation && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl text-center">
