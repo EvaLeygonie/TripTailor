@@ -1,6 +1,6 @@
 import { useState, useContext } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { MapPin, ArrowLeft } from "lucide-react"
+import { MapPin, ArrowLeft, Map } from "lucide-react"
 import TabNav from "../components/TabNav"
 import MustSeesList from "../components/MustSeesList"
 import AttractionsList from "../components/AttractionsList"
@@ -54,7 +54,19 @@ export default function TripDetails() {
   }
 
   return (
+
+
+
     <section className="trip-details p-4 sm:p-8 py-6 min-h-screen flex flex-col">
+
+      <header className="flex items-center gap-3 py-4 border-b border-gray-200 mb-8">
+        <Map size={32} className="text-blue-600" />
+        <div>
+          <h1 className="text-2xl font-bold">TripTailor</h1>
+          <p className="text-gray-500 text-sm">Your personal travel planner</p>
+        </div>
+      </header>
+
       {/* HEADER (Back + Destination info) */}
       {/* HEADER */}
       <header className="flex items-center gap-3 py-4 border-b border-gray-200 bg-white sticky top-0 z-30">
