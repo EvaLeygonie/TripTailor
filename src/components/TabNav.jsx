@@ -28,7 +28,7 @@ export default function TabNav({ activeTab, setActiveTab }) {
             rounded-md
             ${
               activeTab === tab.id
-                ? "bg-gradient-to-b from-violet-500 to-violet-700 text-white"
+                ? "bg-gradient-to-r from-fuchsia-900 to-blue-800 text-white"
                 : "bg-gray-100 text-gray-700 hover:bg-violet-100 hover:text-violet-700"
             }
           `}
