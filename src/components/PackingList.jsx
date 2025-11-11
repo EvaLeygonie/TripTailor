@@ -1,13 +1,16 @@
 import { Plus, Edit, Trash2, X } from "lucide-react";
 import { useParams } from "react-router-dom";
 import tripsData from "../data/mockTrips.jsx";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useContext } from "react";
+import { TripsContext } from "../context/TripsContext.jsx";
 
 export default function PackingList() {
   const { id } = useParams();
-  const trip = tripsData.find((t) => t.id === id);
+  const { trips: ctxTrips = [] } = useContext(TripsContext);
+  const trip =
+    ctxTrips.find((t) => t.id === id) || tripsData.find((t) => t.id === id);
 
-  const LS_key = `packing_${trip?.id || "unknown"}`;
+  const LS_key = useMemo(() => `packing_${id ?? "unknown"}`, [id]);
 
   // State
   const [packing, setPacking] = useState(() => {
@@ -50,22 +53,22 @@ export default function PackingList() {
 
   // 🇸🇪 Ladda om packlista när resans id ändras (t.ex. byter route)
   useEffect(() => {
-    if (!trip) return;
-    const nextKey = `packing_${trip.id}`;
-    const saved = localStorage.getItem(nextKey);
+    if (!id) return;
+    const saved = localStorage.getItem(LS_key);
     if (saved) {
       setPacking(JSON.parse(saved));
-    } else if (Array.isArray(trip.packingList)) {
+    } else if (trip && Array.isArray(trip.packingList)) {
       setPacking(trip.packingList);
     } else {
       setPacking([]);
     }
-  }, [trip, trip.id]);
+  }, [id, LS_key, trip?.packingList]);
 
   // Spara packing till LS
   useEffect(() => {
-    if (trip) localStorage.setItem(LS_key, JSON.stringify(packing));
-  }, [packing, trip, LS_key]);
+    if (!id) return;
+    localStorage.setItem(LS_key, JSON.stringify(packing));
+  }, [packing, id, LS_key]);
 
   // Progress
   const { totalItems, checkedItems, progressPercentage } = useMemo(() => {

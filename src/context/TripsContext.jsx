@@ -42,10 +42,16 @@ function normalizeBudget(trip) {
     ? trip.restaurants
     : [];
 
+  const safePacking = Array.isArray(trip?.packingList) ? trip.packingList : [];
+
   const b = trip.budget || {};
   if (Array.isArray(b.expenses)) {
     return {
       ...trip,
+      mustSeeIds: safeMustSeeIds,
+      attractions: safeAttractions,
+      restaurants: safeRestaurants,
+      packingList: safePacking,
       budget: {
         total: Number(b.total || 0),
         expenses: (b.expenses || []).map((e) => ({
@@ -92,6 +98,7 @@ function normalizeBudget(trip) {
     mustSeeIds: safeMustSeeIds,
     attractions: safeAttractions,
     restaurants: safeRestaurants,
+    packingList: safePacking,
     budget: { total: Number(b.total || 0), expenses },
   };
 }
