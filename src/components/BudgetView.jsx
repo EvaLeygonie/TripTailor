@@ -103,7 +103,7 @@ export default function BudgetView() {
         <h2 className="text-xl sm:text-2xl font-semibold">Budget Overview</h2>
         <button
           onClick={() => setOpen(true)}
-          className="rounded-lg px-4 py-2 text-white font-medium bg-violet-600 hover:bg-violet-700 transition"
+          className="rounded-lg px-4 py-2 text-white font-medium bg-gradient-to-r from-fuchsia-900 to-blue-800 transition-all duration-500"
         >
           + Add Expense
         </button>
@@ -114,7 +114,7 @@ export default function BudgetView() {
         className="relative rounded-2xl p-5 sm:p-6 text-white mb-8 overflow-hidden shadow-[0_8px_30px_rgba(88,28,135,0.45)]"
         style={{
           background:
-            "linear-gradient(135deg, rgba(67,56,202,1) 0%, rgba(109,40,217,1) 40%, rgba(139,92,246,1) 100%)",
+            "linear-gradient(135deg,rgba(110,30,90,1) 0%,rgba(100,25,160,1) 45%,rgba(40,60,170,1) 100%)",
         }}
       >
         {/* Shine overlay */}

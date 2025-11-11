@@ -107,13 +107,7 @@ export default function TripCard({ trip, onEdit }) {
           </div>
           <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full ${
-                budgetPercentage > 100
-                  ? "bg-red-500"
-                  : budgetPercentage > 80
-                  ? "bg-yellow-500"
-                  : "bg-green-500"
-              }`}
+              className={"h-full bg-gradient-to-r from-fuchsia-900 to-blue-800 transition-all duration-500"}
               style={{ width: `${Math.min(budgetPercentage, 100)}%` }}
             />
           </div>

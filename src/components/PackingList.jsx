@@ -257,7 +257,7 @@ export default function PackingList() {
         </h2>
         <button
           onClick={openForm}
-          className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-700 to-blue-600 text-white font-medium text-sm sm:text-base px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 active:scale-[0.97] transition"
+          className="flex items-center justify-center gap-2 bg-gradient-to-r from-fuchsia-900 to-blue-800 transition-all duration-500 text-white font-medium text-sm sm:text-base px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 active:scale-[0.97]"
         >
           <Plus size={18} />
           <span>Add Item</span>
@@ -274,7 +274,7 @@ export default function PackingList() {
         </div>
         <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-purple-700 to-blue-600 transition-all duration-500"
+            className="h-full bg-gradient-to-r from-fuchsia-900 to-blue-800 transition-all duration-500"
             style={{ width: `${progressPercentage}%` }}
           />
         </div>
