@@ -82,9 +82,9 @@ export default function TripsList() {
           {["planned", "ongoing", "completed"].map((status) => {
             const active = filters[status];
             const colors = {
-              planned: "bg-blue-100 text-blue-800",
-              ongoing: "bg-yellow-100 text-yellow-800",
-              completed: "bg-green-100 text-green-800",
+              planned: "bg-gradient-to-r from-blue-100 to-blue-200",
+              ongoing: "bg-gradient-to-r from-yellow-100 to-yellow-200",
+              completed: "bg-gradient-to-r from-green-100  to-green-200",              
             };
             return (
               <button
@@ -114,7 +114,7 @@ export default function TripsList() {
       {/* TOAST */}
       {showToast && (
         <div className="fixed top-[3em] right-[3em] z-50">
-          <div className="bg-green-600 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500">
+          <div className="bg-gradient-to-r from-green-500  to-green-600 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500">
             Trip saved!
           </div>
         </div>

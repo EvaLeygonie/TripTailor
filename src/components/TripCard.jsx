@@ -36,11 +36,11 @@ export default function TripCard({ trip, onEdit }) {
   const getStatusColor = (status) => {
     switch (status) {
       case "planned":
-        return "bg-blue-500";
+        return "bg-gradient-to-r from-blue-400 to-blue-600";
       case "ongoing":
-        return "bg-yellow-500";
+        return "bg-gradient-to-r from-yellow-500 to-yellow-600";
       case "completed":
-        return "bg-green-500";
+        return "bg-gradient-to-r from-green-500  to-green-600";
       default:
         return "bg-gray-400";
     }
@@ -49,21 +49,19 @@ export default function TripCard({ trip, onEdit }) {
   return (
     <article className="relative overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-transform duration-300 max-w-sm w-full bg-white">
       {/* Cover + Link */}
-      <Link to={`/trip/${trip.id}`} className="block h-48 w-full relative">
+      <Link to={`/trip/${trip.id}`} className="block relative aspect-[4/3] w-full overflow-hidden">
         <img
           src={coverImage}
           alt={title}
-          className="h-full w-full object-cover"
+          className="w-full h-full object-cover"
         />
-
         <span
-          className={`absolute top-3 right-3 text-xs text-white px-3 py-1 rounded-full ${getStatusColor(
-            tripStatus
-          )}`}
+          className={`absolute top-3 right-3 text-xs text-white px-3 py-1 rounded-full ${getStatusColor(tripStatus)}`}
         >
           {tripStatus.charAt(0).toUpperCase() + tripStatus.slice(1)}
         </span>
       </Link>
+
 
       {/* Edit button (separat, ligger ovanpå men utanför Link) */}
       <button
