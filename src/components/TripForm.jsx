@@ -104,6 +104,26 @@ export default function TripForm({
       />
 
       <div>
+        <label className="text-sm font-medium mb-1 block">Status</label>
+        <div className="flex items-center gap-2">
+          <Circle
+            className={`h-4 w-4 ${statusColors[tripStatus]}`}
+            fill="currentColor"
+          />
+          <select
+            value={tripStatus}
+            onChange={(e) => setTripStatus(e.target.value)}
+            required
+            className="flex-1 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          >
+            <option value="planned">Planned</option>
+            <option value="ongoing">Ongoing</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
         <label className="text-sm font-medium mb-1 block">Start date</label>
         <input
           type="date"
@@ -123,26 +143,6 @@ export default function TripForm({
           required
           className="p-3 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-indigo-400"
         />
-      </div>
-
-      <div>
-        <label className="text-sm font-medium mb-1 block">Status</label>
-        <div className="flex items-center gap-2">
-          <Circle
-            className={`h-4 w-4 ${statusColors[tripStatus]}`}
-            fill="currentColor"
-          />
-          <select
-            value={tripStatus}
-            onChange={(e) => setTripStatus(e.target.value)}
-            required
-            className="flex-1 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-          >
-            <option value="planned">Planned</option>
-            <option value="ongoing">Ongoing</option>
-            <option value="completed">Completed</option>
-          </select>
-        </div>
       </div>
 
       <div className="col-span-full">
