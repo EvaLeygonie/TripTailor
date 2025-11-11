@@ -2,29 +2,29 @@ import { createContext, useEffect, useState } from "react";
 import mockTrips from "../data/mockTrips.jsx";
 const TripsContext = createContext({
   trips: [],
-  setTrips: () => {},
-  addTrip: () => {},
-  updateTrip: () => {},
-  removeTrip: () => {},
-  addAttraction: () => {},
-  removeAttraction: () => {},
-  addRestaurant: () => {},
-  editAttraction: () => {},
-  removeRestaurant: () => {},
-  editRestaurant: () => {},
-  toggleMustSee: () => {},
-  addExpense: () => {},
-  editExpense: () => {},
-  removeExpense: () => {},
-  setBudgetTotal: () => {},
-  setExpensePaid: () => {},
-  addBreakdownItem: () => {},
-  setBreakdownValue: () => {},
-  renameBreakdownCategory: () => {},
-  removeBreakdownItem: () => {},
+  setTrips: () => { },
+  addTrip: () => { },
+  updateTrip: () => { },
+  removeTrip: () => { },
+  addAttraction: () => { },
+  removeAttraction: () => { },
+  addRestaurant: () => { },
+  editAttraction: () => { },
+  removeRestaurant: () => { },
+  editRestaurant: () => { },
+  toggleMustSee: () => { },
+  addExpense: () => { },
+  editExpense: () => { },
+  removeExpense: () => { },
+  setBudgetTotal: () => { },
+  setExpensePaid: () => { },
+  addBreakdownItem: () => { },
+  setBreakdownValue: () => { },
+  renameBreakdownCategory: () => { },
+  removeBreakdownItem: () => { },
   getTripSpent: () => 0,
   getOngoingSpentTotal: () => 0,
-  setPlannedTotal: () => {},
+  setPlannedTotal: () => { },
 });
 
 export { TripsContext };
@@ -32,8 +32,8 @@ function normalizeBudget(trip) {
   const safeMustSeeIds = Array.isArray(trip?.mustSeeIds)
     ? trip.mustSeeIds
     : Array.isArray(trip?.mustSees)
-    ? trip.mustSees
-    : [];
+      ? trip.mustSees
+      : [];
 
   const safeAttractions = Array.isArray(trip?.attractions)
     ? trip.attractions
@@ -70,27 +70,27 @@ function normalizeBudget(trip) {
       k === "flights"
         ? "Flights"
         : k === "accommodation"
-        ? "Accommodation"
-        : k === "food"
-        ? "Food & Drinks"
-        : k === "transport"
-        ? "Local transport"
-        : k === "activities"
-        ? "Activities"
-        : "Other",
+          ? "Accommodation"
+          : k === "food"
+            ? "Food & Drinks"
+            : k === "transport"
+              ? "Local transport"
+              : k === "activities"
+                ? "Activities"
+                : "Other",
     amount: Number(v || 0),
     category:
       k === "flights"
         ? "Transport"
         : k === "accommodation"
-        ? "Accommodation"
-        : k === "food"
-        ? "Food & Drinks"
-        : k === "transport"
-        ? "Transport"
-        : k === "activities"
-        ? "Activities"
-        : "Other",
+          ? "Accommodation"
+          : k === "food"
+            ? "Food & Drinks"
+            : k === "transport"
+              ? "Transport"
+              : k === "activities"
+                ? "Activities"
+                : "Other",
     isPaid: false,
   }));
   return {
@@ -136,20 +136,86 @@ export function TripsProvider({ children }) {
     );
   };
 
-  const removeAttraction = (tripId, attractionId) =>
-    patchTrip(tripId, (t) => ({
-      ...t,
-      attractions: t.attractions.filter((a) => a.id !== attractionId),
-    }));
+  const removeAttraction = (tripId, attractionId) => {
+    setTrips(prevTrips => {
+      const newTrips = prevTrips.map(trip => {
+        if (trip.id === tripId) {
+          const newAttractions = trip.attractions.filter(a => a.id !== attractionId)
+
+          const mappedActivities = newAttractions
+            .filter(a => a.planning?.trim())
+            .map(a => ({
+              ...a,
+              name: a.title,
+              type: "Attraction",
+              time: a.time || "",
+              endTime: a.endTime || ""
+            }))
+
+          localStorage.setItem(`activities_${tripId}`, JSON.stringify(mappedActivities))
+
+          return { ...trip, attractions: newAttractions }
+        }
+        return trip
+      })
+      return newTrips
+    });
+  }
 
   // IMPLEMENTERAD: Uppdaterar en befintlig attraktion
-  const editAttraction = (tripId, attractionId, updatedData) =>
-    patchTrip(tripId, (t) => ({
-      ...t,
-      attractions: t.attractions.map((a) =>
-        a.id === attractionId ? { ...a, ...updatedData } : a
-      ),
-    }));
+
+  const editAttraction = (tripId, attractionId, updatedData) => {
+    setTrips(prevTrips => {
+      const newTrips = prevTrips.map(trip => {
+        if (trip.id === tripId) {
+          const newAttractions = trip.attractions.map(a =>
+            a.id === attractionId ? { ...a, ...updatedData } : a
+          );
+          const savedActivities = newAttractions
+            .filter(a => a.planning?.trim())
+            .map(a => ({
+              ...a,
+              name: a.title,
+              type: "Attraction",
+              time: a.time || "",
+              endTime: a.endTime || ""
+            }))
+          localStorage.setItem(`activities_${tripId}`, JSON.stringify(savedActivities))
+          return { ...trip, attractions: newAttractions }
+        }
+        return trip
+      })
+      return newTrips
+    })
+  }
+
+  const clearAttractionPlanning = (tripId, attractionId) => {
+    setTrips(prevTrips => {
+      const newTrips = prevTrips.map(trip => {
+        if (trip.id === tripId) {
+          const newAttractions = trip.attractions.map(a =>
+            a.id === attractionId ? { ...a, planning: "" } : a
+          )
+
+          const mappedActivities = newAttractions
+            .filter(a => a.planning?.trim())
+            .map(a => ({
+              ...a,
+              name: a.title,
+              type: "Attraction",
+              time: a.time || "",
+              endTime: a.endTime || "",
+            }));
+          localStorage.setItem(`activities_${tripId}`, JSON.stringify(mappedActivities));
+
+          return { ...trip, attractions: newAttractions };
+        }
+        return trip;
+      })
+      return newTrips;
+    })
+  }
+
 
   const addRestaurant = (tripId, restaurant) =>
     patchTrip(tripId, (t) => ({
@@ -157,20 +223,102 @@ export function TripsProvider({ children }) {
       restaurants: [...t.restaurants, restaurant],
     }));
 
-  const removeRestaurant = (tripId, restaurantId) =>
-    patchTrip(tripId, (t) => ({
-      ...t,
-      restaurants: t.restaurants.filter((r) => r.id !== restaurantId),
-    }));
+  const removeRestaurant = (tripId, restaurantId) => {
+    setTrips(prevTrips => {
+      return prevTrips.map(trip => {
+        if (trip.id === tripId) {
+          const newRestaurants = trip.restaurants.filter(r => r.id !== restaurantId)
+
+          const plannedActivities = [
+            ...trip.attractions.filter(a => a.planning?.trim()).map(a => ({
+              ...a,
+              name: a.title,
+              type: "Attraction",
+              time: a.time || "",
+              endTime: a.endTime || "",
+            })),
+            ...newRestaurants.filter(r => r.planning?.trim()).map(r => ({
+              ...r,
+              name: r.title,
+              type: "Restaurant",
+              time: r.time || "",
+              endTime: r.endTime || "",
+            }))
+          ]
+
+          localStorage.setItem(`activities_${tripId}`, JSON.stringify(plannedActivities))
+
+          return { ...trip, restaurants: newRestaurants }
+        }
+        return trip;
+      })
+    })
+  }
 
   // IMPLEMENTERAD: Uppdaterar en befintlig restaurang
-  const editRestaurant = (tripId, restaurantId, updatedData) =>
-    patchTrip(tripId, (t) => ({
-      ...t,
-      restaurants: t.restaurants.map((r) =>
-        r.id === restaurantId ? { ...r, ...updatedData } : r
-      ),
-    }));
+  const editRestaurant = (tripId, restaurantId, updatedData) => {
+    setTrips(prevTrips => {
+      return prevTrips.map(trip => {
+        if (trip.id === tripId) {
+          const newRestaurants = trip.restaurants.map(r =>
+            r.id === restaurantId ? { ...r, ...updatedData } : r
+          )
+
+          const plannedActivities = [
+            ...trip.attractions.filter(a => a.planning?.trim()).map(a => ({
+              ...a,
+              name: a.title,
+              type: "Attraction",
+              time: a.time || "",
+              endTime: a.endTime || "",
+            })),
+            ...newRestaurants.filter(r => r.planning?.trim()).map(r => ({
+              ...r,
+              name: r.title,
+              type: "Restaurant",
+              time: r.time || "",
+              endTime: r.endTime || "",
+            }))
+          ]
+
+          localStorage.setItem(`activities_${tripId}`, JSON.stringify(plannedActivities))
+
+          return { ...trip, restaurants: newRestaurants }
+        }
+        return trip
+      })
+    })
+  }
+
+
+  // Clear planned date for a specific restaurant
+  const clearRestaurantPlanning = (tripId, restaurantId) => {
+    setTrips(prevTrips => {
+      return prevTrips.map(trip => {
+        if (trip.id === tripId) {
+          const newRestaurants = trip.restaurants.map(r =>
+            r.id === restaurantId ? { ...r, planning: "" } : r
+          );
+
+          // Also update localStorage for calendar view
+          const plannedRestaurants = newRestaurants
+            .filter(r => r.planning?.trim())
+            .map(r => ({
+              ...r,
+              name: r.title,
+              type: "Restaurant",
+              time: r.time || "",
+              endTime: r.endTime || "",
+            }))
+          localStorage.setItem(`activities_${tripId}`, JSON.stringify(plannedRestaurants))
+
+          return { ...trip, restaurants: newRestaurants }
+        }
+        return trip;
+      })
+    })
+  }
+
 
   // IMPLEMENTERAD: toggleMustSee
   const toggleMustSee = (tripId, itemId) => {
@@ -228,10 +376,10 @@ export function TripsProvider({ children }) {
       expenses: b.expenses.map((e) =>
         e.id === expenseId
           ? {
-              ...e,
-              ...patch,
-              amount: Number((patch?.amount ?? e.amount) || 0),
-            }
+            ...e,
+            ...patch,
+            amount: Number((patch?.amount ?? e.amount) || 0),
+          }
           : e
       ),
     }));
@@ -277,14 +425,14 @@ export function TripsProvider({ children }) {
       title.toLowerCase() === "flights"
         ? "Transport"
         : title.toLowerCase() === "accommodation"
-        ? "Accommodation"
-        : title.toLowerCase().includes("food")
-        ? "Food & Drinks"
-        : title.toLowerCase().includes("transport")
-        ? "Transport"
-        : title.toLowerCase().includes("activit")
-        ? "Activities"
-        : "Other";
+          ? "Accommodation"
+          : title.toLowerCase().includes("food")
+            ? "Food & Drinks"
+            : title.toLowerCase().includes("transport")
+              ? "Transport"
+              : title.toLowerCase().includes("activit")
+                ? "Activities"
+                : "Other";
     addExpense(tripId, {
       title,
       amount: Number(amount || 0),
@@ -312,14 +460,14 @@ export function TripsProvider({ children }) {
       (newKey || "").toLowerCase() === "flights"
         ? "Transport"
         : (newKey || "").toLowerCase() === "accommodation"
-        ? "Accommodation"
-        : (newKey || "").toLowerCase().includes("food")
-        ? "Food & Drinks"
-        : (newKey || "").toLowerCase().includes("transport")
-        ? "Transport"
-        : (newKey || "").toLowerCase().includes("activit")
-        ? "Activities"
-        : "Other";
+          ? "Accommodation"
+          : (newKey || "").toLowerCase().includes("food")
+            ? "Food & Drinks"
+            : (newKey || "").toLowerCase().includes("transport")
+              ? "Transport"
+              : (newKey || "").toLowerCase().includes("activit")
+                ? "Activities"
+                : "Other";
     editExpense(tripId, exp.id, { title: newKey, category: mappedCategory });
   }
 
@@ -359,6 +507,8 @@ export function TripsProvider({ children }) {
     getTripSpent,
     getOngoingSpentTotal,
     setPlannedTotal,
+    clearAttractionPlanning,
+    clearRestaurantPlanning,
   };
 
   return (

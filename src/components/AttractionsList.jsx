@@ -20,22 +20,22 @@ const formatRating = (rating) => {
 }
 
 const formatDuration = (min) => {
-    // Check if min is null or undefined
-    if (min === null || min === undefined || min === '') return "N/A";
+  // Check if min is null or undefined
+  if (min === null || min === undefined || min === '') return "N/A";
 
-    // Ensure 'min' is treated as a number
-    const totalMinutes = parseInt(min, 10);
+  // Ensure 'min' is treated as a number
+  const totalMinutes = parseInt(min, 10);
 
-    if (isNaN(totalMinutes) || totalMinutes <= 0) return "N/A";
+  if (isNaN(totalMinutes) || totalMinutes <= 0) return "N/A";
 
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
 
-    if (hours > 0 && minutes > 0) return `${hours}h ${minutes}min`;
-    if (hours > 0) return `${hours} hours`;
-    if (minutes > 0) return `${minutes} minutes`;
+  if (hours > 0 && minutes > 0) return `${hours}h ${minutes}min`;
+  if (hours > 0) return `${hours} hours`;
+  if (minutes > 0) return `${minutes} minutes`;
 
-    return "N/A";
+  return "N/A";
 }
 
 const AttractionsList = () => {
@@ -124,8 +124,8 @@ const AttractionsList = () => {
   }
 
   const handleDeleteClick = (itemId) => {
-      setItemToDeleteId(itemId);
-      setShowConfirmation(true);
+    setItemToDeleteId(itemId);
+    setShowConfirmation(true);
   };
 
   const handleConfirmDelete = () => {
@@ -231,68 +231,68 @@ const AttractionsList = () => {
 
                 {/* Description - NOW FULLY LEFT ALIGNED AND MAX WIDTH APPLIED TO CENTER TEXT BLOCK */}
                 <div className="text-sm text-gray-700 max-w-2xl mx-auto text-left">
-                    <p className="font-semibold mb-1 text-center">Description</p>
-                    <p className="text-gray-600 italic leading-snug">{attraction.description || "No detailed description provided for this item."}</p>
+                  <p className="font-semibold mb-1 text-center">Description</p>
+                  <p className="text-gray-600 italic leading-snug">{attraction.description || "No detailed description provided for this item."}</p>
                 </div>
 
                 {/* Detailed Stats Grid - NOW USING GRID-COLS-1 ON SMALL SCREENS AND EXPLICITLY LEFT-ALIGNED */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-4 text-sm pt-2">
 
-                    {/* Address */}
-                    <div className="flex items-start">
-                        <MapPin size={16} className="text-red-500 mr-2 flex-shrink-0 mt-0.5" />
-                        <div className='flex flex-col text-left'>
-                            <p className="font-medium text-gray-700">Location</p>
-                            <p className="text-gray-500 leading-tight">{attraction.address || "Address not available."}</p>
-                        </div>
+                  {/* Address */}
+                  <div className="flex items-start">
+                    <MapPin size={16} className="text-red-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <div className='flex flex-col text-left'>
+                      <p className="font-medium text-gray-700">Location</p>
+                      <p className="text-gray-500 leading-tight">{attraction.address || "Address not available."}</p>
                     </div>
+                  </div>
 
-                    {/* Rating */}
-                    <div className="flex items-start">
-                        <Star size={16} className="text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
-                         <div className='flex flex-col text-left'>
-                            <p className="font-medium text-gray-700">User Rating</p>
-                            <p className="text-gray-500">{formatRating(attraction.rating)}</p>
-                        </div>
+                  {/* Rating */}
+                  <div className="flex items-start">
+                    <Star size={16} className="text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <div className='flex flex-col text-left'>
+                      <p className="font-medium text-gray-700">User Rating</p>
+                      <p className="text-gray-500">{formatRating(attraction.rating)}</p>
                     </div>
+                  </div>
 
-                    {/* Cost */}
-                    <div className="flex items-start">
-                        <Tag size={16} className="text-indigo-500 mr-2 flex-shrink-0 mt-0.5" />
-                         <div className='flex flex-col text-left'>
-                            <p className="font-medium text-gray-700">Expected Cost</p>
-                            <p className="text-gray-500">{attraction.priceLevel} ({formatCost(attraction.expectedCost)})</p>
-                        </div>
+                  {/* Cost */}
+                  <div className="flex items-start">
+                    <Tag size={16} className="text-indigo-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <div className='flex flex-col text-left'>
+                      <p className="font-medium text-gray-700">Expected Cost</p>
+                      <p className="text-gray-500">{attraction.priceLevel} ({formatCost(attraction.expectedCost)})</p>
                     </div>
+                  </div>
 
-                    {/* Duration */}
-                    <div className="flex items-start">
-                        <Clock size={16} className="text-teal-500 mr-2 flex-shrink-0 mt-0.5" />
-                         <div className='flex flex-col text-left'>
-                            <p className="font-medium text-gray-700">Duration</p>
-                            <p className="text-gray-500">{formatDuration(attraction.durationMin)}</p>
-                        </div>
+                  {/* Duration */}
+                  <div className="flex items-start">
+                    <Clock size={16} className="text-teal-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <div className='flex flex-col text-left'>
+                      <p className="font-medium text-gray-700">Duration</p>
+                      <p className="text-gray-500">{formatDuration(attraction.durationMin)}</p>
                     </div>
+                  </div>
 
-                    {/* Opening Hours */}
-                    <div className="flex items-start">
-                        <Clock size={16} className="text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
-                         <div className='flex flex-col text-left'>
-                            <p className="font-medium text-gray-700">Hours</p>
-                            <p className="text-gray-500">{attraction.openingHours || "Check locally"}</p>
-                        </div>
+                  {/* Opening Hours */}
+                  <div className="flex items-start">
+                    <Clock size={16} className="text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <div className='flex flex-col text-left'>
+                      <p className="font-medium text-gray-700">Hours</p>
+                      <p className="text-gray-500">{attraction.openingHours || "Check locally"}</p>
                     </div>
+                  </div>
 
-                    {/* Planned Visit */}
-                    <div className="flex items-start">
-                        <Calendar size={16} className="text-violet-600 mr-2 flex-shrink-0 mt-0.5" />
-                         <div className='flex flex-col text-left'>
-                            <p className="font-medium text-gray-700">Planned Visit</p>
-                            <p className="text-gray-500 font-semibold">
-                                {attraction.planning ? attraction.planning : "Not planned yet"}
-                            </p>
-                        </div>
+                  {/* Planned Visit */}
+                  <div className="flex items-start">
+                    <Calendar size={16} className="text-violet-600 mr-2 flex-shrink-0 mt-0.5" />
+                    <div className='flex flex-col text-left'>
+                      <p className="font-medium text-gray-700">Planned Visit</p>
+                      <p className="text-gray-500 font-semibold">
+                        {attraction.planning ? attraction.planning : "Not planned yet"}
+                      </p>
                     </div>
+                  </div>
                 </div>
               </div>
             </ListItem>
@@ -445,11 +445,10 @@ const AttractionsList = () => {
                     src={img.url}
                     alt="cover option"
                     onClick={() => setSelectedImage(img.url)}
-                    className={`h-20 w-full object-cover rounded-lg cursor-pointer border-2 ${
-                      selectedImage === img.url
-                        ? "border-blue-500"
-                        : "border-transparent hover:border-gray-300"
-                    }`}
+                    className={`h-20 w-full object-cover rounded-lg cursor-pointer border-2 ${selectedImage === img.url
+                      ? "border-blue-500"
+                      : "border-transparent hover:border-gray-300"
+                      }`}
                   />
                 ))}
               </div>
