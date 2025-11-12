@@ -194,14 +194,14 @@ export default function BudgetView() {
 
               <button
                 onClick={() => startEdit(e)}
-                className="p-1 rounded-full flex items-center gap-1 text-purple-700 border hover:bg-pueple-50 transition"
+                className="p-1 rounded-full border-transparent text-gray-800 hover:text-purple-600 transition duration-150"
               >
                 <Edit className="w-4 h-4" />
               </button>
 
               <button
                 type="button"
-                className="p-1 rounded-full flex items-center gap-1 text-red-600 text-sm hover:bg-red-100 transition"
+                className="p-1 rounded-full border border-transparent text-red-400 hover:text-red-500 hover:border-red-500 transition duration-150"
                 onClick={() => removeExpense(trip.id, e.id)}
               >
                 <Trash2 size={16} />
