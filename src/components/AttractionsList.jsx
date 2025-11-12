@@ -383,7 +383,7 @@ const AttractionsList = () => {
                 Attraction name
               </label>
               <input
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. Louvre Museum,..."
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -395,7 +395,7 @@ const AttractionsList = () => {
                 Category
               </label>
               <input
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. Museum / Landmark / Nature..."
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -412,7 +412,7 @@ const AttractionsList = () => {
                 Address
               </label>
               <input
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. 75001 Paris, France"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
@@ -423,7 +423,7 @@ const AttractionsList = () => {
                 Description
               </label>
               <textarea
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[80px]"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[80px]"
                 placeholder="Provide a detailed summary of the attraction..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -438,7 +438,7 @@ const AttractionsList = () => {
                 min="1"
                 max="5"
                 step="0.1"
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. 4.8"
                 value={rating}
                 onChange={(e) => setRating(e.target.value)}
@@ -449,7 +449,7 @@ const AttractionsList = () => {
                 Price level
               </label>
               <select
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 value={priceLevel}
                 onChange={(e) => setPriceLevel(e.target.value)}
               >
@@ -468,7 +468,7 @@ const AttractionsList = () => {
               <input
                 type="number"
                 min="0"
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. 150"
                 value={expectedCost}
                 onChange={(e) => setExpectedCost(e.target.value)}
@@ -481,7 +481,7 @@ const AttractionsList = () => {
               <input
                 type="number"
                 min="0"
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. 120"
                 value={durationMin}
                 onChange={(e) => setDurationMin(e.target.value)}
@@ -492,7 +492,7 @@ const AttractionsList = () => {
                 Opening hours
               </label>
               <input
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. 09:00–17:00"
                 value={openingHours}
                 onChange={(e) => setOpeningHours(e.target.value)}
@@ -503,7 +503,7 @@ const AttractionsList = () => {
                 Planned visit (date)
               </label>
               <input
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 type="date"
                 min={trip.dates.start}
                 max={trip.dates.end}
@@ -523,7 +523,7 @@ const AttractionsList = () => {
                     alt="cover option"
                     onClick={() => setSelectedImage(img.url)}
                     className={`h-20 w-full object-cover rounded-lg cursor-pointer border-2 ${selectedImage === img.url
-                      ? "border-blue-500"
+                      ? "border-purple-500"
                       : "border-transparent hover:border-gray-300"
                       }`}
                   />
@@ -543,7 +543,7 @@ const AttractionsList = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
+                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-fuchsia-900 to-blue-800 text-white hover:bg-blue-700 disabled:opacity-60"
                   disabled={saving || !name.trim()}
                 >
                   {saving

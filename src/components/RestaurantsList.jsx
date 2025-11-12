@@ -400,7 +400,7 @@ const RestaurantsList = () => {
                 Restaurant name
               </label>
               <input
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. Italian Trattoria..."
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -412,7 +412,7 @@ const RestaurantsList = () => {
                 Cuisine / Type
               </label>
               <input
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. Fine Dining / Italian / Street Food..."
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -429,7 +429,7 @@ const RestaurantsList = () => {
                 Address
               </label>
               <input
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. 123 Main Street, City"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
@@ -440,7 +440,7 @@ const RestaurantsList = () => {
                 Notes / Dishes to Try
               </label>
               <textarea
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500 min-h-[80px]"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[80px]"
                 placeholder="Dishes to try, atmosphere notes, reservation details..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -455,7 +455,7 @@ const RestaurantsList = () => {
                 min="1"
                 max="5"
                 step="0.1"
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. 4.8"
                 value={rating}
                 onChange={(e) => setRating(e.target.value)}
@@ -466,7 +466,7 @@ const RestaurantsList = () => {
                 Price level
               </label>
               <select
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 value={priceLevel}
                 onChange={(e) => setPriceLevel(e.target.value)}
               >
@@ -484,7 +484,7 @@ const RestaurantsList = () => {
               <input
                 type="number"
                 min="0"
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. 350"
                 value={expectedCost}
                 onChange={(e) => setExpectedCost(e.target.value)}
@@ -497,7 +497,7 @@ const RestaurantsList = () => {
               <input
                 type="number"
                 min="0"
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. 90"
                 value={durationMin}
                 onChange={(e) => setDurationMin(e.target.value)}
@@ -508,7 +508,7 @@ const RestaurantsList = () => {
                 Opening hours
               </label>
               <input
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="e.g. 18:00–23:00"
                 value={openingHours}
                 onChange={(e) => setOpeningHours(e.target.value)}
@@ -519,7 +519,7 @@ const RestaurantsList = () => {
                 Planned visit (date)
               </label>
               <input
-                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 type="date"
                 min={trip.dates.start}
                 max={trip.dates.end}
@@ -539,7 +539,7 @@ const RestaurantsList = () => {
                     alt="cover option"
                     onClick={() => setSelectedImage(img.url)}
                     className={`h-20 w-full object-cover rounded-lg cursor-pointer border-2 ${selectedImage === img.url
-                      ? "border-red-500" // Changed highlight color
+                      ? "border-purple-500" // Changed highlight color
                       : "border-transparent hover:border-gray-300"
                       }`}
                   />
@@ -559,7 +559,7 @@ const RestaurantsList = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 disabled:opacity-60" // Changed button color
+                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-fuchsia-900 to-blue-800 disabled:opacity-60" // Changed button color
                   disabled={saving || !name.trim()}
                 >
                   {saving
