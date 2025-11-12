@@ -221,10 +221,9 @@ const AttractionsList = () => {
 
         <button
           onClick={handleAddClick}
-          className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-fuchsia-900 to-blue-800 text-white font-medium rounded-lg shadow-md hover:bg-violet-700 transition duration-150 ease-in-out"
+          className="flex items-center space-x-2 px-4 py-2 bg-gray-50 font-medium rounded-lg transition duration-200 ease-in-out group hover:bg-gradient-to-r hover:from-fuchsia-900 hover:to-blue-800 hover:text-white"
         >
-          <Plus size={20} />
-          <span>Add</span>
+          <Plus size={30} strokeWidth={3} className="text-fuchsia-900 group-hover:text-white transition duration-200" />
         </button>
       </div>
 
@@ -523,11 +522,10 @@ const AttractionsList = () => {
                     src={img.url}
                     alt="cover option"
                     onClick={() => setSelectedImage(img.url)}
-                    className={`h-20 w-full object-cover rounded-lg cursor-pointer border-2 ${
-                      selectedImage === img.url
-                        ? "border-blue-500"
-                        : "border-transparent hover:border-gray-300"
-                    }`}
+                    className={`h-20 w-full object-cover rounded-lg cursor-pointer border-2 ${selectedImage === img.url
+                      ? "border-blue-500"
+                      : "border-transparent hover:border-gray-300"
+                      }`}
                   />
                 ))}
               </div>
@@ -553,8 +551,8 @@ const AttractionsList = () => {
                       ? "Saving..."
                       : "Adding..."
                     : isEditing
-                    ? "Save Changes"
-                    : "Add"}
+                      ? "Save Changes"
+                      : "Add"}
                 </button>
               </div>
             </form>
