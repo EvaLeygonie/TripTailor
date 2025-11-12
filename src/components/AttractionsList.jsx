@@ -221,7 +221,7 @@ const AttractionsList = () => {
 
         <button
           onClick={handleAddClick}
-          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition duration-150 ease-in-out"
+          className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-fuchsia-900 to-blue-800 text-white font-medium rounded-lg shadow-md hover:bg-violet-700 transition duration-150 ease-in-out"
         >
           <Plus size={20} />
           <span>Add</span>

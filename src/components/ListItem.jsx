@@ -2,6 +2,7 @@ import {
   Star,
   Edit,
   Calendar,
+  CalendarCheck,
   Trash2,
   MapPin,
   Soup,
@@ -151,7 +152,7 @@ const ListItem = ({
                   e.stopPropagation();
                   onDelete();
                 }}
-                className="p-1 rounded-full border border-transparent text-red-600 hover:bg-red-100 hover:border-red-500 transition duration-150"
+                className="p-1 rounded-full border border-transparent text-gray-600 hover:text-red-500 hover:border-red-500 transition duration-150"
                 title="Delete Item"
               >
                 <Trash2 size={18} />
@@ -165,7 +166,7 @@ const ListItem = ({
                   e.stopPropagation();
                   onEdit();
                 }}
-                className="p-1 rounded-full border border-transparent text-blue-600 hover:bg-blue-100 hover:border-blue-500 transition duration-150"
+                className="p-1 rounded-full border border-transparent text-gray-600 hover:text-blue-500 transition duration-150"
                 title="Edit Item"
               >
                 <Edit size={18} />
@@ -173,17 +174,21 @@ const ListItem = ({
             )}
 
             {/* Planning Button - Triggers Date Picker */}
-            <button
-              onClick={handleDateClick}
-              className={`p-1 rounded-full border border-transparent transition duration-150 ${
-                isPlanned
-                  ? "text-violet-600 hover:bg-violet-100 hover:border-violet-600"
-                  : "text-violet-400 hover:bg-violet-100 hover:border-violet-400"
-              }`}
-              title={isPlanned ? `Planned for ${item.planning}` : "Plan Item"}
-            >
-              <Calendar size={18} fill={isPlanned ? "currentColor" : "none"} />
-            </button>
+              <button
+                onClick={handleDateClick}
+                className={`p-1 rounded-full border border-transparent transition duration-150 ${
+                  isPlanned
+                    ? "text-purple-600 hover:text-violet-600"
+                    : "text-gray-600 hover:text-violet-600"
+                }`}
+                title={isPlanned ? `Planned for ${item.planning}` : "Plan Item"}
+              >
+                {isPlanned ? (
+                  <CalendarCheck size={18} />
+                ) : (
+                  <Calendar size={18} />
+                )}
+              </button>
 
             {/* Must-See Button */}
             <button
@@ -194,7 +199,7 @@ const ListItem = ({
               className={`p-1 rounded-full border border-transparent transition duration-150 ${
                 isMustSee
                   ? "text-yellow-500 hover:text-yellow-600 hover:border-yellow-500"
-                  : "text-gray-400 hover:text-yellow-400 hover:bg-gray-100 hover:border-gray-400"
+                  : "text-gray-400 hover:text-yellow-400 hover:border-gray-400"
               }`}
               title={isMustSee ? "Remove from Must-See" : "Add to Must-See"}
             >
