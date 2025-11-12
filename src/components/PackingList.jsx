@@ -335,17 +335,17 @@ export default function PackingList() {
                         onClick={() =>
                           openEditModal(categoryGroup.category, item.label)
                         }
-                        className="p-1.5 text-purple-700 hover:bg-purple-100 rounded-full transition"
+                        className="p-1 rounded-full border-transparent text-gray-800 hover:text-purple-600 transition duration-150"
                         title="Edit Item"
                       >
-                        <Edit size={16} />
+                        <Edit size={16} strokeWidth={2} />
                       </button>
                       <button
                         onClick={
                           () =>
                             openDeleteModal(categoryGroup.category, item.label) // NEW
                         }
-                        className="p-1.5 text-red-600 hover:bg-red-100 rounded-full transition"
+                        className="p-1 rounded-full border border-transparent text-red-400 hover:text-red-500 hover:border-red-500 transition duration-150"
                         title="Delete Item"
                       >
                         <Trash2 size={16} />
