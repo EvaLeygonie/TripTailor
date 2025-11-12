@@ -35,10 +35,13 @@ const ListItem = ({
   hideRating = false,
 }) => {
   const anchorInputRef = useRef(null);
-  const panelInputRef = useRef(null);
+  // const panelInputRef = useRef(null);
   const cardRef = useRef(null);
 
   const [isMobile, setIsMobile] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false); // NEW: State for feedback message
+
+  // Effect to determine if device is mobile
   useEffect(() => {
     if (typeof window === "undefined") return;
     const mq = window.matchMedia("(max-width: 639px)");
@@ -51,6 +54,17 @@ const ListItem = ({
       else mq.removeListener(update);
     };
   }, []);
+
+  // NEW: Effect to hide the feedback message after 2 seconds
+  useEffect(() => {
+    if (showFeedback) {
+      const timer = setTimeout(() => {
+        setShowFeedback(false);
+      }, 2000); // Hide after 2 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [showFeedback]);
+
 
   const isPlanned = !!item.planning && item.planning.trim().length > 0;
 
@@ -90,7 +104,8 @@ const ListItem = ({
       cardRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
     }
 
-    const el = panelInputRef.current ?? anchorInputRef.current;
+    // Since panelInputRef is not being rendered, we only use anchorInputRef
+    const el = anchorInputRef.current;
     if (!el) return;
 
     if (el.showPicker) el.showPicker();
@@ -104,6 +119,20 @@ const ListItem = ({
     const newDate = e.target.value;
     onPlan?.(item.id, newDate);
   };
+
+  // NEW: Handler for the must-see button click, including feedback logic
+  const handleToggleMustSee = (e) => {
+    e.stopPropagation();
+
+    const wasMustSee = isMustSee;
+    onToggleFavorite();
+
+    // Show feedback only if we are ADDING it to Must-Sees
+    if (!wasMustSee) {
+        setShowFeedback(true);
+    }
+  };
+
 
   return (
     <div
@@ -199,21 +228,29 @@ const ListItem = ({
               {isPlanned ? <CalendarCheck size={18} /> : <Calendar size={18} />}
             </button>
 
-            {/* Must-See */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleFavorite();
-              }}
-              className={`p-1 rounded-full border border-transparent transition ${
-                isMustSee
-                  ? "text-yellow-500 hover:text-yellow-600 hover:border-yellow-500"
-                  : "text-gray-400 hover:text-yellow-400 hover:bg-gray-100 hover:border-gray-400"
-              }`}
-              title={isMustSee ? "Remove from Must-See" : "Add to Must-See"}
-            >
-              <Star size={18} fill={isMustSee ? "currentColor" : "none"} />
-            </button>
+            {/* Must-See Button & Feedback */}
+            <div className="relative flex items-center">
+                <button
+                onClick={handleToggleMustSee} // Use the new handler
+                className={`p-1 rounded-full border border-transparent transition ${
+                    isMustSee
+                    ? "text-yellow-500 hover:text-yellow-600 hover:border-yellow-500"
+                    : "text-gray-400 hover:text-yellow-400 hover:bg-gray-100 hover:border-gray-400"
+                }`}
+                title={isMustSee ? "Remove from Must-See" : "Add to Must-See"}
+                >
+                <Star size={18} fill={isMustSee ? "currentColor" : "none"} />
+                </button>
+
+                {/* Feedback Message */}
+                <span
+                    className={`absolute left-full ml-2 whitespace-nowrap text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full transition-all duration-300 pointer-events-none ${
+                        showFeedback ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'
+                    }`}
+                >
+                    Added to Must-sees!
+                </span>
+            </div>
           </div>
         </div>
       </div>
