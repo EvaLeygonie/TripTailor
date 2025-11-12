@@ -8,7 +8,7 @@
   font-weight: 400;
 
 
-  background-color:  #ffffff;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -21,6 +21,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -45,14 +46,47 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color:  #ffffff;
+  background-color: #ffffff;
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.react-calendar {
+  border: none !important;
+  background-color: white !important;
+}
+
+.react-calendar__tile {
+  border: none !important;
+  background-color: white !important;
+}
+
+.react-calendar__navigation button {
+  border: none !important;
+  background-color: white !important;
+}
+
+.react-calendar__tile--active {
+  background-color: #e0dede !important;
+  color: #701a75 !important;
+  border-radius: 0.5rem;
+}
+
+.react-calendar__tile:hover {
+  background-color: #f5d0fe !important;
+  color: #701a75 !important;
+  border-radius: 0.5rem;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none !important;
 }

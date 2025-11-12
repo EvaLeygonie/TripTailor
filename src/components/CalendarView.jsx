@@ -1,32 +1,24 @@
 
-
 import { useState, useContext, useEffect } from "react"
 import { Plus, X } from "lucide-react"
+import Calendar from "react-calendar"
+import "react-calendar/dist/Calendar.css"
 import { TripsContext } from "../context/TripsContext"
 
 export default function CalendarView({ trip }) {
   const { trips, setTrips, clearAttractionPlanning, clearRestaurantPlanning, editAttraction, editRestaurant } = useContext(TripsContext)
-
   const currentTrip = trips.find(t => t.id === trip?.id)
 
-  const [days, setDays] = useState([])
-  const [showModal, setShowModal] = useState(false)
   const [selectedDay, setSelectedDay] = useState(null)
-  const [selectedActivity, setSelectedActivity] = useState("")
-  const [availableActivities, setAvailableActivities] = useState([])
   const [activities, setActivities] = useState([])
+  const [availableActivities, setAvailableActivities] = useState([])
+  const [showModal, setShowModal] = useState(false)
+  const [selectedActivity, setSelectedActivity] = useState("")
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [activityToDelete, setActivityToDelete] = useState(null)
 
   useEffect(() => {
     if (!currentTrip || !currentTrip.dates) return
-
-    const { start, end } = currentTrip.dates;
-    const tempDays = [];
-    for (let d = new Date(start); d <= new Date(end); d.setDate(d.getDate() + 1)) {
-      tempDays.push({ date: d.toISOString().split("T")[0] });
-    }
-    setDays(tempDays)
 
     const plannedAttractions = (currentTrip.attractions || [])
       .filter(a => a.planning?.trim())
@@ -37,139 +29,158 @@ export default function CalendarView({ trip }) {
       .map(r => ({ ...r, name: r.title, type: "Restaurant", time: r.time || "", endTime: r.endTime || "" }))
 
     const allPlanned = [...plannedAttractions, ...plannedRestaurants]
-
     const saved = JSON.parse(localStorage.getItem(`activities_${currentTrip.id}`) || "[]")
-
     const mergedActivities = [
       ...allPlanned,
       ...saved.filter(s => !allPlanned.some(a => a.id === s.id))
     ]
-
     setActivities(mergedActivities.filter(a => a.planning?.trim()))
 
     const allAvailable = [
       ...(currentTrip.attractions || []).map(a => ({ ...a, name: a.title, type: "Attraction" })),
       ...(currentTrip.restaurants || []).map(r => ({ ...r, name: r.title, type: "Restaurant" })),
-    ];
+    ]
     setAvailableActivities(allAvailable)
 
-  }, [currentTrip, currentTrip?.dates?.start, currentTrip?.dates?.end])
-
+  }, [currentTrip])
 
   if (!currentTrip) return null
 
-  const handleOpenModal = (day) => {
-    setSelectedDay(day)
-    setShowModal(true)
+  const handleDayClick = (date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, "0")
+    const day = String(date.getDate()).padStart(2, "0")
+    const formatted = `${year}-${month}-${day}`
+    setSelectedDay(formatted)
     setSelectedActivity("")
+  }
+
+  const handleOpenModal = () => {
+    if (!selectedDay) {
+      const today = new Date().toISOString().split("T")[0]
+      setSelectedDay(today)
+    }
+    setShowModal(true)
   }
 
   const handleAddActivity = () => {
     if (!selectedActivity || !selectedDay) return
-
     const activityData = availableActivities.find(a => a.name === selectedActivity)
-    if (!activityData) return;
+    if (!activityData) return
 
-    const newActivity = {
-      ...activityData,
-      planning: selectedDay.date,
-    }
-
+    const newActivity = { ...activityData, planning: selectedDay }
     const updatedActivities = [...activities, newActivity]
     setActivities(updatedActivities)
     localStorage.setItem(`activities_${currentTrip.id}`, JSON.stringify(updatedActivities))
 
     if (activityData.type === "Attraction") {
-      editAttraction(currentTrip.id, activityData.id, { planning: selectedDay.date })
-    } else if (activityData.type === "Restaurant") {
-      editRestaurant(currentTrip.id, activityData.id, { planning: selectedDay.date })
+      editAttraction(currentTrip.id, activityData.id, { planning: selectedDay })
+    } else {
+      editRestaurant(currentTrip.id, activityData.id, { planning: selectedDay })
     }
 
     setTrips(trips.map(t =>
       t.id === currentTrip.id
         ? {
-          ...t, attractions: t.attractions.map(a =>
-            a.id === activityData.id ? { ...a, planning: selectedDay.date } : a
-          ),
-          restaurants: t.restaurants.map(r =>
-            r.id === activityData.id ? { ...r, planning: selectedDay.date } : r
-          ),
+          ...t,
+          attractions: t.attractions.map(a => a.id === activityData.id ? { ...a, planning: selectedDay } : a),
+          restaurants: t.restaurants.map(r => r.id === activityData.id ? { ...r, planning: selectedDay } : r),
           activities: updatedActivities
         }
         : t
     ))
 
+    setSelectedDay(newActivity.planning)
+
     setShowModal(false)
   }
 
-  const handleDeleteClick = (activity) => {
-    setActivityToDelete(activity)
-    setShowDeleteModal(true)
-  }
-
+  const handleDeleteClick = (activity) => { setActivityToDelete(activity); setShowDeleteModal(true) }
   const confirmDeleteActivity = () => {
     if (!activityToDelete) return
-
-    if (activityToDelete.type === "Attraction") {
-      clearAttractionPlanning(currentTrip.id, activityToDelete.id)
-    } else if (activityToDelete.type === "Restaurant") {
-      clearRestaurantPlanning(currentTrip.id, activityToDelete.id)
-    }
+    if (activityToDelete.type === "Attraction") clearAttractionPlanning(currentTrip.id, activityToDelete.id)
+    else clearRestaurantPlanning(currentTrip.id, activityToDelete.id)
 
     setActivities(prev => prev.filter(a => a.id !== activityToDelete.id))
     setActivityToDelete(null)
     setShowDeleteModal(false)
   }
 
+  const tileContent = ({ date, view }) => {
+    if (view === "month") {
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, "0")
+      const day = String(date.getDate()).padStart(2, "0")
+      const dateStr = `${year}-${month}-${day}`
+
+      const hasActivity = activities.some(a => a.planning === dateStr)
+      if (hasActivity) {
+        return <div className="w-2 h-2 bg-violet-600 rounded-full mx-auto mt-1"></div>
+      }
+    }
+    return null
+  }
+
+  const selectedDayActivities = activities
+    .filter(a => a.planning === selectedDay)
+    .sort((a, b) => (!a.time ? 1 : !b.time ? -1 : a.time.localeCompare(b.time)))
+
   return (
     <div className="p-4 bg-gray-50 rounded-xl shadow-lg mt-6 relative">
-      <div className="flex flex-col items-start mb-6">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-2">Planned activities</h2>
-        <p className="text-gray-600 mb-6">
-          {currentTrip.dates.start} – {currentTrip.dates.end}
-        </p>
+
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col items-start">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Planned activities</h2>
+          <p className="text-gray-600 text-sm">
+            {currentTrip.dates.start} – {currentTrip.dates.end}
+          </p>
+        </div>
+        <button
+          onClick={handleOpenModal}
+          className="bg-gray-50 text-violet-600 flex items-center justify-center p-2 rounded-md border hover:bg-violet-50 hover:text-violet-700 transition-all duration-200 ease-in-out"
+        >
+          <Plus size={30} strokeWidth={3} className="text-fuchsia-900 group-hover:text-white transition duration-200" />
+        </button>
       </div>
 
-      <div className="space-y-4">
-        {days.map(day => {
-          const dateFormatted = new Date(day.date).toLocaleDateString("en", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-          })
-
-          const dayActivities = activities
-            .filter(a => a.planning === day.date)
-            .sort((a, b) => (!a.time ? 1 : !b.time ? -1 : a.time.localeCompare(b.time)));
-
-          return (
-            <div key={day.date} className="mb-4 border-b pb-2">
-              <div className="flex items-center justify-between">
-                <p className="font-medium text-base">{dateFormatted}</p>
-                <button
-                  onClick={() => handleOpenModal(day)}
-                  className="bg-gray-50 text-violet-600 flex items-center justify-center p-2 rounded-md border hover:bg-violet-50 hover:text-violet-700 transition-all duration-200 ease-in-out"
-                >
-                  <Plus size={25} className="text-fuchsia-900 group-hover:text-white transition duration-200" />
-                </button>
-              </div>
-
-              <ul className="mt-8 space-y-2">
-                {dayActivities.map((a, i) => (
-                  <li key={i} className="text-gray-700 flex items-center gap-2">
-                    {a.image && <img src={a.image} alt={a.name} className="w-8 h-8 object-cover rounded-md" />}
-                    <span className="text-base font-medium">{a.name}</span>
-                    <span className="text-xs text-gray-400">({a.type})</span>
-                    <button onClick={() => handleDeleteClick(a)} className="bg-gray-50 text-red-500 hover:text-red-700">
-                      <X size={18} />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
+      <div className="mt-6 rounded-xxl p-6 w-full">
+        <div className="flex justify-center">
+          <Calendar
+            className="bg-white rounded-xl shadow-lg border-0"
+            minDate={new Date(currentTrip.dates.start)}
+            maxDate={new Date(currentTrip.dates.end)}
+            onClickDay={handleDayClick}
+            tileContent={tileContent}
+            value={selectedDay ? new Date(selectedDay) : null}
+            activeStartDate={new Date(currentTrip.dates.start)}
+          />
+        </div>
       </div>
+
+      {selectedDay && (
+        <div className="mt-4">
+          <h3 className="text-base font-semibold text-left mt-8 mb-6">
+            Activities planned on {new Date(selectedDay).toLocaleDateString()}
+          </h3>
+
+          {selectedDayActivities.length > 0 ? (
+            <ul className="space-y-2">
+              {selectedDayActivities.map(a => (
+                <li key={a.id} className="flex items-center gap-2 text-gray-700">
+                  {a.image && <img src={a.image} alt={a.name} className="w-8 h-8 object-cover rounded-md" />}
+                  <span className="font-medium">{a.name}</span>
+                  <span className="text-xs text-gray-400">({a.type})</span>
+                  <button onClick={() => handleDeleteClick(a)} className="bg-gray-50 text-red-500 hover:text-red-700">
+                    <X size={18} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-400 italic text-left">No activities planned</p>
+          )}
+        </div>
+      )}
 
       {showModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
@@ -179,9 +190,18 @@ export default function CalendarView({ trip }) {
             </button>
 
             <h2 className="text-xl font-semibold mb-4">Add activity</h2>
-            <p className="text-gray-500 mb-4">
-              {selectedDay && new Date(selectedDay.date).toLocaleDateString("en", { weekday: "long", day: "numeric", month: "long" })}
-            </p>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">Date</label>
+              <input
+                type="date"
+                className="border rounded-md w-full p-2"
+                value={selectedDay || ""}
+                min={currentTrip.dates.start}
+                max={currentTrip.dates.end}
+                onChange={(e) => setSelectedDay(e.target.value)}
+              />
+            </div>
 
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">Choose activity</label>
@@ -205,6 +225,7 @@ export default function CalendarView({ trip }) {
         </div>
       )}
 
+
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
@@ -216,7 +237,6 @@ export default function CalendarView({ trip }) {
           </div>
         </div>
       )}
-
     </div>
   )
 }
