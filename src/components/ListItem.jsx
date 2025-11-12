@@ -17,6 +17,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 const ListItem = ({
   item,
@@ -33,27 +34,29 @@ const ListItem = ({
   tripEndDate,
   hideRating = false,
 }) => {
-  const [centerPicker, setCenterPicker] = useState(false);
-  const centerInputRef = useRef(null);
+  const anchorInputRef = useRef(null);
+  const panelInputRef = useRef(null);
+  const cardRef = useRef(null);
 
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    if (!centerPicker) return;
-    const el = centerInputRef.current;
-    if (!el) return;
-    el.focus({ preventScroll: true });
-    if (el.showPicker) {
-      requestAnimationFrame(() => el.showPicker());
-    } else {
-      // empty
-    }
-  }, [centerPicker]);
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 639px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    if (mq.addEventListener) mq.addEventListener("change", update);
+    else mq.addListener(update);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener("change", update);
+      else mq.removeListener(update);
+    };
+  }, []);
 
   const isPlanned = !!item.planning && item.planning.trim().length > 0;
 
   const getCategoryIcon = (category) => {
     if (!category) return MapPin;
-
-    switch (category.toLowerCase()) {
+    switch ((category || "").toLowerCase()) {
       case "nature":
         return TreePine;
       case "landmark":
@@ -79,19 +82,38 @@ const ListItem = ({
         return Soup;
     }
   };
-
   const Icon = getCategoryIcon(item.category);
+
+  const handleDateClick = (e) => {
+    e.stopPropagation();
+    if (isMobile) {
+      cardRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+
+    const el = panelInputRef.current ?? anchorInputRef.current;
+    if (!el) return;
+
+    if (el.showPicker) el.showPicker();
+    else {
+      el.focus();
+      el.click();
+    }
+  };
+
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    onPlan?.(item.id, newDate);
+  };
 
   return (
     <div
-      className={`relative flex flex-col bg-white rounded-xl shadow-lg transition-all duration-300 ease-in-out
-      ${isExpanded ? "shadow-xl" : "hover:shadow-xl"}
-      ${centerPicker ? "overflow-visible" : "overflow-hidden"}
-    `}
+      ref={cardRef}
+      className={`relative flex flex-col bg-white rounded-xl shadow-lg overflow-visible transition-all duration-300 ease-in-out ${
+        isExpanded ? "shadow-xl" : "hover:shadow-xl"
+      }`}
     >
-      {/* --- Card Header (Row of Image + Content) --- */}
+      {/* --- Card Header --- */}
       <div className="flex p-3 sm:p-4">
-        {/* Image */}
         <div className="w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 mr-4">
           <img
             src={
@@ -109,14 +131,11 @@ const ListItem = ({
           />
         </div>
 
-        {/* Content & Main Info */}
         <div className="flex-grow flex flex-col justify-between">
-          {/* FIX: Enforce text-left on the title element */}
           <h3 className="text-lg font-semibold text-gray-900 line-clamp-1 text-left">
             {item.title}
           </h3>
 
-          {/* Sub-Info Row */}
           <div className="text-sm text-gray-500 mt-0.5">
             <div className="flex items-center">
               <Icon
@@ -139,67 +158,57 @@ const ListItem = ({
             </div>
           </div>
 
-          {/* Action Buttons Row */}
+          {/* Actions */}
           <div className="mt-2 flex space-x-2">
-            {/* Delete Button */}
             {onDelete && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete();
                 }}
-                className="p-1 rounded-full border border-transparent text-gray-600 hover:text-red-500 hover:border-red-500 transition duration-150"
+                className="p-1 rounded-full border border-transparent text-red-600 hover:bg-red-100 hover:border-red-500 transition"
                 title="Delete Item"
               >
                 <Trash2 size={18} />
               </button>
             )}
 
-            {/* Edit Button */}
             {onEdit && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onEdit();
                 }}
-                className="p-1 rounded-full border border-transparent text-gray-600 hover:text-blue-500 transition duration-150"
+                className="p-1 rounded-full border border-transparent text-blue-600 hover:bg-blue-100 hover:border-blue-500 transition"
                 title="Edit Item"
               >
                 <Edit size={18} />
               </button>
             )}
 
-            <div className="relative inline-flex overflow-visible z-10">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCenterPicker(true);
-                }}
-                className={`p-1 rounded-full border border-transparent transition duration-150 ${
-                  isPlanned
-                    ? "text-purple-600 hover:text-violet-600"
-                    : "text-gray-600 hover:text-violet-600"
-                }`}
-                title={isPlanned ? `Planned for ${item.planning}` : "Plan Item"}
-              >
-                {isPlanned ? (
-                  <CalendarCheck size={18} />
-                ) : (
-                  <Calendar size={18} />
-                )}
-              </button>
-            </div>
+            {/* Calendar */}
+            <button
+              onClick={handleDateClick}
+              className={`p-1 rounded-full border border-transparent transition ${
+                isPlanned
+                  ? "text-violet-600 hover:bg-violet-100 hover:border-violet-600"
+                  : "text-violet-400 hover:bg-violet-100 hover:border-violet-400"
+              }`}
+              title={isPlanned ? `Planned for ${item.planning}` : "Plan Item"}
+            >
+              {isPlanned ? <CalendarCheck size={18} /> : <Calendar size={18} />}
+            </button>
 
-            {/* Must-See Button */}
+            {/* Must-See */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 onToggleFavorite();
               }}
-              className={`p-1 rounded-full border border-transparent transition duration-150 ${
+              className={`p-1 rounded-full border border-transparent transition ${
                 isMustSee
                   ? "text-yellow-500 hover:text-yellow-600 hover:border-yellow-500"
-                  : "text-gray-400 hover:text-yellow-400 hover:border-gray-400"
+                  : "text-gray-400 hover:text-yellow-400 hover:bg-gray-100 hover:border-gray-400"
               }`}
               title={isMustSee ? "Remove from Must-See" : "Add to Must-See"}
             >
@@ -208,6 +217,53 @@ const ListItem = ({
           </div>
         </div>
       </div>
+
+      {isMobile ? (
+        createPortal(
+          <div
+            className="
+                fixed
+                inset-x-[max(16px,env(safe-area-inset-left))]
+                bottom-[max(12px,env(safe-area-inset-bottom))]
+                z-[9999]
+                flex justify-center pointer-events-none
+              "
+            aria-hidden="true"
+          >
+            <input
+              ref={anchorInputRef}
+              type="date"
+              value={item.planning || ""}
+              min={tripStartDate}
+              max={tripEndDate}
+              onChange={handleDateChange}
+              className="
+                  opacity-0
+                  w-[min(320px,calc(100vw-32px))]
+                  h-[44px]
+                "
+              tabIndex={-1}
+            />
+          </div>,
+          document.body
+        )
+      ) : (
+        <div
+          className="sm:absolute sm:left-1/2 sm:top-[98%] sm:-translate-x-1/2 z-[70] pointer-events-none"
+          aria-hidden="true"
+        >
+          <input
+            ref={anchorInputRef}
+            type="date"
+            value={item.planning || ""}
+            min={tripStartDate}
+            max={tripEndDate}
+            onChange={handleDateChange}
+            className="opacity-0 w-[280px] h-[44px]"
+            tabIndex={-1}
+          />
+        </div>
+      )}
 
       {/* --- Expandable Content (children) --- */}
       {children && (
@@ -218,7 +274,6 @@ const ListItem = ({
               : "max-h-0 opacity-0"
           }`}
         >
-          {/* Ensure children content is wrapped */}
           <div className="p-4 pt-3">{children}</div>
         </div>
       )}
@@ -230,47 +285,13 @@ const ListItem = ({
             e.stopPropagation();
             onToggleExpand();
           }}
-          className={`w-full py-2 bg-gray-50 hover:bg-gray-100 text-gray-500 transition-all duration-300 flex justify-center items-center ${
+          className={`w-full py-2 bg-gray-50 hover:bg-gray-100 text-gray-500 transition flex justify-center items-center ${
             isExpanded ? "border-t border-gray-200" : ""
           }`}
           title={isExpanded ? "Collapse Details" : "Show Details"}
         >
           {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </button>
-      )}
-      {/* Teleport input  */}
-      {centerPicker && (
-        <>
-          <div
-            className="fixed inset-0 z-[60]"
-            onClick={() => setCenterPicker(false)}
-            aria-hidden="true"
-          />
-
-          <div
-            className="absolute left-1/2 top-full -translate-x-1/2 z-[70]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="w-[300px] h-[44px] flex items-center justify-center">
-              <input
-                ref={centerInputRef}
-                type="date"
-                value={item.planning || ""}
-                min={tripStartDate}
-                max={tripEndDate}
-                onChange={(e) => {
-                  onPlan?.(item.id, e.target.value);
-                  setCenterPicker(false);
-                }}
-                onBlur={() => {
-                  setTimeout(() => setCenterPicker(false), 120);
-                }}
-                className="opacity-0 w-full h-full cursor-pointer"
-                autoFocus
-              />
-            </div>
-          </div>
-        </>
       )}
     </div>
   );
