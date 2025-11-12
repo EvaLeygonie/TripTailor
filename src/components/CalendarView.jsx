@@ -148,9 +148,9 @@ export default function CalendarView({ trip }) {
                 <h2 className="font-semibold text-lg">{dateFormatted}</h2>
                 <button
                   onClick={() => handleOpenModal(day)}
-                  className="bg-gradient-to-b from-violet-500 to-violet-700 text-white flex items-center justify-center p-2 rounded-md shadow-sm hover:from-violet-600 hover:to-violet-800 transition-all duration-200 ease-in-out"
+                  className="bg-gray-50 text-violet-600 flex items-center justify-center p-2 rounded-md border hover:bg-violet-50 hover:text-violet-700 transition-all duration-200 ease-in-out"
                 >
-                  <Plus size={20} />
+                  <Plus size={25} />
                 </button>
               </div>
 
@@ -165,7 +165,7 @@ export default function CalendarView({ trip }) {
                     {a.image && <img src={a.image} alt={a.name} className="w-6 h-6 object-cover rounded-md" />}
                     <span>{a.name}</span>
                     <span className="text-xs text-gray-400">({a.type})</span>
-                    <button onClick={() => handleDeleteClick(a)} className="text-red-500 hover:text-red-700">
+                    <button onClick={() => handleDeleteClick(a)} className="bg-gray-50 text-red-500 hover:text-red-700">
                       <X size={16} />
                     </button>
                   </li>

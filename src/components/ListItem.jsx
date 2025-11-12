@@ -70,22 +70,22 @@ const ListItem = ({
   const Icon = getCategoryIcon(item.category);
 
   // --- Quick Date Picker Logic ---
-  const handleDateClick = (e) => {
-    e.stopPropagation();
-    if (dateInputRef.current && dateInputRef.current.showPicker) {
-      dateInputRef.current.showPicker();
-    } else if (dateInputRef.current) {
-      dateInputRef.current.focus();
-      dateInputRef.current.click();
-    }
-  };
+  // const handleDateClick = (e) => {
+  //   e.stopPropagation();
+  //   if (dateInputRef.current && dateInputRef.current.showPicker) {
+  //     dateInputRef.current.showPicker();
+  //   } else if (dateInputRef.current) {
+  //     dateInputRef.current.focus();
+  //     dateInputRef.current.click();
+  //   }
+  // };
 
-  const handleDateChange = (e) => {
-    const newDate = e.target.value;
-    if (onPlan) {
-      onPlan(item.id, newDate);
-    }
-  };
+  // const handleDateChange = (e) => {
+  //   const newDate = e.target.value;
+  //   if (onPlan) {
+  //     onPlan(item.id, newDate);
+  //   }
+  // };
 
   return (
     <div
@@ -174,7 +174,7 @@ const ListItem = ({
             )}
 
             {/* Planning Button - Triggers Date Picker */}
-              <button
+            {/* <button
                 onClick={handleDateClick}
                 className={`p-1 rounded-full border border-transparent transition duration-150 ${
                   isPlanned
@@ -188,7 +188,48 @@ const ListItem = ({
                 ) : (
                   <Calendar size={18} />
                 )}
+              </button> */}
+
+            <div className="relative inline-flex overflow-visible z-10">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (dateInputRef.current) {
+                    dateInputRef.current.focus({ preventScroll: true });
+                    if (dateInputRef.current.showPicker) {
+                      dateInputRef.current.showPicker();
+                    } else {
+                      dateInputRef.current.click();
+                    }
+                  }
+                }}
+                className={`p-1 rounded-full border border-transparent transition duration-150 ${
+                  isPlanned
+                    ? "text-purple-600 hover:text-violet-600"
+                    : "text-gray-600 hover:text-violet-600"
+                }`}
+                title={isPlanned ? `Planned for ${item.planning}` : "Plan Item"}
+              >
+                {isPlanned ? (
+                  <CalendarCheck size={18} />
+                ) : (
+                  <Calendar size={18} />
+                )}
               </button>
+
+              {/* Anchored date input */}
+              <input
+                type="date"
+                ref={dateInputRef}
+                onChange={(e) => onPlan && onPlan(item.id, e.target.value)}
+                value={item.planning || ""}
+                min={tripStartDate}
+                max={tripEndDate}
+                className="absolute inset-0 w-6 h-6 opacity-0 pointer-events-none"
+                tabIndex={-1}
+                aria-hidden="true"
+              />
+            </div>
 
             {/* Must-See Button */}
             <button
@@ -210,7 +251,7 @@ const ListItem = ({
       </div>
 
       {/* HIDDEN DATE INPUT: Correctly constrained */}
-      <input
+      {/* <input
         type="date"
         ref={dateInputRef}
         onChange={handleDateChange}
@@ -218,7 +259,7 @@ const ListItem = ({
         value={item.planning || ""}
         min={tripStartDate}
         max={tripEndDate}
-      />
+      /> */}
 
       {/* --- Expandable Content (children) --- */}
       {children && (
