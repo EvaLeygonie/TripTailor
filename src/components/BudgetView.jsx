@@ -100,7 +100,7 @@ export default function BudgetView() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
       {/* Top bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-        <h2 className="text-xl sm:text-2xl font-semibold">Budget Overview</h2>
+        <h2 className="text-2xl sm:text-2xl font-semibold">Budget Overview</h2>
         <button
           onClick={() => setOpen(true)}
           className="rounded-lg px-4 py-2 text-white font-medium bg-gradient-to-r from-fuchsia-900 to-blue-800 transition-all duration-500"
