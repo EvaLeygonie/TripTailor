@@ -1,27 +1,27 @@
-import { Plus, X, MapPin, Clock, Star, Tag, Calendar } from 'lucide-react'
-import { useParams } from 'react-router-dom'
+import { Plus, X, MapPin, Clock, Star, Tag, Calendar } from "lucide-react";
+import { useParams } from "react-router-dom";
 // Removed mockTrips and mockImages imports
 import { coverImages } from "../data/mockImages";
-import ListItem from './ListItem'
-import { useState, useContext } from 'react'
-import { TripsContext } from '../context/TripsContext'
-import tripsData from '../data/mockTrips'
+import ListItem from "./ListItem";
+import { useState, useContext } from "react";
+import { TripsContext } from "../context/TripsContext";
+import tripsData from "../data/mockTrips";
 
 // Helper functions (kept outside the component for clean access)
 const formatCost = (cost) => {
   if (cost === 0) return "Free";
   if (cost === undefined || cost === null) return "N/A";
   return `${cost} Kr`;
-}
+};
 
 const formatRating = (rating) => {
   if (!rating) return "N/A";
   return `${rating} / 5.0`;
-}
+};
 
 const formatDuration = (min) => {
   // Check if min is null or undefined
-  if (min === null || min === undefined || min === '') return "N/A";
+  if (min === null || min === undefined || min === "") return "N/A";
 
   // Ensure 'min' is treated as a number
   const totalMinutes = parseInt(min, 10);
@@ -36,18 +36,25 @@ const formatDuration = (min) => {
   if (minutes > 0) return `${minutes} minutes`;
 
   return "N/A";
-}
+};
 
 const AttractionsList = () => {
-  const { id } = useParams()
+  const { id } = useParams();
 
   // Simplified context usage
-  const { trips, addAttraction, editAttraction, removeAttraction, toggleMustSee } = useContext(TripsContext);
+  const {
+    trips,
+    addAttraction,
+    editAttraction,
+    removeAttraction,
+    toggleMustSee,
+  } = useContext(TripsContext);
 
   // Use the context trip if available, otherwise fall back to mock data structure for safety
-  const trip = trips.find((t) => t.id === id) || tripsData.find((t) => t.id === id);
+  const trip =
+    trips.find((t) => t.id === id) || tripsData.find((t) => t.id === id);
 
-  const [showConfirmation, setShowConfirmation] = useState(false)
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [itemToDeleteId, setItemToDeleteId] = useState(null);
 
   const [open, setOpen] = useState(false);
@@ -73,13 +80,27 @@ const AttractionsList = () => {
   const mustSeeIds = trip ? trip.mustSeeIds : [];
 
   if (!trip) {
-    return <div className="p-4 text-center text-gray-500">Loading trip data or trip ID not found.</div>
+    return (
+      <div className="p-4 text-center text-gray-500">
+        Loading trip data or trip ID not found.
+      </div>
+    );
   }
 
   const suggestedCategories = [
-    "Nature", "Landmark", "Museum", "Sightseeing", "Entertainment",
-    "Historical Site", "Art Gallery", "Park", "Beach", "Religious Site",
-    "Theme Park", "Shopping", "Other"
+    "Nature",
+    "Landmark",
+    "Museum",
+    "Sightseeing",
+    "Entertainment",
+    "Historical Site",
+    "Art Gallery",
+    "Park",
+    "Beach",
+    "Religious Site",
+    "Theme Park",
+    "Shopping",
+    "Other",
   ];
 
   const resetForm = () => {
@@ -98,7 +119,7 @@ const AttractionsList = () => {
     setIsEditing(false);
     setError("");
     setSaving(false);
-  }
+  };
 
   const handleAddClick = () => {
     resetForm();
@@ -121,7 +142,7 @@ const AttractionsList = () => {
     setSelectedImage(item.image || coverImages[0]?.url);
     setError("");
     setOpen(true);
-  }
+  };
 
   const handleDeleteClick = (itemId) => {
     setItemToDeleteId(itemId);
@@ -134,12 +155,12 @@ const AttractionsList = () => {
     }
     setItemToDeleteId(null);
     setShowConfirmation(false);
-  }
+  };
 
   const handleCancelDelete = () => {
     setItemToDeleteId(null);
     setShowConfirmation(false);
-  }
+  };
 
   const handleToggleExpand = (itemId) => {
     setExpandedItemId(expandedItemId === itemId ? null : itemId);
@@ -148,7 +169,6 @@ const AttractionsList = () => {
   const handlePlanItem = (itemId, date) => {
     editAttraction(trip.id, itemId, { planning: date });
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -190,7 +210,9 @@ const AttractionsList = () => {
     }
   };
 
-  const attractionToDelete = trip.attractions.find(a => a.id === itemToDeleteId);
+  const attractionToDelete = trip.attractions.find(
+    (a) => a.id === itemToDeleteId
+  );
 
   return (
     <div className="p-4 bg-gray-50 rounded-xl shadow-lg mt-6">
@@ -208,7 +230,7 @@ const AttractionsList = () => {
 
       {/* List container: Constrained width and centered */}
       <div className="space-y-4 max-w-3xl mx-auto">
-        {trip.attractions.map(attraction => {
+        {trip.attractions.map((attraction) => {
           const isExpanded = expandedItemId === attraction.id;
 
           return (
@@ -225,71 +247,104 @@ const AttractionsList = () => {
               onPlan={handlePlanItem}
               tripStartDate={trip.dates.start}
               tripEndDate={trip.dates.end}
+              hideRating
             >
               {/* --- Children: Expanded Details (Passed to ListItem) --- */}
               <div className="space-y-3">
-
                 {/* Description - NOW FULLY LEFT ALIGNED AND MAX WIDTH APPLIED TO CENTER TEXT BLOCK */}
                 <div className="text-sm text-gray-700 max-w-2xl mx-auto text-left">
                   <p className="font-semibold mb-1 text-center">Description</p>
-                  <p className="text-gray-600 italic leading-snug">{attraction.description || "No detailed description provided for this item."}</p>
+                  <p className="text-gray-600 italic leading-snug">
+                    {attraction.description ||
+                      "No detailed description provided for this item."}
+                  </p>
                 </div>
 
                 {/* Detailed Stats Grid - NOW USING GRID-COLS-1 ON SMALL SCREENS AND EXPLICITLY LEFT-ALIGNED */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-4 text-sm pt-2">
-
                   {/* Address */}
                   <div className="flex items-start">
-                    <MapPin size={16} className="text-red-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <div className='flex flex-col text-left'>
+                    <MapPin
+                      size={16}
+                      className="text-red-500 mr-2 flex-shrink-0 mt-0.5"
+                    />
+                    <div className="flex flex-col text-left">
                       <p className="font-medium text-gray-700">Location</p>
-                      <p className="text-gray-500 leading-tight">{attraction.address || "Address not available."}</p>
+                      <p className="text-gray-500 leading-tight">
+                        {attraction.address || "Address not available."}
+                      </p>
                     </div>
                   </div>
 
                   {/* Rating */}
                   <div className="flex items-start">
-                    <Star size={16} className="text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <div className='flex flex-col text-left'>
+                    <Star
+                      size={16}
+                      className="text-yellow-500 mr-2 flex-shrink-0 mt-0.5"
+                    />
+                    <div className="flex flex-col text-left">
                       <p className="font-medium text-gray-700">User Rating</p>
-                      <p className="text-gray-500">{formatRating(attraction.rating)}</p>
+                      <p className="text-gray-500">
+                        {formatRating(attraction.rating)}
+                      </p>
                     </div>
                   </div>
 
                   {/* Cost */}
                   <div className="flex items-start">
-                    <Tag size={16} className="text-indigo-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <div className='flex flex-col text-left'>
+                    <Tag
+                      size={16}
+                      className="text-indigo-500 mr-2 flex-shrink-0 mt-0.5"
+                    />
+                    <div className="flex flex-col text-left">
                       <p className="font-medium text-gray-700">Expected Cost</p>
-                      <p className="text-gray-500">{attraction.priceLevel} ({formatCost(attraction.expectedCost)})</p>
+                      <p className="text-gray-500">
+                        {attraction.priceLevel} (
+                        {formatCost(attraction.expectedCost)})
+                      </p>
                     </div>
                   </div>
 
                   {/* Duration */}
                   <div className="flex items-start">
-                    <Clock size={16} className="text-teal-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <div className='flex flex-col text-left'>
+                    <Clock
+                      size={16}
+                      className="text-teal-500 mr-2 flex-shrink-0 mt-0.5"
+                    />
+                    <div className="flex flex-col text-left">
                       <p className="font-medium text-gray-700">Duration</p>
-                      <p className="text-gray-500">{formatDuration(attraction.durationMin)}</p>
+                      <p className="text-gray-500">
+                        {formatDuration(attraction.durationMin)}
+                      </p>
                     </div>
                   </div>
 
                   {/* Opening Hours */}
                   <div className="flex items-start">
-                    <Clock size={16} className="text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <div className='flex flex-col text-left'>
+                    <Clock
+                      size={16}
+                      className="text-orange-500 mr-2 flex-shrink-0 mt-0.5"
+                    />
+                    <div className="flex flex-col text-left">
                       <p className="font-medium text-gray-700">Hours</p>
-                      <p className="text-gray-500">{attraction.openingHours || "Check locally"}</p>
+                      <p className="text-gray-500">
+                        {attraction.openingHours || "Check locally"}
+                      </p>
                     </div>
                   </div>
 
                   {/* Planned Visit */}
                   <div className="flex items-start">
-                    <Calendar size={16} className="text-violet-600 mr-2 flex-shrink-0 mt-0.5" />
-                    <div className='flex flex-col text-left'>
+                    <Calendar
+                      size={16}
+                      className="text-violet-600 mr-2 flex-shrink-0 mt-0.5"
+                    />
+                    <div className="flex flex-col text-left">
                       <p className="font-medium text-gray-700">Planned Visit</p>
                       <p className="text-gray-500 font-semibold">
-                        {attraction.planning ? attraction.planning : "Not planned yet"}
+                        {attraction.planning
+                          ? attraction.planning
+                          : "Not planned yet"}
                       </p>
                     </div>
                   </div>
@@ -311,7 +366,9 @@ const AttractionsList = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-lg max-h-[90vh] overflow-y-auto">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">{isEditing ? "Edit Attraction" : "Add Attraction"}</h3>
+              <h3 className="text-lg font-semibold">
+                {isEditing ? "Edit Attraction" : "Add Attraction"}
+              </h3>
               <button
                 onClick={() => setOpen(false)}
                 className="rounded-md p-1 hover:bg-gray-100"
@@ -322,9 +379,10 @@ const AttractionsList = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="grid gap-3">
-
               {/* Name */}
-              <label className="text-sm font-medium text-gray-700">Attraction name</label>
+              <label className="text-sm font-medium text-gray-700">
+                Attraction name
+              </label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g. Louvre Museum,..."
@@ -334,7 +392,9 @@ const AttractionsList = () => {
               />
 
               {/* Category */}
-              <label className="text-sm font-medium text-gray-700">Category</label>
+              <label className="text-sm font-medium text-gray-700">
+                Category
+              </label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g. Museum / Landmark / Nature..."
@@ -349,7 +409,9 @@ const AttractionsList = () => {
               </datalist>
 
               {/* Address */}
-              <label className="text-sm font-medium text-gray-700">Address</label>
+              <label className="text-sm font-medium text-gray-700">
+                Address
+              </label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g. 75001 Paris, France"
@@ -358,7 +420,9 @@ const AttractionsList = () => {
               />
 
               {/* Description */}
-              <label className="text-sm font-medium text-gray-700">Description</label>
+              <label className="text-sm font-medium text-gray-700">
+                Description
+              </label>
               <textarea
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[80px]"
                 placeholder="Provide a detailed summary of the attraction..."
@@ -367,7 +431,9 @@ const AttractionsList = () => {
               />
 
               {/* Rating */}
-              <label className="text-sm font-medium text-gray-700">Rating (1–5)</label>
+              <label className="text-sm font-medium text-gray-700">
+                Rating (1–5)
+              </label>
               <input
                 type="number"
                 min="1"
@@ -380,7 +446,9 @@ const AttractionsList = () => {
               />
 
               {/* Price Level */}
-              <label className="text-sm font-medium text-gray-700">Price level</label>
+              <label className="text-sm font-medium text-gray-700">
+                Price level
+              </label>
               <select
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={priceLevel}
@@ -395,7 +463,9 @@ const AttractionsList = () => {
               </select>
 
               {/* Expected cost */}
-              <label className="text-sm font-medium text-gray-700">Expected cost (Kr)</label>
+              <label className="text-sm font-medium text-gray-700">
+                Expected cost (Kr)
+              </label>
               <input
                 type="number"
                 min="0"
@@ -406,7 +476,9 @@ const AttractionsList = () => {
               />
 
               {/* Duration */}
-              <label className="text-sm font-medium text-gray-700">Typical duration (minutes)</label>
+              <label className="text-sm font-medium text-gray-700">
+                Typical duration (minutes)
+              </label>
               <input
                 type="number"
                 min="0"
@@ -417,7 +489,9 @@ const AttractionsList = () => {
               />
 
               {/* Opening hours */}
-              <label className="text-sm font-medium text-gray-700">Opening hours</label>
+              <label className="text-sm font-medium text-gray-700">
+                Opening hours
+              </label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g. 09:00–17:00"
@@ -426,7 +500,9 @@ const AttractionsList = () => {
               />
 
               {/* Planning (Modal version - uses trip constraints) */}
-              <label className="text-sm font-medium text-gray-700">Planned visit (date)</label>
+              <label className="text-sm font-medium text-gray-700">
+                Planned visit (date)
+              </label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 type="date"
@@ -437,7 +513,9 @@ const AttractionsList = () => {
               />
 
               {/* Image selector from mockImages */}
-              <label className="text-sm font-medium text-gray-700">Select image</label>
+              <label className="text-sm font-medium text-gray-700">
+                Select image
+              </label>
               <div className="grid grid-cols-3 gap-2">
                 {coverImages.map((img) => (
                   <img
@@ -445,10 +523,11 @@ const AttractionsList = () => {
                     src={img.url}
                     alt="cover option"
                     onClick={() => setSelectedImage(img.url)}
-                    className={`h-20 w-full object-cover rounded-lg cursor-pointer border-2 ${selectedImage === img.url
-                      ? "border-blue-500"
-                      : "border-transparent hover:border-gray-300"
-                      }`}
+                    className={`h-20 w-full object-cover rounded-lg cursor-pointer border-2 ${
+                      selectedImage === img.url
+                        ? "border-blue-500"
+                        : "border-transparent hover:border-gray-300"
+                    }`}
                   />
                 ))}
               </div>
@@ -469,7 +548,13 @@ const AttractionsList = () => {
                   className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
                   disabled={saving || !name.trim()}
                 >
-                  {saving ? (isEditing ? "Saving..." : "Adding...") : (isEditing ? "Save Changes" : "Add")}
+                  {saving
+                    ? isEditing
+                      ? "Saving..."
+                      : "Adding..."
+                    : isEditing
+                    ? "Save Changes"
+                    : "Add"}
                 </button>
               </div>
             </form>
@@ -481,9 +566,13 @@ const AttractionsList = () => {
       {showConfirmation && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl text-center">
-            <h3 className="text-lg font-bold text-red-600 mb-3">Confirm Deletion</h3>
+            <h3 className="text-lg font-bold text-red-600 mb-3">
+              Confirm Deletion
+            </h3>
             <p className="mb-6 text-gray-700">
-              Are you sure you want to delete **{attractionToDelete?.title || 'this item'}**? This cannot be undone.
+              Are you sure you want to delete **
+              {attractionToDelete?.title || "this item"}**? This cannot be
+              undone.
             </p>
             <div className="flex gap-3 justify-center">
               <button

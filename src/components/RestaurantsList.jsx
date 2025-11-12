@@ -1,45 +1,54 @@
-import { Plus, X, MapPin, Clock, Star, Tag, Calendar, Utensils } from 'lucide-react'
-import { useParams } from 'react-router-dom'
+import {
+  Plus,
+  X,
+  MapPin,
+  Clock,
+  Star,
+  Tag,
+  Calendar,
+  Utensils,
+} from "lucide-react";
+import { useParams } from "react-router-dom";
 // Note: We use the relative paths provided in the user's input, assuming the developer will resolve them locally.
 import { coverImages } from "../data/mockImages";
-import ListItem from './ListItem'
-import { useState, useContext } from 'react'
-import { TripsContext } from '../context/TripsContext'
-import tripsData from '../data/mockTrips'
+import ListItem from "./ListItem";
+import { useState, useContext } from "react";
+import { TripsContext } from "../context/TripsContext";
+import tripsData from "../data/mockTrips";
 
 // Helper functions (kept outside the component for clean access)
 const formatCost = (cost) => {
   if (cost === 0) return "Free";
   if (cost === undefined || cost === null) return "N/A";
   return `${cost} Kr`;
-}
+};
 
 const formatRating = (rating) => {
   if (!rating) return "N/A";
   return `${rating} / 5.0`;
-}
+};
 
 const formatDuration = (min) => {
-    // Check if min is null or undefined
-    if (min === null || min === undefined || min === '') return "N/A";
+  // Check if min is null or undefined
+  if (min === null || min === undefined || min === "") return "N/A";
 
-    // Ensure 'min' is treated as a number
-    const totalMinutes = parseInt(min, 10);
+  // Ensure 'min' is treated as a number
+  const totalMinutes = parseInt(min, 10);
 
-    if (isNaN(totalMinutes) || totalMinutes <= 0) return "N/A";
+  if (isNaN(totalMinutes) || totalMinutes <= 0) return "N/A";
 
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
 
-    if (hours > 0 && minutes > 0) return `${hours}h ${minutes}min`;
-    if (hours > 0) return `${hours} hours`;
-    if (minutes > 0) return `${minutes} minutes`;
+  if (hours > 0 && minutes > 0) return `${hours}h ${minutes}min`;
+  if (hours > 0) return `${hours} hours`;
+  if (minutes > 0) return `${minutes} minutes`;
 
-    return "N/A";
-}
+  return "N/A";
+};
 
 const RestaurantsList = () => {
-  const { id } = useParams()
+  const { id } = useParams();
 
   // Simplified context usage. Assuming context now provides restaurant-specific handlers.
   const {
@@ -47,13 +56,14 @@ const RestaurantsList = () => {
     addRestaurant, // Changed from addAttraction
     editRestaurant, // Changed from editAttraction
     removeRestaurant, // Changed from removeAttraction
-    toggleMustSee
+    toggleMustSee,
   } = useContext(TripsContext);
 
   // Use the context trip if available, otherwise fall back to mock data structure for safety
-  const trip = trips.find((t) => t.id === id) || tripsData.find((t) => t.id === id);
+  const trip =
+    trips.find((t) => t.id === id) || tripsData.find((t) => t.id === id);
 
-  const [showConfirmation, setShowConfirmation] = useState(false)
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [itemToDeleteId, setItemToDeleteId] = useState(null);
 
   const [open, setOpen] = useState(false);
@@ -80,16 +90,30 @@ const RestaurantsList = () => {
   const mustSeeIds = trip ? trip.mustSeeIds : [];
 
   if (!trip) {
-    return <div className="p-4 text-center text-gray-500">Loading trip data or trip ID not found.</div>
+    return (
+      <div className="p-4 text-center text-gray-500">
+        Loading trip data or trip ID not found.
+      </div>
+    );
   }
 
   // Use the restaurant list from the trip object
   const restaurantList = trip.restaurants || [];
 
-
   const suggestedCategories = [
-    "Fine Dining", "Casual Dining", "Cafe / Bakery", "Bar / Pub", "Street Food",
-    "Italian", "Asian", "Mexican", "Local Cuisine", "Seafood", "Vegetarian / Vegan", "Dessert", "Other"
+    "Fine Dining",
+    "Casual Dining",
+    "Cafe / Bakery",
+    "Bar / Pub",
+    "Street Food",
+    "Italian",
+    "Asian",
+    "Mexican",
+    "Local Cuisine",
+    "Seafood",
+    "Vegetarian / Vegan",
+    "Dessert",
+    "Other",
   ];
 
   const resetForm = () => {
@@ -108,7 +132,7 @@ const RestaurantsList = () => {
     setIsEditing(false);
     setError("");
     setSaving(false);
-  }
+  };
 
   const handleAddClick = () => {
     resetForm();
@@ -131,11 +155,11 @@ const RestaurantsList = () => {
     setSelectedImage(item.image || coverImages[0]?.url);
     setError("");
     setOpen(true);
-  }
+  };
 
   const handleDeleteClick = (itemId) => {
-      setItemToDeleteId(itemId);
-      setShowConfirmation(true);
+    setItemToDeleteId(itemId);
+    setShowConfirmation(true);
   };
 
   const handleConfirmDelete = () => {
@@ -144,12 +168,12 @@ const RestaurantsList = () => {
     }
     setItemToDeleteId(null);
     setShowConfirmation(false);
-  }
+  };
 
   const handleCancelDelete = () => {
     setItemToDeleteId(null);
     setShowConfirmation(false);
-  }
+  };
 
   const handleToggleExpand = (itemId) => {
     setExpandedItemId(expandedItemId === itemId ? null : itemId);
@@ -159,7 +183,6 @@ const RestaurantsList = () => {
   const handlePlanItem = (itemId, date) => {
     editRestaurant(trip.id, itemId, { planning: date }); // Changed to editRestaurant
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -201,7 +224,9 @@ const RestaurantsList = () => {
     }
   };
 
-  const restaurantToDelete = restaurantList.find(r => r.id === itemToDeleteId);
+  const restaurantToDelete = restaurantList.find(
+    (r) => r.id === itemToDeleteId
+  );
 
   return (
     <div className="p-4 bg-gray-50 rounded-xl shadow-lg mt-6">
@@ -219,7 +244,8 @@ const RestaurantsList = () => {
 
       {/* List container: Constrained width and centered to match other lists */}
       <div className="space-y-4 max-w-3xl mx-auto">
-        {restaurantList.map(restaurant => { // Iterating over trip.restaurants
+        {restaurantList.map((restaurant) => {
+          // Iterating over trip.restaurants
           const isExpanded = expandedItemId === restaurant.id;
 
           return (
@@ -236,74 +262,109 @@ const RestaurantsList = () => {
               onPlan={handlePlanItem}
               tripStartDate={trip.dates.start}
               tripEndDate={trip.dates.end}
+              hideRating
             >
               {/* --- Children: Expanded Details (Passed to ListItem) --- */}
               <div className="space-y-3">
-
                 {/* Description - Adjusted to max-w-xl on large screens to reduce overall width */}
                 <div className="text-sm text-gray-700 max-w-xl mx-auto text-left">
-                    <p className="font-semibold mb-1 text-center">Description</p>
-                    <p className="text-gray-600 italic leading-snug">{restaurant.description || "No detailed description provided for this restaurant."}</p>
+                  <p className="font-semibold mb-1 text-center">Description</p>
+                  <p className="text-gray-600 italic leading-snug">
+                    {restaurant.description ||
+                      "No detailed description provided for this restaurant."}
+                  </p>
                 </div>
 
                 {/* Detailed Stats Grid - Left-aligned */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-4 text-sm pt-2">
-
-                    {/* Address */}
-                    <div className="flex items-start">
-                        <MapPin size={16} className="text-red-500 mr-2 flex-shrink-0 mt-0.5" />
-                        <div className='flex flex-col text-left'>
-                            <p className="font-medium text-gray-700">Location</p>
-                            <p className="text-gray-500 leading-tight">{restaurant.address || "Address not available."}</p>
-                        </div>
+                  {/* Address */}
+                  <div className="flex items-start">
+                    <MapPin
+                      size={16}
+                      className="text-red-500 mr-2 flex-shrink-0 mt-0.5"
+                    />
+                    <div className="flex flex-col text-left">
+                      <p className="font-medium text-gray-700">Location</p>
+                      <p className="text-gray-500 leading-tight">
+                        {restaurant.address || "Address not available."}
+                      </p>
                     </div>
+                  </div>
 
-                    {/* Rating */}
-                    <div className="flex items-start">
-                        <Star size={16} className="text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
-                         <div className='flex flex-col text-left'>
-                            <p className="font-medium text-gray-700">User Rating</p>
-                            <p className="text-gray-500">{formatRating(restaurant.rating)}</p>
-                        </div>
+                  {/* Rating */}
+                  <div className="flex items-start">
+                    <Star
+                      size={16}
+                      className="text-yellow-500 mr-2 flex-shrink-0 mt-0.5"
+                    />
+                    <div className="flex flex-col text-left">
+                      <p className="font-medium text-gray-700">User Rating</p>
+                      <p className="text-gray-500">
+                        {formatRating(restaurant.rating)}
+                      </p>
                     </div>
+                  </div>
 
-                    {/* Cost */}
-                    <div className="flex items-start">
-                        <Tag size={16} className="text-indigo-500 mr-2 flex-shrink-0 mt-0.5" />
-                         <div className='flex flex-col text-left'>
-                            <p className="font-medium text-gray-700">Price</p>
-                            <p className="text-gray-500">{restaurant.priceLevel} ({formatCost(restaurant.expectedCost)})</p>
-                        </div>
+                  {/* Cost */}
+                  <div className="flex items-start">
+                    <Tag
+                      size={16}
+                      className="text-indigo-500 mr-2 flex-shrink-0 mt-0.5"
+                    />
+                    <div className="flex flex-col text-left">
+                      <p className="font-medium text-gray-700">Price</p>
+                      <p className="text-gray-500">
+                        {restaurant.priceLevel} (
+                        {formatCost(restaurant.expectedCost)})
+                      </p>
                     </div>
+                  </div>
 
-                    {/* Duration */}
-                    <div className="flex items-start">
-                        <Clock size={16} className="text-teal-500 mr-2 flex-shrink-0 mt-0.5" />
-                         <div className='flex flex-col text-left'>
-                            <p className="font-medium text-gray-700">Dining Duration</p>
-                            <p className="text-gray-500">{formatDuration(restaurant.durationMin)}</p>
-                        </div>
+                  {/* Duration */}
+                  <div className="flex items-start">
+                    <Clock
+                      size={16}
+                      className="text-teal-500 mr-2 flex-shrink-0 mt-0.5"
+                    />
+                    <div className="flex flex-col text-left">
+                      <p className="font-medium text-gray-700">
+                        Dining Duration
+                      </p>
+                      <p className="text-gray-500">
+                        {formatDuration(restaurant.durationMin)}
+                      </p>
                     </div>
+                  </div>
 
-                    {/* Opening Hours */}
-                    <div className="flex items-start">
-                        <Utensils size={16} className="text-orange-500 mr-2 flex-shrink-0 mt-0.5" />
-                         <div className='flex flex-col text-left'>
-                            <p className="font-medium text-gray-700">Opening Hours</p>
-                            <p className="text-gray-500">{restaurant.openingHours || "Check locally"}</p>
-                        </div>
+                  {/* Opening Hours */}
+                  <div className="flex items-start">
+                    <Utensils
+                      size={16}
+                      className="text-orange-500 mr-2 flex-shrink-0 mt-0.5"
+                    />
+                    <div className="flex flex-col text-left">
+                      <p className="font-medium text-gray-700">Opening Hours</p>
+                      <p className="text-gray-500">
+                        {restaurant.openingHours || "Check locally"}
+                      </p>
                     </div>
+                  </div>
 
-                    {/* Planned Visit */}
-                    <div className="flex items-start">
-                        <Calendar size={16} className="text-violet-600 mr-2 flex-shrink-0 mt-0.5" />
-                         <div className='flex flex-col text-left'>
-                            <p className="font-medium text-gray-700">Planned Date</p>
-                            <p className="text-gray-500 font-semibold">
-                                {restaurant.planning ? restaurant.planning : "Not planned yet"}
-                            </p>
-                        </div>
+                  {/* Planned Visit */}
+                  <div className="flex items-start">
+                    <Calendar
+                      size={16}
+                      className="text-violet-600 mr-2 flex-shrink-0 mt-0.5"
+                    />
+                    <div className="flex flex-col text-left">
+                      <p className="font-medium text-gray-700">Planned Date</p>
+                      <p className="text-gray-500 font-semibold">
+                        {restaurant.planning
+                          ? restaurant.planning
+                          : "Not planned yet"}
+                      </p>
                     </div>
+                  </div>
                 </div>
               </div>
             </ListItem>
@@ -322,7 +383,9 @@ const RestaurantsList = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-lg max-h-[90vh] overflow-y-auto">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">{isEditing ? "Edit Restaurant" : "Add Restaurant"}</h3>
+              <h3 className="text-lg font-semibold">
+                {isEditing ? "Edit Restaurant" : "Add Restaurant"}
+              </h3>
               <button
                 onClick={() => setOpen(false)}
                 className="rounded-md p-1 hover:bg-gray-100"
@@ -333,9 +396,10 @@ const RestaurantsList = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="grid gap-3">
-
               {/* Name */}
-              <label className="text-sm font-medium text-gray-700">Restaurant name</label>
+              <label className="text-sm font-medium text-gray-700">
+                Restaurant name
+              </label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                 placeholder="e.g. Italian Trattoria..."
@@ -345,7 +409,9 @@ const RestaurantsList = () => {
               />
 
               {/* Category */}
-              <label className="text-sm font-medium text-gray-700">Cuisine / Type</label>
+              <label className="text-sm font-medium text-gray-700">
+                Cuisine / Type
+              </label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                 placeholder="e.g. Fine Dining / Italian / Street Food..."
@@ -360,7 +426,9 @@ const RestaurantsList = () => {
               </datalist>
 
               {/* Address */}
-              <label className="text-sm font-medium text-gray-700">Address</label>
+              <label className="text-sm font-medium text-gray-700">
+                Address
+              </label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                 placeholder="e.g. 123 Main Street, City"
@@ -369,7 +437,9 @@ const RestaurantsList = () => {
               />
 
               {/* Description */}
-              <label className="text-sm font-medium text-gray-700">Notes / Dishes to Try</label>
+              <label className="text-sm font-medium text-gray-700">
+                Notes / Dishes to Try
+              </label>
               <textarea
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500 min-h-[80px]"
                 placeholder="Dishes to try, atmosphere notes, reservation details..."
@@ -378,7 +448,9 @@ const RestaurantsList = () => {
               />
 
               {/* Rating */}
-              <label className="text-sm font-medium text-gray-700">Rating (1–5)</label>
+              <label className="text-sm font-medium text-gray-700">
+                Rating (1–5)
+              </label>
               <input
                 type="number"
                 min="1"
@@ -391,7 +463,9 @@ const RestaurantsList = () => {
               />
 
               {/* Price Level */}
-              <label className="text-sm font-medium text-gray-700">Price level</label>
+              <label className="text-sm font-medium text-gray-700">
+                Price level
+              </label>
               <select
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                 value={priceLevel}
@@ -405,7 +479,9 @@ const RestaurantsList = () => {
               </select>
 
               {/* Expected cost */}
-              <label className="text-sm font-medium text-gray-700">Expected cost (Kr per person)</label>
+              <label className="text-sm font-medium text-gray-700">
+                Expected cost (Kr per person)
+              </label>
               <input
                 type="number"
                 min="0"
@@ -416,7 +492,9 @@ const RestaurantsList = () => {
               />
 
               {/* Duration */}
-              <label className="text-sm font-medium text-gray-700">Typical dining duration (minutes)</label>
+              <label className="text-sm font-medium text-gray-700">
+                Typical dining duration (minutes)
+              </label>
               <input
                 type="number"
                 min="0"
@@ -427,7 +505,9 @@ const RestaurantsList = () => {
               />
 
               {/* Opening hours */}
-              <label className="text-sm font-medium text-gray-700">Opening hours</label>
+              <label className="text-sm font-medium text-gray-700">
+                Opening hours
+              </label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                 placeholder="e.g. 18:00–23:00"
@@ -436,7 +516,9 @@ const RestaurantsList = () => {
               />
 
               {/* Planning (Modal version - uses trip constraints) */}
-              <label className="text-sm font-medium text-gray-700">Planned visit (date)</label>
+              <label className="text-sm font-medium text-gray-700">
+                Planned visit (date)
+              </label>
               <input
                 className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                 type="date"
@@ -447,7 +529,9 @@ const RestaurantsList = () => {
               />
 
               {/* Image selector from mockImages */}
-              <label className="text-sm font-medium text-gray-700">Select image</label>
+              <label className="text-sm font-medium text-gray-700">
+                Select image
+              </label>
               <div className="grid grid-cols-3 gap-2">
                 {coverImages.map((img) => (
                   <img
@@ -480,7 +564,13 @@ const RestaurantsList = () => {
                   className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 disabled:opacity-60" // Changed button color
                   disabled={saving || !name.trim()}
                 >
-                  {saving ? (isEditing ? "Saving..." : "Adding...") : (isEditing ? "Save Changes" : "Add")}
+                  {saving
+                    ? isEditing
+                      ? "Saving..."
+                      : "Adding..."
+                    : isEditing
+                    ? "Save Changes"
+                    : "Add"}
                 </button>
               </div>
             </form>
@@ -492,9 +582,13 @@ const RestaurantsList = () => {
       {showConfirmation && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-xs rounded-xl bg-white p-6 shadow-2xl text-center">
-            <h3 className="text-lg font-bold text-red-600 mb-3">Confirm Deletion</h3>
+            <h3 className="text-lg font-bold text-red-600 mb-3">
+              Confirm Deletion
+            </h3>
             <p className="mb-6 text-gray-700">
-              Are you sure you want to delete **{restaurantToDelete?.title || 'this item'}**? This cannot be undone.
+              Are you sure you want to delete **
+              {restaurantToDelete?.title || "this item"}**? This cannot be
+              undone.
             </p>
             <div className="flex gap-3 justify-center">
               <button

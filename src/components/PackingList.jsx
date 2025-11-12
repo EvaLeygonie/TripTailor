@@ -62,7 +62,7 @@ export default function PackingList() {
     } else {
       setPacking([]);
     }
-  }, [id, LS_key, trip?.packingList]);
+  }, [id, LS_key, trip.packingList, trip]);
 
   // Spara packing till LS
   useEffect(() => {
