@@ -150,7 +150,7 @@ export default function CalendarView({ trip }) {
                   onClick={() => handleOpenModal(day)}
                   className="bg-gray-50 text-violet-600 flex items-center justify-center p-2 rounded-md border hover:bg-violet-50 hover:text-violet-700 transition-all duration-200 ease-in-out"
                 >
-                  <Plus size={25} />
+                  <Plus size={25} className="text-fuchsia-900 group-hover:text-white transition duration-200" />
                 </button>
               </div>
 
