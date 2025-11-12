@@ -58,7 +58,7 @@ export default function TripsList() {
         </p>
         <button
           onClick={() => openModal(null)}
-          className="col-span-full mt-4 bg-gradient-to-r from-purple-700 to-blue-600 text-white py-3 px-6 rounded-lg shadow-lg hover:opacity-90 active:scale-95 transition duration-150 flex items-center justify-center gap-2 font-semibold"
+          className="col-span-full mt-4 bg-gradient-to-r from-fuchsia-900 to-blue-800 text-white py-3 px-6 rounded-lg shadow-lg hover:opacity-90 active:scale-95 transition duration-150 flex items-center justify-center gap-2 font-semibold"
         >
           <Plus size={20} /> Plan New Trip
         </button>
