@@ -145,7 +145,7 @@ export default function CalendarView({ trip }) {
           return (
             <div key={day.date} className="mb-4 border-b pb-2">
               <div className="flex items-center justify-between">
-                <h2 className="font-semibold text-lg">{dateFormatted}</h2>
+                <p className="font-medium text-base">{dateFormatted}</p>
                 <button
                   onClick={() => handleOpenModal(day)}
                   className="bg-gray-50 text-violet-600 flex items-center justify-center p-2 rounded-md border hover:bg-violet-50 hover:text-violet-700 transition-all duration-200 ease-in-out"
@@ -157,16 +157,11 @@ export default function CalendarView({ trip }) {
               <ul className="mt-8 space-y-2">
                 {dayActivities.map((a, i) => (
                   <li key={i} className="text-gray-700 flex items-center gap-2">
-                    {(a.time || a.endTime) && (
-                      <span className="text-sm text-gray-500">
-                        {a.time}{a.endTime && ` – ${a.endTime}`}
-                      </span>
-                    )}
-                    {a.image && <img src={a.image} alt={a.name} className="w-6 h-6 object-cover rounded-md" />}
-                    <span>{a.name}</span>
+                    {a.image && <img src={a.image} alt={a.name} className="w-8 h-8 object-cover rounded-md" />}
+                    <span className="text-base font-medium">{a.name}</span>
                     <span className="text-xs text-gray-400">({a.type})</span>
                     <button onClick={() => handleDeleteClick(a)} className="bg-gray-50 text-red-500 hover:text-red-700">
-                      <X size={16} />
+                      <X size={18} />
                     </button>
                   </li>
                 ))}
