@@ -205,7 +205,7 @@ const ListItem = ({
       </div>
 
       {/* HIDDEN DATE INPUT: Correctly constrained */}
-      <input
+      {/* <input
         type="date"
         ref={dateInputRef}
         onChange={handleDateChange}
@@ -213,7 +213,7 @@ const ListItem = ({
         value={item.planning || ""}
         min={tripStartDate}
         max={tripEndDate}
-      />
+      /> */}
 
       {/* --- Expandable Content (children) --- */}
       {children && (
@@ -224,8 +224,37 @@ const ListItem = ({
               : "max-h-0 opacity-0"
           }`}
         >
-          {/* Ensure children content is wrapped */}
-          <div className="p-4 pt-3">{children}</div>
+          <div className="p-4 pt-3">
+            {/* Planned date input inside the card */}
+            <div className="mb-3">
+              <label className="block text-xs font-medium text-gray-600">
+                Planned date
+              </label>
+              <div className="relative">
+                <input
+                  type="date"
+                  ref={dateInputRef}
+                  value={item.planning || ""}
+                  min={tripStartDate}
+                  max={tripEndDate}
+                  onChange={handleDateChange}
+                  className="mt-1 w-full border rounded-lg px-3 py-2 pr-10 text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDateClick(e);
+                  }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-violet-600 hover:text-violet-700"
+                  title="Open calendar"
+                >
+                  <Calendar size={18} />
+                </button>
+              </div>
+            </div>
+            {children}
+          </div>
         </div>
       )}
 
