@@ -10,6 +10,7 @@ import BudgetView from "../components/BudgetView"
 import CalendarView from "../components/CalendarView"
 import trips from "../data/mockTrips"
 import { TripsContext } from "../context/TripsContext"
+import { Link } from "react-router-dom";
 
 export default function TripDetails() {
   const [activeTab, setActiveTab] = useState("mustsees")
@@ -59,12 +60,14 @@ export default function TripDetails() {
 
     <section className="trip-details p-4 sm:p-8 py-6 min-h-screen flex flex-col">
 
-      <header className="flex items-center gap-3 py-4 border-b border-gray-200 mb-8">
-        <Map size={32} className="text-purple-700" />
-        <div>
-          <h1 className="text-2xl font-bold">TripTailor</h1>
-          <p className="text-gray-500 text-sm">Your personal travel planner</p>
-        </div>
+      <header className="flex items-center gap-3 py-4 border-b border-gray-200">
+        <Link to="/" className="flex items-center gap-3 no-underline">
+          <Map size={32} className="text-purple-700 flex-shrink-0" />
+          <div className="text-gray-900">
+            <h1 className="text-2xl font-bold">TripTailor</h1>
+            <p className="text-gray-500 text-sm">Your personal travel planner</p>
+          </div>
+        </Link>
       </header>
 
       {/* HEADER (Back + Destination info) */}
