@@ -3,7 +3,6 @@ import TripForm from "../components/TripForm";
 import { Plus, Map, X, SlidersHorizontal } from "lucide-react";
 import { useState, useContext } from "react";
 import { TripsContext } from "../context/TripsContext";
-import { Link } from "react-router-dom";
 
 export default function TripsList() {
   const { trips, addTrip, updateTrip } = useContext(TripsContext);
@@ -41,16 +40,14 @@ export default function TripsList() {
   };
 
   return (
-    <section className="trip-list p-4 sm:p-8">
+    <section className="trip-list p-4 sm:p-8 min-h-screen flex flex-col max-w-5xl mx-auto">
       {/* HEADER */}
       <header className="flex items-center gap-3 py-4 border-b border-gray-200">
-        <Link to="/" className="flex items-center gap-3 no-underline">
-          <Map size={32} className="text-purple-700 flex-shrink-0" />
-          <div className="text-gray-900">
-            <h1 className="text-2xl font-bold">TripTailor</h1>
-            <p className="text-gray-500 text-sm">Your personal travel planner</p>
-          </div>
-        </Link>
+        <Map size={32} className="text-purple-700" />
+        <div>
+          <h1 className="text-2xl font-bold">TripTailor</h1>
+          <p className="text-gray-500 text-sm">Your personal travel planner</p>
+        </div>
       </header>
 
       {/* CTA */}
@@ -87,7 +84,7 @@ export default function TripsList() {
             const colors = {
               planned: "bg-gradient-to-r from-blue-100 to-blue-200",
               ongoing: "bg-gradient-to-r from-yellow-100 to-yellow-200",
-              completed: "bg-gradient-to-r from-green-100  to-green-200",
+              completed: "bg-gradient-to-r from-green-100 to-green-200",
             };
             return (
               <button
@@ -117,7 +114,7 @@ export default function TripsList() {
       {/* TOAST */}
       {showToast && (
         <div className="fixed top-[3em] right-[3em] z-50">
-          <div className="bg-gradient-to-r from-green-500  to-green-600 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500">
+          <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500">
             Trip saved!
           </div>
         </div>
