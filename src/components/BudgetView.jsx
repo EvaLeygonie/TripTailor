@@ -103,9 +103,9 @@ export default function BudgetView() {
         <h2 className="text-2xl sm:text-2xl font-semibold">Budget Overview</h2>
         <button
           onClick={() => setOpen(true)}
-          className="rounded-lg px-4 py-2 text-white font-medium bg-gradient-to-r from-fuchsia-900 to-blue-800 transition-all duration-500"
+          className="bg-gray-50 text-violet-600 flex items-center justify-center p-2 rounded-md border hover:bg-violet-50 hover:text-violet-700 transition-all duration-200 ease-in-out"
         >
-          + Add Expense
+          <Plus size={30} strokeWidth={3} className="text-fuchsia-900 group-hover:text-white transition duration-200" />
         </button>
       </div>
 

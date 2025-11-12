@@ -261,10 +261,9 @@ export default function PackingList() {
 
         <button
           onClick={openForm}
-          className="self-start sm:self-auto flex items-center gap-2 bg-gradient-to-r from-fuchsia-900 to-blue-800 transition-all duration-500 text-white font-medium text-sm sm:text-base px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 active:scale-[0.97]"
+          className="bg-gray-50 text-violet-600 flex items-center justify-center p-2 rounded-md border hover:bg-violet-50 hover:text-violet-700 transition-all duration-200 ease-in-out"
         >
-          <Plus size={18} />
-          <span>Add Item</span>
+          <Plus size={30} strokeWidth={3} className="text-fuchsia-900 group-hover:text-white transition duration-200" />
         </button>
       </div>
 
@@ -321,11 +320,10 @@ export default function PackingList() {
                       />
                       <label
                         htmlFor={inputId}
-                        className={`text-sm sm:text-base cursor-pointer ${
-                          item.checked
-                            ? "line-through text-gray-400"
-                            : "text-gray-800"
-                        }`}
+                        className={`text-sm sm:text-base cursor-pointer ${item.checked
+                          ? "line-through text-gray-400"
+                          : "text-gray-800"
+                          }`}
                       >
                         {item.label}
                       </label>
