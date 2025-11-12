@@ -16,7 +16,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 const ListItem = ({
   item,
@@ -33,7 +33,20 @@ const ListItem = ({
   tripEndDate,
   hideRating = false,
 }) => {
-  const dateInputRef = useRef(null);
+  const [centerPicker, setCenterPicker] = useState(false);
+  const centerInputRef = useRef(null);
+
+  useEffect(() => {
+    if (!centerPicker) return;
+    const el = centerInputRef.current;
+    if (!el) return;
+    el.focus({ preventScroll: true });
+    if (el.showPicker) {
+      requestAnimationFrame(() => el.showPicker());
+    } else {
+      // empty
+    }
+  }, [centerPicker]);
 
   const isPlanned = !!item.planning && item.planning.trim().length > 0;
 
@@ -69,29 +82,12 @@ const ListItem = ({
 
   const Icon = getCategoryIcon(item.category);
 
-  // --- Quick Date Picker Logic ---
-  // const handleDateClick = (e) => {
-  //   e.stopPropagation();
-  //   if (dateInputRef.current && dateInputRef.current.showPicker) {
-  //     dateInputRef.current.showPicker();
-  //   } else if (dateInputRef.current) {
-  //     dateInputRef.current.focus();
-  //     dateInputRef.current.click();
-  //   }
-  // };
-
-  // const handleDateChange = (e) => {
-  //   const newDate = e.target.value;
-  //   if (onPlan) {
-  //     onPlan(item.id, newDate);
-  //   }
-  // };
-
   return (
     <div
-      className={`flex flex-col bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 ease-in-out ${
-        isExpanded ? "shadow-xl" : "hover:shadow-xl"
-      }`}
+      className={`relative flex flex-col bg-white rounded-xl shadow-lg transition-all duration-300 ease-in-out
+      ${isExpanded ? "shadow-xl" : "hover:shadow-xl"}
+      ${centerPicker ? "overflow-visible" : "overflow-hidden"}
+    `}
     >
       {/* --- Card Header (Row of Image + Content) --- */}
       <div className="flex p-3 sm:p-4">
@@ -173,35 +169,11 @@ const ListItem = ({
               </button>
             )}
 
-            {/* Planning Button - Triggers Date Picker */}
-            {/* <button
-                onClick={handleDateClick}
-                className={`p-1 rounded-full border border-transparent transition duration-150 ${
-                  isPlanned
-                    ? "text-purple-600 hover:text-violet-600"
-                    : "text-gray-600 hover:text-violet-600"
-                }`}
-                title={isPlanned ? `Planned for ${item.planning}` : "Plan Item"}
-              >
-                {isPlanned ? (
-                  <CalendarCheck size={18} />
-                ) : (
-                  <Calendar size={18} />
-                )}
-              </button> */}
-
             <div className="relative inline-flex overflow-visible z-10">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (dateInputRef.current) {
-                    dateInputRef.current.focus({ preventScroll: true });
-                    if (dateInputRef.current.showPicker) {
-                      dateInputRef.current.showPicker();
-                    } else {
-                      dateInputRef.current.click();
-                    }
-                  }
+                  setCenterPicker(true);
                 }}
                 className={`p-1 rounded-full border border-transparent transition duration-150 ${
                   isPlanned
@@ -216,19 +188,6 @@ const ListItem = ({
                   <Calendar size={18} />
                 )}
               </button>
-
-              {/* Anchored date input */}
-              <input
-                type="date"
-                ref={dateInputRef}
-                onChange={(e) => onPlan && onPlan(item.id, e.target.value)}
-                value={item.planning || ""}
-                min={tripStartDate}
-                max={tripEndDate}
-                className="absolute inset-0 w-6 h-6 opacity-0 pointer-events-none"
-                tabIndex={-1}
-                aria-hidden="true"
-              />
             </div>
 
             {/* Must-See Button */}
@@ -249,17 +208,6 @@ const ListItem = ({
           </div>
         </div>
       </div>
-
-      {/* HIDDEN DATE INPUT: Correctly constrained */}
-      {/* <input
-        type="date"
-        ref={dateInputRef}
-        onChange={handleDateChange}
-        className="hidden"
-        value={item.planning || ""}
-        min={tripStartDate}
-        max={tripEndDate}
-      /> */}
 
       {/* --- Expandable Content (children) --- */}
       {children && (
@@ -289,6 +237,40 @@ const ListItem = ({
         >
           {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </button>
+      )}
+      {/* Teleport input  */}
+      {centerPicker && (
+        <>
+          <div
+            className="fixed inset-0 z-[60]"
+            onClick={() => setCenterPicker(false)}
+            aria-hidden="true"
+          />
+
+          <div
+            className="absolute left-1/2 top-full -translate-x-1/2 z-[70]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-[300px] h-[44px] flex items-center justify-center">
+              <input
+                ref={centerInputRef}
+                type="date"
+                value={item.planning || ""}
+                min={tripStartDate}
+                max={tripEndDate}
+                onChange={(e) => {
+                  onPlan?.(item.id, e.target.value);
+                  setCenterPicker(false);
+                }}
+                onBlur={() => {
+                  setTimeout(() => setCenterPicker(false), 120);
+                }}
+                className="opacity-0 w-full h-full cursor-pointer"
+                autoFocus
+              />
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
