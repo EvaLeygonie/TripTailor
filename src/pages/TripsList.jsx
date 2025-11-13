@@ -41,7 +41,7 @@ export default function TripsList() {
   };
 
   return (
-    <section className="trip-list p-4 sm:p-8 min-h-screen flex flex-col max-w-5xl mx-auto">
+    <section className="trip-list p-4 sm:p-8 py-6 min-h-screen flex flex-col max-w-5xl mx-auto w-full">
       {/* HEADER */}
       <header className="flex items-center gap-3 py-4 border-b border-gray-200">
         <Link to="/" className="flex items-center gap-3 no-underline">
