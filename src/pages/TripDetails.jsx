@@ -55,7 +55,7 @@ export default function TripDetails() {
   }
 
   return (
-    <section className="trip-details p-4 sm:p-8 py-6 min-h-screen flex flex-col max-w-5xl mx-auto">
+    <section className="trip-details p-4 sm:p-8 py-6 min-h-screen flex flex-col max-w-5xl mx-auto w-full">
 
       <header className="flex items-center gap-3 py-4 border-b border-gray-200">
         <Link to="/" className="flex items-center gap-3 no-underline">
@@ -96,6 +96,7 @@ export default function TripDetails() {
 
       {/* TAB CONTENT */}
       <div className="tab-content mt-6 flex-grow p-4 sm:p-6 bg-white rounded-2xl shadow-sm overflow-y-auto">
+      <div className="w-full max-w-4xl mx-auto">
         {activeTab === "mustsees" && <MustSeesList trip={trip} />}
         {activeTab === "attractions" && <AttractionsList trip={trip} />}
         {activeTab === "restaurants" && <RestaurantsList trip={trip} />}
@@ -103,6 +104,7 @@ export default function TripDetails() {
         {activeTab === "budget" && <BudgetView trip={trip} />}
         {activeTab === "planning" && <CalendarView trip={trip} />}
       </div>
+    </div>
 
       {/* REMOVE TRIP SECTION */}
       <div className="mt-8 text-center">

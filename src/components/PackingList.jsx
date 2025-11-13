@@ -252,7 +252,7 @@ export default function PackingList() {
 
   // Render
   return (
-    <section className="px-4 py-6 sm:px-6 sm:py-8 bg-gray-50 rounded-xl min-h-screen shadow-lg">
+    <section className="px-4 py-6 sm:px-6 sm:py-8 bg-gray-50 rounded-xl min-h-screen shadow-lg w-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <h2 className="text-2xl font-semibold text-start text-gray-800">

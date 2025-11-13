@@ -16,7 +16,7 @@ export default function TabNav({ activeTab, setActiveTab }) {
         px-2 sm:px-4 py-2
          bg-white
         sticky top-[64px] sm:top-[70px] z-20
-        transition-none
+        transition-none w-full
       "
     >
       {tabs.map((tab) => (
