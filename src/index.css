@@ -28,16 +28,21 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden; /* Förhindra sidscroll */
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  background-color: #ffffff;
 }
+
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+
 
 button {
   border-radius: 8px;
@@ -60,33 +65,132 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-.react-calendar {
-  border: none !important;
-  background-color: white !important;
+/* Förhindra sidscroll på alla listor (som RestaurantsList, MustSees, Attractions) */
+.list-container {
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: #f9fafb; /* samma stil som PackingList */
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  overflow-x: hidden; /* <-- viktig! förhindrar sidscroll */
 }
 
+@media (max-width: 640px) {
+  .list-container {
+    padding: 1rem;
+  }
+}
+
+
+/* Grundinställningar för kalendern */
+.react-calendar {
+  width: 100% !important;
+  max-width: 700px;
+  margin: 0 auto;
+  border: none !important;
+  border-radius: 1rem;
+  padding: 1rem;
+  background-color: #fdf4ff;  /* Ljus lila bakgrund */
+  color: #4c1d95;             /* Mörk lila text */
+  font-family: inherit;
+}
+
+/* Celler */
 .react-calendar__tile {
   border: none !important;
+  border-radius: 0.5rem;
   background-color: white !important;
+  padding: 0.6rem;
+  font-size: 0.85rem;
 }
 
+/* Aktiv dag */
+.react-calendar__tile--active {
+  background-color: #a855f7 !important;
+  color: white !important;
+}
+
+/* Hover */
+.react-calendar__tile:hover {
+  background-color: #d8b4fe !important;
+  color: #4c1d95 !important;
+}
+
+/* Navigeringsknappar och månadsnamn */
 .react-calendar__navigation button {
   border: none !important;
-  background-color: white !important;
+  background-color: transparent !important;
+  font-weight: 600;
+  color: #4c1d95;
 }
 
-.react-calendar__tile--active {
-  background-color: #e0dede !important;
-  color: #701a75 !important;
-  border-radius: 0.5rem;
+.react-calendar__navigation__label {
+  white-space: normal;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.2;
 }
 
-.react-calendar__tile:hover {
-  background-color: #f5d0fe !important;
-  color: #701a75 !important;
-  border-radius: 0.5rem;
-}
-
+/* Veckodagar */
 .react-calendar__month-view__weekdays__weekday abbr {
   text-decoration: none !important;
+  font-size: 0.75rem;
+  color: #701a75;
+}
+
+/* ===== MOBIL ===== */
+@media (max-width: 640px) {
+  .react-calendar {
+    padding: 0.8rem;
+  }
+
+  .react-calendar__tile {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .react-calendar__navigation__label {
+    font-size: 1rem;
+  }
+
+  .react-calendar__month-view__weekdays__weekday abbr {
+    font-size: 0.7rem;
+  }
+}
+
+/* ===== DESKTOP ===== */
+@media (min-width: 768px) {
+  .react-calendar {
+    padding: 2rem;                /* mer inre luft */
+    max-width: 750px;             /* lite bredare för balans */
+  }
+
+  .react-calendar__tile {
+    padding: 1.25rem !important;  /* större rutor */
+    min-height: 80px;             /* ger högre känsla */
+    font-size: 1rem;              /* lite större text */
+  }
+
+  .react-calendar__month-view__weekdays__weekday abbr {
+    font-size: 0.9rem;
+  }
+
+  .react-calendar__navigation__label {
+    font-size: 1.3rem;            /* lite tydligare månadstext */
+  }
+}
+
+
+@media (max-width: 640px) {
+  .react-calendar__navigation__label {
+    font-size: 1rem;       /* lite mindre än desktop */
+    white-space: nowrap;    /* undvik radbrytning */
+  }
+
+  .react-calendar__tile {
+    font-size: 0.85rem;    /* gör dagarna lite större än innan */
+    padding: 0.65rem !important;
+  }
 }

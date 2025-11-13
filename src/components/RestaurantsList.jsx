@@ -229,7 +229,8 @@ const RestaurantsList = () => {
   );
 
   return (
-    <div className="p-4 bg-gray-50 rounded-xl shadow-lg mt-6">
+   <div className="w-full max-w-5xl mx-auto p-4 sm:px-6 bg-gray-50 rounded-xl shadow-lg mt-6 overflow-x-hidden">
+
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-gray-800">Restaurants</h2>
 
@@ -242,7 +243,7 @@ const RestaurantsList = () => {
       </div>
 
       {/* List container: Constrained width and centered to match other lists */}
-      <div className="space-y-4 max-w-3xl mx-auto">
+      <div className="space-y-4 w-full max-w-3xl mx-auto">
         {restaurantList.map((restaurant) => {
           // Iterating over trip.restaurants
           const isExpanded = expandedItemId === restaurant.id;
@@ -275,7 +276,8 @@ const RestaurantsList = () => {
                 </div>
 
                 {/* Detailed Stats Grid - Left-aligned */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-4 text-sm pt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4 text-sm pt-2">
+
                   {/* Address */}
                   <div className="flex items-start">
                     <MapPin
@@ -380,7 +382,7 @@ const RestaurantsList = () => {
       {/* ===== Modal Add/Edit Restaurant ===== */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-lg max-h-[90vh] overflow-y-auto">
+          <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-lg max-h-[90vh] overflow-y-hidden">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-lg font-semibold">
                 {isEditing ? "Edit Restaurant" : "Add Restaurant"}
