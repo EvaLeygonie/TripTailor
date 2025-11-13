@@ -215,7 +215,7 @@ const AttractionsList = () => {
   );
 
   return (
-    <div className="p-4 bg-gray-50 rounded-xl shadow-lg mt-6 w-full">
+    <div className="p-4 bg-gray-50 rounded-xl shadow-lg mt-6 overflow-x-hidden">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-gray-800">Attractions</h2>
 
@@ -228,7 +228,7 @@ const AttractionsList = () => {
       </div>
 
       {/* List container: Constrained width and centered */}
-      <div className="space-y-4 w-full">
+      <div className="space-y-4 max-w-3xl mx-auto">
         {trip.attractions.map((attraction) => {
           const isExpanded = expandedItemId === attraction.id;
 
@@ -363,7 +363,7 @@ const AttractionsList = () => {
       {/* ===== Modal Add/Edit Attraction ===== */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-lg max-h-[90vh] overflow-y-auto">
+          <div className="w-full max-w-md rounded-xl bg-white p-5 shadow-lg max-h-[90vh] ">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-lg font-semibold">
                 {isEditing ? "Edit Attraction" : "Add Attraction"}
