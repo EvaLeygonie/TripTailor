@@ -105,7 +105,11 @@ export default function BudgetView() {
           onClick={() => setOpen(true)}
           className="bg-gray-50 text-violet-600 flex items-center justify-center p-2 rounded-md border hover:bg-violet-50 hover:text-violet-700 transition-all duration-200 ease-in-out"
         >
-          <Plus size={30} strokeWidth={3} className="text-fuchsia-900 group-hover:text-white transition duration-200" />
+          <Plus
+            size={30}
+            strokeWidth={3}
+            className="text-fuchsia-900 group-hover:text-white transition duration-200"
+          />
         </button>
       </div>
 
@@ -125,12 +129,12 @@ export default function BudgetView() {
 
         <div className="flex items-center justify-between py-3 border-b border-white/15">
           <div className="opacity-90 text-sm sm:text-base">Total Budget</div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 sm:gap-3">
             <input
               type="text"
               inputMode="decimal"
               pattern="[0-9]*[.,]?[0-9]*"
-              className="w-28 sm:w-36 rounded-lg px-2 py-1 text-right font-semibold text-violet-700"
+              className="w-24 sm:w-36 rounded-lg px-2 py-1 text-right font-semibold text-violet-700 ml-2"
               value={draftTotal}
               onChange={(e) => {
                 const raw = e.target.value.replace(/[^\d.,]/g, "");
