@@ -129,12 +129,12 @@ export default function BudgetView() {
 
         <div className="flex items-center justify-between py-3 border-b border-white/15">
           <div className="opacity-90 text-sm sm:text-base">Total Budget</div>
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 ml-2 sm:ml-0">
             <input
               type="text"
               inputMode="decimal"
               pattern="[0-9]*[.,]?[0-9]*"
-              className="w-24 sm:w-36 rounded-lg px-2 py-1 text-right font-semibold text-violet-700 ml-2"
+              className="w-28 sm:w-36 rounded-lg px-2 py-1 text-right font-semibold text-violet-700"
               value={draftTotal}
               onChange={(e) => {
                 const raw = e.target.value.replace(/[^\d.,]/g, "");
